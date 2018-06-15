@@ -1,0 +1,64 @@
+---
+- name: test the nutanix api
+  hosts: localhost
+  vars:
+    - prism_url: https://172.29.170.95:9440/PrismGateway/services/rest/v2.0/
+    - prism_user: admin
+  vars_prompt:
+    - name: "prism_password"
+      prompt: "Enter prism password"
+      private: yes
+  tasks:
+    # https://172.29.170.95:9440/PrismGateway/services/rest/v2.0/virtual_disks/?count=10
+    - name: Test the api disks end point
+      uri:
+        url: "{{ prism_url }}/virtual_disks"
+        body: "count=10"
+        method: GET
+        validate_certs: no
+        force_basic_auth: yes
+        body_format: json
+        user: "{{ prism_user }}"
+        password: "{{ prism_password }}"
+        status_code: 200
+      register: json_disks_result
+      ignore_errors: yes
+    
+    - name: Dump the disks call result
+      debug:
+        var: json_disks_result.json
+
+    - name: Get a list of VMs
+      uri:
+        url: "{{ prism_url }}/vms"
+        body: "count=10"
+        method: GET
+        validate_certs: no
+        force_basic_auth: yes
+        body_format: json
+        user: "{{ prism_user }}"
+        password: "{{ prism_password }}"
+        status_code: 200
+      register: json_vms_result
+
+    - name: debug the json vms results, dump it all
+      debug:
+        msg: "{{ json_vms_result.json }}"
+
+    - name: debug the json vms results, grab the uuid of the first vm returned
+      debug:
+        # var: json_vms_results.json.entities.uuid
+        msg: "{{ json_vms_result.json.entities[0].uuid }}"
+
+    - name: Create a VM
+      uri:
+        url: "{{ prism_url }}/vms"
+        body: "{{ lookup('file','vm-def.json') }}"
+        method: POST
+        validate_certs: no
+        force_basic_auth: yes
+        body_format: json
+        user: "{{ prism_user }}"
+        password: "{{ prism_password }}"
+        status_code: 200
+      register: json_create_result
