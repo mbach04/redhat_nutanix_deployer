@@ -1,0 +1,17 @@
+- name: provision load balancers
+  uri:
+    url: "{{ api_v3 }}/vms"
+    body: "{{lookup('template', 'vm-template.json.jinja')}}"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    # HEADER_Content-Type: "application/json" #test this, seems we need it at times and others we don't?
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 202
+  register: json_create_result
+
+- name: Display vm creation response
+  debug:
+    var: json_create_result

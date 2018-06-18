@@ -1,0 +1,26 @@
+---
+- name: Get clusters list
+  uri:
+    url: "{{ api_v3 }}/clusters/list"
+    body:
+      kind: cluster
+      sort_order: ASCENDING
+      offset: 0
+      length: 10
+      sort_attribute: ''
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 200
+  register: json_clusters_result
+  ignore_errors: yes
+
+- name: Stash the Cluster UUID
+  set_fact:
+    cluster_uuid: "{{ json_clusters_result.json.entities[0].metadata.uuid }}"
+
+- debug:
+    var: cluster_uuid

@@ -1,0 +1,34 @@
+---
+# - name: Vars for environment bootstrapping
+#   hosts: localhost
+#   tasks:
+#     - name: include dell env vars
+#       include_vars:
+#         file: group_vars/all/env_vars_stg.yml
+#       when: stg
+#     - name: include internal lab vars
+#       include_vars:
+#         file: group_vars/all/env_vars_prd.yml
+#       when: not stg
+
+- name: Provision Nutanix Instances 
+  hosts: localhost
+  vars_prompt:
+    - name: "prism_password"
+      prompt: "Enter prism password"
+      private: yes
+  roles:
+    - nutanix_provisioner
+  tasks:
+    - meta: refresh_inventory
+  tags:
+    - provision
+
+# - name: Setup OpenShift 
+#   hosts: tag_app_ocp:&tag_env_{{ hostvars['localhost']['env'] }}
+#   become: yes
+#   roles:
+#     - { role: common, when: deploy_openshift }
+#     - { role: deploy_openshift, when: install_openshift }
+#   tags: 
+#     - openshift

@@ -1,0 +1,128 @@
+---
+spec:
+  name: VM Template
+  availability_zone_reference:
+    kind: availability_zone
+    name: string
+    uuid: string
+  backup_policy:
+    consistency_group_uuid: string
+    default_snapshot_type: string
+    snapshot_policy_list:
+    - replication_target:
+        cluster_reference:
+          kind: cluster
+          name: string
+          uuid: string
+        availability_zone_reference:
+          kind: availability_zone
+          name: string
+          uuid: string
+      snapshot_schedule_list:
+      - remote_retention_quantity: 0
+        snapshot_type: string
+        local_retention_quantity: 0
+        schedule:
+          interval_multiple: 0
+          duration_secs: 0
+          end_time: '2018-06-18T12:54:40.860Z'
+          start_time: '2018-06-18T12:54:40.860Z'
+          interval_type: string
+          is_suspended: true
+          day_of_week:
+          - string
+  cluster_reference:
+    kind: cluster
+    name: string
+    uuid: string
+  resources:
+    power_state: string
+    num_vcpus_per_socket: 0
+    num_sockets: 0
+    gpu_list:
+    - vendor: string
+      mode: string
+      device_id: 0
+    memory_size_mib: 0
+    boot_config:
+      boot_device_order_list:
+      - string
+      boot_device:
+        disk_address:
+          device_index: 0
+          adapter_type: string
+        mac_address: string
+    hardware_clock_timezone: string
+    guest_customization:
+      cloud_init:
+        meta_data: string
+        user_data: string
+        custom_key_values: {}
+      sysprep:
+        install_type: PREPARED
+        unattend_xml: string
+        custom_key_values: {}
+    power_state_mechanism:
+      mechanism: string
+    vga_console_enabled: true
+    disk_list:
+    - volume_group_reference:
+        kind: string
+        uuid: string
+        name: string
+      device_properties:
+        disk_address:
+          device_index: 0
+          adapter_type: string
+        device_type: DISK
+      uuid: string
+      data_source_reference:
+        kind: string
+        uuid: string
+        name: string
+      disk_size_mib: 0
+      disk_size_bytes: 0
+    vnuma_config:
+      num_vnuma_nodes: 0
+    nic_list:
+    - nic_type: string
+      subnet_reference:
+        kind: subnet
+        name: string
+        uuid: string
+      network_function_nic_type: string
+      uuid: string
+      mac_address: string
+      ip_endpoint_list:
+      - ip: string
+        type: string
+      network_function_chain_reference:
+        kind: network_function_chain
+        name: string
+        uuid: string
+    guest_os_id: string
+    guest_tools:
+      nutanix_guest_tools:
+        iso_mount_state: string
+        state: string
+        enabled_capability_list:
+        - string
+    parent_reference:
+      kind: string
+      uuid: string
+      name: string
+  description: string
+api_version: string
+metadata:
+  last_update_time: '2018-06-18T12:54:40.860Z'
+  kind: vm
+  uuid: string
+  spec_version: 0
+  creation_time: '2018-06-18T12:54:40.860Z'
+  spec_hash: string
+  owner_reference:
+    kind: user
+    name: string
+    uuid: string
+  categories: {}
+  name: string
