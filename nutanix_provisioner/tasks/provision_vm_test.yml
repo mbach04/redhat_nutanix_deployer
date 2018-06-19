@@ -48,4 +48,4 @@
     test_vm_uuid: "{{ json_create_result.json.status.execution_context.task_uuid }}"
 
 - debug:
-    var: test_vm_uuid
+    var: test_vm_task_uuid
