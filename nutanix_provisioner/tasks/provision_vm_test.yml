@@ -1,4 +1,4 @@
-- name: Create a basic VM (test)
+- name: Create a basic VM (test1)
   uri:
     url: "{{ api_v3 }}/vms"
     # body: "{{ lookup('file','vm-def.json') }}"
@@ -11,13 +11,13 @@
         cluster_reference:
           kind: cluster
           uuid: "{{ cluster_uuid }}"
-        name: automation-test
+        name: automation-test-1
         resources:
           memory_size_mib: 1024
           nic_list:
           - subnet_reference:
               kind: subnet
-              uuid: 3684e505-7f21-4ee2-8550-cc34b1908de7
+              uuid: "{{ subnet_uuid }}"
           disk_list:
           - data_source_reference:
               kind: image
@@ -42,10 +42,119 @@
 - name: Display vm creation response
   debug:
     var: json_create_result.json
+  when: "{{ global_debug }}"
 
 - name: Register the task uuid so we can reference this VM directly later
   set_fact:
-    test_vm_task_uuid: "{{ json_create_result.json.status.execution_context.task_uuid }}"
+    test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
+
+- name: Create a basic VM (test2)
+  uri:
+    url: "{{ api_v3 }}/vms"
+    # body: "{{ lookup('file','vm-def.json') }}"
+    # Probably best to move this into a template for reusability
+    body:
+      api_version: '3.0'
+      metadata:
+        kind: vm
+      spec:
+        cluster_reference:
+          kind: cluster
+          uuid: "{{ cluster_uuid }}"
+        name: automation-test-2
+        resources:
+          memory_size_mib: 1024
+          nic_list:
+          - subnet_reference:
+              kind: subnet
+              uuid: "{{ subnet_uuid }}"
+          disk_list:
+          - data_source_reference:
+              kind: image
+              uuid: "{{ rhel_kvm_image }}"
+            device_properties:
+              device_type: DISK
+          num_sockets: 1
+          num_vcpus_per_socket: 1
+          power_state: 'ON'
+          guest_customization:
+             cloud_init:
+               user_data: "{{ lookup('template','cloud-init') | b64encode }}"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 202
+  register: json_create_result
+
+- name: Display vm creation response
+  debug:
+    var: json_create_result.json
+  when: "{{ global_debug }}"
+
+- name: Register the task uuid so we can reference this VM directly later
+  set_fact:
+    test_vm_uuid_2: "{{ json_create_result.json.metadata.uuid }}"
+
+- name: Create a basic VM (test3)
+  uri:
+    url: "{{ api_v3 }}/vms"
+    # body: "{{ lookup('file','vm-def.json') }}"
+    # Probably best to move this into a template for reusability
+    body:
+      api_version: '3.0'
+      metadata:
+        kind: vm
+      spec:
+        cluster_reference:
+          kind: cluster
+          uuid: "{{ cluster_uuid }}"
+        name: automation-test-3
+        resources:
+          memory_size_mib: 1024
+          nic_list:
+          - subnet_reference:
+              kind: subnet
+              uuid: "{{ subnet_uuid }}"
+          disk_list:
+          - data_source_reference:
+              kind: image
+              uuid: "{{ rhel_kvm_image }}"
+            device_properties:
+              device_type: DISK
+          num_sockets: 1
+          num_vcpus_per_socket: 1
+          power_state: 'ON'
+          guest_customization:
+             cloud_init:
+               user_data: "{{ lookup('template','cloud-init') | b64encode }}"
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 202
+  register: json_create_result
+
+- name: Display vm creation response
+  debug:
+    var: json_create_result.json
+  when: "{{ global_debug }}"
+
+- name: Register the task uuid so we can reference this VM directly later
+  set_fact:
+    test_vm_uuid_3: "{{ json_create_result.json.metadata.uuid }}"
+
+    
 
 - debug:
-    var: test_vm_task_uuid
+    var: test_vm_uuid_1
+
+- debug:
+    var: test_vm_uuid_2
+
+- debug:
+    var: test_vm_uuid_3
