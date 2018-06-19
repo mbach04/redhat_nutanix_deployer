@@ -1,0 +1,34 @@
+---
+#Queries the Nutanix API endpoint for a list of images
+#Returns a list of dictionaries containing the name and uuid of the results
+#Example output:
+# [
+#   {'name': 'virtualmachineA', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f0'},
+#   {'name': 'virtualmachineB', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f1'}
+# ]
+
+- name: Get vms list
+  uri:
+    url: "{{ api_v3 }}/vms/list"
+    body:
+      length: 100
+      offset: 0
+      filter: ""
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 200
+  register: json_vms_result
+  ignore_errors: yes
+
+
+- name: Stash the image UUIDs
+  set_fact:
+    vm_uuids: "{{ vm_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
+  with_items: "{{ json_vms_result.json.entities }}"
+
+- debug:
+    var: json_vms_result.json.entities[0].metadata.uuid

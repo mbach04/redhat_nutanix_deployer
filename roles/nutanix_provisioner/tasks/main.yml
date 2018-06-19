@@ -1,10 +1,10 @@
 ---
 # tasks file for nutanix_provisioner
-- include: get_cluster_uuid.yml
+- include: get_cluster_uuids.yml
 
-- include: get_image_uuid.yml
+- include: get_image_uuids.yml
 
-- include: provision_vm_test.yml
+#- include: provision_vm_test.yml
 
 # - include:  provision_lbs.yml
 #   when: deploy_openshift
