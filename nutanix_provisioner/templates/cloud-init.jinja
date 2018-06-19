@@ -1,23 +1,42 @@
 #cloud-config
 # vim: syntax=yaml
 #
+
+groups:
+  - test: [root,sys]
+  - cloud-users
+
+# Add users to the system. Users are added after groups are added.
+users:
+  - default
+  - name: foobar
+    gecos: Foo B. Bar
+    primary_group: foobar
+    groups: users
+    selinux_user: staff_u
+    expiredate: 2019-09-01
+    ssh_import_id: foobar
+    lock_passwd: false
+    passwd: $6$j212wezy$7H/1LT4f9/N3wpgNunhsIqtMj62OKiS3nyNwuizouQc3u7MbYCarYeAHWYPYb2FT.lbioDm2RrkJPb9BZMN1O/
+
 # Add yum repository configuration to the system
 #
 # The following example adds the file /etc/yum.repos.d/epel_testing.repo
 # which can then subsequently be used by yum for later operations.
-yum_repos:
+# yum_repos:
     # The name of the repository
-    epel-testing:
+    # epel-testing:
         # Any repository configuration options
         # See: man yum.conf
         #
         # This one is required!
-        baseurl: http://download.fedoraproject.org/pub/epel/testing/5/$basearch
-        enabled: false
-        failovermethod: priority
-        gpgcheck: true
-        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL
-        name: Extra Packages for Enterprise Linux 5 - Testing
+
+        # baseurl: http://download.fedoraproject.org/pub/epel/testing/5/$basearch
+        # enabled: false
+        # failovermethod: priority
+        # gpgcheck: true
+        # gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL
+        # name: Extra Packages for Enterprise Linux 5 - Testing
 
 #
 # This is an example file to automatically configure resolv.conf when the
@@ -46,7 +65,7 @@ resolv_conf:
 ssh_keys:
   rsa_private: |
     -----BEGIN RSA PRIVATE KEY-----
-    MIIBxwIBAAJhAKD0YSHy73nUgysO13XsJmd4fHiFyQ+00R7VVu2iV9Qcon2LZS/x
+    TESTTEAAJhAKDSUPERMADEUPgysO13XsJmd4fHiFyQ+00R7VVu2iV9Qcon2LZS/x
     1cydPZ4pQpfjEha6WxZ6o8ci/Ea/w0n+0HGPwaxlEG2Z9inNtj3pgFrYcRztfECb
     1j6HCibZbAzYtwIBIwJgO8h72WjcmvcpZ8OvHSvTwAguO2TkR6mPgHsgSaKy6GJo
     PUJnaZRWuba/HX0KGyhz19nPzLpzG5f0fYahlMJAyc13FV7K6kMBPXTRR6FxgHEg

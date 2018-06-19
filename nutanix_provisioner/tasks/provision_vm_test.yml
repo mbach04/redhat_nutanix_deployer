@@ -21,12 +21,15 @@
           disk_list:
           - data_source_reference:
               kind: image
-              uuid: ffdf0075-feb6-49d4-9c4b-3e836901b225
+              uuid: "{{ rhel_kvm_image }}"
             device_properties:
               device_type: DISK
           num_sockets: 1
           num_vcpus_per_socket: 1
           power_state: 'ON'
+          guest_customization:
+             cloud_init:
+               user_data: "{{ lookup('template','cloud-init.jinja') | b64encode }}"
     method: POST
     validate_certs: no
     force_basic_auth: yes
