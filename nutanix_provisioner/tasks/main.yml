@@ -4,9 +4,9 @@
 
 - include: get_image_uuid.yml
 
-- include: get_vm_uuid.yml
-
 - include: provision_vm_test.yml
+
+- include: get_vm_uuid_from_task.yml
 
 # - include:  provision_lbs.yml
 #   when: deploy_openshift

@@ -1,0 +1,23 @@
+---
+- name: Debug the tasks url
+  debug:
+    msg: "{{ api_v3 }}/tasks/{{ test_vm_task_uuid }}"
+
+- name: Get vms uuid from task uuid
+  uri:
+    url: "{{ api_v3 }}/tasks/{{ test_vm_task_uuid }}"
+    method: GET
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 200
+  register: json_tasks_result
+  ignore_errors: yes
+
+- debug:
+    var: json_tasks_result.json
+
+# - debug:
+#     var: json_tasks_result.json

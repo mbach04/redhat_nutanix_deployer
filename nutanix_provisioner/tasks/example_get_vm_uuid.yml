@@ -1,5 +1,5 @@
 ---
-- name: Get vms list
+- name: Get first returned uuid (example)
   uri:
     url: "{{ api_v3 }}/vms/list"
     body:

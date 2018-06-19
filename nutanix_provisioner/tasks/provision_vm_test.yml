@@ -45,7 +45,7 @@
 
 - name: Register the task uuid so we can reference this VM directly later
   set_fact:
-    test_vm_uuid: "{{ json_create_result.json.status.execution_context.task_uuid }}"
+    test_vm_task_uuid: "{{ json_create_result.json.status.execution_context.task_uuid }}"
 
 - debug:
     var: test_vm_task_uuid
