@@ -6,10 +6,10 @@
 #   {'name': 'clusterA', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f0'},
 #   {'name': 'clusterB', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f1'}
 # ]
-
+  
 - name: Get clusters list
   uri:
-    url: "{{ api_v3 }}/clusters/list"
+    url: "{{ api_url_v3 }}/clusters/list"
     body:
       kind: cluster
       sort_order: ASCENDING

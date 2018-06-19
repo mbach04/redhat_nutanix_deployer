@@ -4,7 +4,9 @@
 
 - include: get_image_uuids.yml
 
-#- include: provision_vm_test.yml
+- include: get_subnet_uuids.yml
+
+#- include: provision_vm.yml
 
 # - include:  provision_lbs.yml
 #   when: deploy_openshift

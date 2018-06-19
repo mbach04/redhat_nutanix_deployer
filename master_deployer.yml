@@ -13,14 +13,12 @@
 
 - name: Provision Nutanix Instances
   hosts: localhost
-  vars_prompt:
-    - name: "prism_password"
-      prompt: "Enter prism password"
-      private: yes
-  roles:
-    - nutanix_provisioner
+  vars_files:
+    - secrets.yml
   tasks:
     - meta: refresh_inventory
+    - include_role:
+        name: nutanix_provisioner
   tags:
     - provision
 

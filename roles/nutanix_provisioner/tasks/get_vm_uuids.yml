@@ -9,7 +9,7 @@
 
 - name: Get vms list
   uri:
-    url: "{{ api_v3 }}/vms/list"
+    url: "{{ api_url_v3 }}/vms/list"
     body:
       length: 100
       offset: 0

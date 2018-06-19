@@ -1,15 +1,15 @@
 ---
-#Queries the Nutanix API endpoint for a list of images
+#Queries the Nutanix API endpoint for a list of subnets
 #Returns a list of dictionaries containing the name and uuid of the results
 #Example output:
 # [
-#   {'name': 'imageA', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f0'},
-#   {'name': 'imageB', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f1'}
+#   {'name': 'subnetA', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f0'},
+#   {'name': 'subnetB', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f1'}
 # ]
 
 - name: Get images list
   uri:
-    url: "{{ api_url_v3 }}/images/list"
+    url: "{{ api_url_v3 }}/subnets/list"
     body:
       length: 100
       offset: 0
@@ -26,8 +26,8 @@
 
 - name: Stash the image UUIDs
   set_fact:
-    image_uuids: "{{ image_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
+    subnet_uuids: "{{ subnet_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
   with_items: "{{ json_images_result.json.entities }}"
 
 - debug:
-    var: image_uuids
+    var: subnet_uuids

@@ -1,17 +1,25 @@
-- name: Create a basic VM (test1)
+---
+#Provision a VM in Nutanix using API calls
+# Define the following variables per VM:
+#  cluster_uuid - cluster to provision VM
+#  vm_name - name of VM
+#  subnet_uuid - network(vlan) to deploy VM
+#  image_uuid - image(cdrom) to mount to VM
+#
+- name: Create a basic VM
   uri:
-    url: "{{ api_v3 }}/vms"
+    url: "{{ api_url_v3 }}/vms"
     # body: "{{ lookup('file','vm-def.json') }}"
     # Probably best to move this into a template for reusability
     body:
-      api_version: '3.0'
+      api_version: "{{ api_version }}"
       metadata:
         kind: vm
       spec:
         cluster_reference:
           kind: cluster
           uuid: "{{ cluster_uuid }}"
-        name: automation-test-1
+        name: "{{ vm_name }}"
         resources:
           memory_size_mib: 1024
           nic_list:
@@ -24,7 +32,7 @@
           disk_list:
           - data_source_reference:
               kind: image
-              uuid: "{{ rhel_binary_dvd_iso }}"
+              uuid: "{{ image_uuid }}"
             device_properties:
               device_type: CDROM
           - disk_size_mib:
@@ -157,7 +165,7 @@
 #   set_fact:
 #     test_vm_uuid_3: "{{ json_create_result.json.metadata.uuid }}"
 
-    
+
 
 - debug:
     var: test_vm_uuid_1
