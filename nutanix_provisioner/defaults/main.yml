@@ -2,7 +2,7 @@
 # defaults file for nutanix_provisioner
 
 # Control debug level
-global_debug: false
+global_debug: true
 
 # Set Nutanix cluster info here
 cluster_ip: 172.29.170.95
