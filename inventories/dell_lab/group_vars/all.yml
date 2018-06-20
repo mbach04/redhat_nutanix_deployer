@@ -23,8 +23,9 @@ rhel_kvm_image: 2fa2ad9e-62b5-4eca-8c06-7132986525df
 # cluster_uuid: 00056e15-0223-d74a-497a-ecf4bbd9b8f0
 
 cluster_name: "SOFATL"
-subnet_name: "VM1"
-image_name: "RHEL_Server_7.5_KVM_Guest"
+subnet_name: "VMtest"
+# image_name: "RHEL_Server_7.5_KVM_Guest"
+image_name: RHEL_Server_7.5
 
 # Cloud-init values
 # These are dummy keys to test with for now
