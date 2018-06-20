@@ -8,10 +8,10 @@
     url: "{{ api_v3 }}/tasks/{{ test_vm_task_uuid }}"
     method: GET
     validate_certs: no
-    force_basic_auth: yes
+    force_basic_auth: no
     body_format: json
-    user: "{{ prism_user }}"
-    password: "{{ prism_password }}"
+    headers: 
+      Cookie: "{{ session_cookie }}"
     status_code: 200
   register: json_tasks_result
   ignore_errors: yes

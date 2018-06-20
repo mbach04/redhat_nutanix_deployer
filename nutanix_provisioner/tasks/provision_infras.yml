@@ -1,5 +1,5 @@
 ---=
-- name: Provisioning | Create OpenShift Masters
+- name: Provisioning | Create OpenShift Infra Nodes
   uri:
     url: "{{ api_v3 }}/vms"
     body: "{{ lookup('file','vm-def.json') }}"
@@ -18,4 +18,4 @@
   when: global_debug
 
 - set_fact:
-    master1_uuid: "{{ json_create_result.json.metadata.uuid }}"
+    infra1_uuid: "{{ json_create_result.json.metadata.uuid }}"
