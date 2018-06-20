@@ -1,0 +1,47 @@
+{
+  "api_version": "3.0",
+  "metadata": {
+    "kind": "vm"
+  },
+  "spec": {
+    "cluster_reference": {
+      "kind": "cluster",
+      "uuid": "{{ cluster_uuid }}"
+    },
+    "name": "automation-test",
+    "resources": {
+      "memory_size_mib": {{ master_memory }},
+      "nic_list": [
+        {
+          "subnet_reference": {
+            "kind": "subnet",
+            "uuid": "{{ subnet_uuid }}"
+          }
+        }
+      ],
+      "disk_list": [
+        {
+          "data_source_reference": {
+            "kind": "image",
+            "uuid": "{{ rhel_binary_dvd_iso }}"
+          },
+          "device_properties": {
+            "device_type": "CDROM"
+          }
+        },
+        {
+          "disk_size_mib": {{ master_disk_1_size }}
+        },
+        {
+          "disk_size_mib": {{ master_disk_2_size }}
+        },
+        {
+          "disk_size_mib": {{ master_disk_3_size }}
+        }
+      ],
+      "num_sockets": {{ master_num_sockets }},
+      "num_vcpus_per_socket": 1,
+      "power_state": "ON"
+    }
+  }
+}

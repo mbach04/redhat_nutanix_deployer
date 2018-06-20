@@ -1,4 +1,4 @@
----=
+---
 - name: Provisioning | Create OpenShift Masters
   uri:
     url: "{{ api_v3 }}/vms"

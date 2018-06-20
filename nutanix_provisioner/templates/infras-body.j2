@@ -1,0 +1,35 @@
+api_version: '3.0'
+metadata:
+kind: vm
+spec:
+cluster_reference:
+    kind: cluster
+    uuid: "{{ cluster_uuid }}"
+name: "ocp-infra-0{{ infra_count }}"
+resources:
+    memory_size_mib: "{{ infra_memory }"}
+    nic_list:
+    - subnet_reference:
+        kind: subnet
+        uuid: "{{ subnet_uuid }}"
+    # - ip_endpoint_list:
+    #     - ip: "172.29.171.200" #Specifying the IP here results in successful API call with no vm created?
+    #     - type: ASSIGNED
+    disk_list:
+    - data_source_reference:
+        kind: image
+        uuid: "{{ rhel_binary_dvd_iso }}"
+    device_properties:
+        device_type: CDROM
+    - disk_size_mib:
+        "{{ infra_disk_1_size }}"
+    - disk_size_mib:
+        "{{ infra_disk_2_size }}"
+    - disk_size_mib:
+        "{{ infra_disk_3_size }}"
+    num_sockets: "{{ infra_num_sockets }}"
+    num_vcpus_per_socket: 1
+    power_state: 'ON'
+    guest_customization:
+        cloud_init:
+        user_data: "{{ lookup('template','cloud-init') | b64encode }}"
