@@ -3,7 +3,7 @@
 
 - name: Create a basic VM (test1)
   uri:
-    url: "{{ api_v3 }}/vms"
+    url: "{{ api_url_v3 }}/vms"
     body:
       "{{ lookup('template', 'masters-body.json.j2') }}"
       # api_version: '3.0'

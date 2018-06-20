@@ -39,6 +39,9 @@
   when: "item['name'] == image_name"
   loop: "{{ image_uuids }}"
 
+- debug:
+    var: image_uuid
+
 - name: Debug | print subnet UUID
   debug:
     msg: "{{ item['name'] }}"

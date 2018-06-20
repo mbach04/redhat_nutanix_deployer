@@ -10,7 +10,7 @@
 
 - include: define_uuid_from_name.yml
 
-#- include: provision_vm.yml
+- include: provision_vm.yml
 
 # - include:  provision_lbs.yml
 #   when: deploy_openshift
