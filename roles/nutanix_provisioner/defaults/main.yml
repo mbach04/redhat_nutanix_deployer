@@ -14,3 +14,30 @@ api_version: "3.0"
 
 # Cloud-init values
 # These are dummy keys to test with for now
+
+# VM Host Settings
+#------------------------------#
+# OCP Masters
+master_count: 3
+master_memory: 20480
+master_disk_1_size: 100000
+master_disk_2_size: 50000
+master_disk_3_size: 50000
+master_num_sockets: 4
+master_ip: "172.29.171.200"
+
+# OCP Nodes
+node_count: 3
+node_memory: 20480
+node_disk_1_size: 100000
+node_disk_2_size: 50000
+node_disk_3_size: 50000
+node_num_sockets: 4
+
+# OCP Infras
+infra_count: 3
+infra_memory: 20480
+infra_disk_1_size: 100000
+infra_disk_2_size: 50000
+infra_disk_3_size: 50000
+infra_num_sockets: 4

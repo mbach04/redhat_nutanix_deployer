@@ -1,177 +1,65 @@
----
-#Provision a VM in Nutanix using API calls
-# Define the following variables per VM:
-#  cluster_uuid - cluster to provision VM
-#  vm_name - name of VM
-#  subnet_uuid - network(vlan) to deploy VM
-#  image_uuid - image(cdrom) to mount to VM
-#
-- name: Create a basic VM
+- debug:
+    msg: "{{ lookup('template', 'masters-body.json') }}"
+
+- name: Create a basic VM (test1)
   uri:
-    url: "{{ api_url_v3 }}/vms"
-    # body: "{{ lookup('file','vm-def.json') }}"
-    # Probably best to move this into a template for reusability
+    url: "{{ api_v3 }}/vms"
     body:
-      api_version: "{{ api_version }}"
-      metadata:
-        kind: vm
-      spec:
-        cluster_reference:
-          kind: cluster
-          uuid: "{{ cluster_uuid }}"
-        name: "{{ vm_name }}"
-        resources:
-          memory_size_mib: 1024
-          nic_list:
-          - subnet_reference:
-              kind: subnet
-              uuid: "{{ subnet_uuid }}"
-          # - ip_endpoint_list:
-          #     - ip: "172.29.170.201" #Specifying the IP here results in successful API call with no vm created?
-          #     - type: ASSIGNED
-          disk_list:
-          - data_source_reference:
-              kind: image
-              uuid: "{{ image_uuid }}"
-            device_properties:
-              device_type: CDROM
-          - disk_size_mib:
-              38147 #40GB
-          - disk_size_mib:
-              1024 #~10GB
-          - disk_size_mib:
-              1024 #~10GB
-          num_sockets: 1
-          num_vcpus_per_socket: 1
-          power_state: 'ON'
-          guest_customization:
-             cloud_init:
-               user_data: "{{ lookup('template','cloud-init') | b64encode }}"
+      "{{ lookup('template', 'masters-body.json') }}"
+      # api_version: '3.0'
+      # metadata:
+      #   kind: vm
+      # spec:
+      #   cluster_reference:
+      #     kind: cluster
+      #     uuid: "{{ cluster_uuid }}"
+      #   name: "automation-test-{{ item }}"
+      #   resources:
+      #     memory_size_mib: "{{ master_memory }}"
+      #     nic_list:
+      #     - subnet_reference:
+      #         kind: subnet
+      #         uuid: "{{ subnet_uuid }}"
+      #     - ip_endpoint_list:
+      #         - ip: "{{ master_ip }}" #Specifying the IP here results in successful API call with no vm created?
+      #     disk_list:
+      #     - data_source_reference:
+      #         kind: image
+      #         uuid: "{{ rhel_binary_dvd_iso }}"
+      #       device_properties:
+      #         device_type: CDROM
+      #     - disk_size_mib:
+      #         "{{ master_disk_1_size }}"
+      #     - disk_size_mib:
+      #         "{{ master_disk_2_size }}"
+      #     - disk_size_mib:
+      #         "{{ master_disk_3_size }}"
+      #     num_sockets: "{{ master_num_sockets }}"
+      #     num_vcpus_per_socket: 1
+      #     power_state: 'ON'
+      #     guest_customization:
+      #        cloud_init:
+      #          user_data: "{{ lookup('template','cloud-init') | b64encode }}"
     method: POST
     validate_certs: no
-    force_basic_auth: yes
     body_format: json
-    user: "{{ prism_user }}"
-    password: "{{ prism_password }}"
+    headers: 
+      Cookie: "{{ session_cookie }}"
     status_code: 202
   register: json_create_result
+  # with_items:
+  #   - 1
+  #   - 2
+  #   - 3
 
 - name: Display vm creation response
   debug:
-    var: json_create_result.json
+    var: json_create_result
   when: global_debug
 
-- name: Register the task uuid so we can reference this VM directly later
-  set_fact:
-    test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
-
-# - name: Create a basic VM (test2)
-#   uri:
-#     url: "{{ api_v3 }}/vms"
-#     # body: "{{ lookup('file','vm-def.json') }}"
-#     # Probably best to move this into a template for reusability
-#     body:
-#       api_version: '3.0'
-#       metadata:
-#         kind: vm
-#       spec:
-#         cluster_reference:
-#           kind: cluster
-#           uuid: "{{ cluster_uuid }}"
-#         name: automation-test-2
-#         resources:
-#           memory_size_mib: 1024
-#           nic_list:
-#           - subnet_reference:
-#               kind: subnet
-#               uuid: "{{ subnet_uuid }}"
-#           disk_list:
-#           - data_source_reference:
-#               kind: image
-#               uuid: "{{ rhel_kvm_image }}"
-#             device_properties:
-#               device_type: DISK
-#           num_sockets: 1
-#           num_vcpus_per_socket: 1
-#           power_state: 'ON'
-#           guest_customization:
-#              cloud_init:
-#                user_data: "{{ lookup('template','cloud-init') | b64encode }}"
-#     method: POST
-#     validate_certs: no
-#     force_basic_auth: yes
-#     body_format: json
-#     user: "{{ prism_user }}"
-#     password: "{{ prism_password }}"
-#     status_code: 202
-#   register: json_create_result
-
-# - name: Display vm creation response
-#   debug:
-#     var: json_create_result.json
-#   when: global_debug
-
 # - name: Register the task uuid so we can reference this VM directly later
 #   set_fact:
-#     test_vm_uuid_2: "{{ json_create_result.json.metadata.uuid }}"
-
-# - name: Create a basic VM (test3)
-#   uri:
-#     url: "{{ api_v3 }}/vms"
-#     # body: "{{ lookup('file','vm-def.json') }}"
-#     # Probably best to move this into a template for reusability
-#     body:
-#       api_version: '3.0'
-#       metadata:
-#         kind: vm
-#       spec:
-#         cluster_reference:
-#           kind: cluster
-#           uuid: "{{ cluster_uuid }}"
-#         name: automation-test-3
-#         resources:
-#           memory_size_mib: 1024
-#           nic_list:
-#           - subnet_reference:
-#               kind: subnet
-#               uuid: "{{ subnet_uuid }}"
-#           disk_list:
-#           - data_source_reference:
-#               kind: image
-#               uuid: "{{ rhel_kvm_image }}"
-#             device_properties:
-#               device_type: DISK
-#           num_sockets: 1
-#           num_vcpus_per_socket: 1
-#           power_state: 'ON'
-#           guest_customization:
-#              cloud_init:
-#                user_data: "{{ lookup('template','cloud-init') | b64encode }}"
-#     method: POST
-#     validate_certs: no
-#     force_basic_auth: yes
-#     body_format: json
-#     user: "{{ prism_user }}"
-#     password: "{{ prism_password }}"
-#     status_code: 202
-#   register: json_create_result
-
-# - name: Display vm creation response
-#   debug:
-#     var: json_create_result.json
-#   when: global_debug
-
-# - name: Register the task uuid so we can reference this VM directly later
-#   set_fact:
-#     test_vm_uuid_3: "{{ json_create_result.json.metadata.uuid }}"
-
-
-
-- debug:
-    var: test_vm_uuid_1
+#     test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
 
 # - debug:
-#     var: test_vm_uuid_2
-
-# - debug:
-#     var: test_vm_uuid_3
+#     var: test_vm_uuid_1

@@ -1,0 +1,43 @@
+---
+- name: Auth to the cluster 
+  uri:
+    url: "{{ api_v3 }}/clusters/list"
+    body:
+      kind: cluster
+      sort_order: ASCENDING
+      offset: 0
+      length: 10
+      sort_attribute: ''
+    method: POST
+    validate_certs: no
+    force_basic_auth: yes
+    body_format: json
+    user: "{{ prism_user }}"
+    password: "{{ prism_password }}"
+    status_code: 200
+    return_content: yes
+  register: login
+  ignore_errors: yes
+
+- debug:
+    var: login.set_cookie
+  when: global_debug
+
+- set_fact:
+    session_cookie: "{{ login.set_cookie }}"
+
+- name: Login with session cookie test on clusters endpoint
+  uri:
+    url: "{{ api_v3 }}/clusters/list"
+    body:
+      kind: cluster
+      sort_order: ASCENDING
+      offset: 0
+      length: 10
+      sort_attribute: ''
+    method: POST
+    validate_certs: no
+    body_format: json
+    headers: 
+      Cookie: "{{ session_cookie }}"
+    status_code: 200
