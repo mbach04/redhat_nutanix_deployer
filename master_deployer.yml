@@ -13,8 +13,7 @@
 
 - name: Provision Nutanix Instances
   hosts: localhost
-  vars_files:
-    - secrets.yml
+
   tasks:
     - meta: refresh_inventory
     - include_role:
