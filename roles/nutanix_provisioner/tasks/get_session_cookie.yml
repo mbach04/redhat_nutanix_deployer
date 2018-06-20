@@ -1,7 +1,7 @@
 ---
 - name: Auth to the cluster 
   uri:
-    url: "{{ api_v3 }}/clusters/list"
+    url: "{{ api_url_v3 }}/clusters/list"
     body:
       kind: cluster
       sort_order: ASCENDING
@@ -28,7 +28,7 @@
 
 - name: Login with session cookie test on clusters endpoint
   uri:
-    url: "{{ api_v3 }}/clusters/list"
+    url: "{{ api_url_v3 }}/clusters/list"
     body:
       kind: cluster
       sort_order: ASCENDING

@@ -1,11 +1,11 @@
 - debug:
-    msg: "{{ lookup('template', 'masters-body.json') }}"
+    msg: "{{ lookup('template', 'masters-body.json.j2') }}"
 
 - name: Create a basic VM (test1)
   uri:
     url: "{{ api_v3 }}/vms"
     body:
-      "{{ lookup('template', 'masters-body.json') }}"
+      "{{ lookup('template', 'masters-body.json.j2') }}"
       # api_version: '3.0'
       # metadata:
       #   kind: vm

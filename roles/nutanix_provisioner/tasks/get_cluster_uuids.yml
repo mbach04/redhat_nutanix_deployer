@@ -18,11 +18,10 @@
       sort_attribute: ''
     method: POST
     validate_certs: no
-    force_basic_auth: yes
     body_format: json
-    user: "{{ prism_user }}"
-    password: "{{ prism_password }}"
     status_code: 200
+    headers: 
+      Cookie: "{{ session_cookie }}"
   register: json_clusters_result
   ignore_errors: yes
 

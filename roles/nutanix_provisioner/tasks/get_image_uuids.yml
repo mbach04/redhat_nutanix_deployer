@@ -16,18 +16,18 @@
       filter: ""
     method: POST
     validate_certs: no
-    force_basic_auth: yes
     body_format: json
-    user: "{{ prism_user }}"
-    password: "{{ prism_password }}"
     status_code: 200
+    headers: 
+      Cookie: "{{ session_cookie }}"
   register: json_images_result
   ignore_errors: yes
 
 - name: Stash the image UUIDs
   set_fact:
-    image_uuids: "{{ image_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
+    image_uuids: "{{ image_uuids | default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
   with_items: "{{ json_images_result.json.entities }}"
 
-- debug:
+- name: image_uuid output
+  debug:
     var: image_uuids

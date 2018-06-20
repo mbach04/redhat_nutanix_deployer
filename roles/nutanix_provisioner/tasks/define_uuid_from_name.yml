@@ -1,0 +1,51 @@
+---
+#Select and define UUIDs to use based on names provided in group_vars
+
+#cluster_name: "SOFATL"
+#subnet_name: "VM1"
+#image_name: "RHEL_Server_7.5_KVM_Guest"
+
+
+#cluster_uuids
+
+
+#image_uuids
+#subnet_uuids
+
+#cluster_uuid
+#image_uuid
+#subnet_uuid
+
+- name: Debug | print cluster UUID
+  debug:
+    msg: "{{ item['name'] }}"
+  loop: "{{ cluster_uuids }}"  
+
+- name: Define Cluster UUID to use from name
+  set_fact:
+    cluster_uuid: "{{ item['uuid'] }}"
+  when: "item['name'] == cluster_name"
+  loop: "{{ cluster_uuids }}"
+
+
+- name: Debug | print image UUID to use
+  debug:
+    msg: "{{ item['name'] }}"
+  loop: "{{ image_uuids }}"
+  
+- name: Define Image UUID to use from name
+  set_fact:
+    image_uuid: "{{ item['uuid'] }}"
+  when: "item['name'] == image_name"
+  loop: "{{ image_uuids }}"
+
+- name: Debug | print subnet UUID
+  debug:
+    msg: "{{ item['name'] }}"
+  loop: "{{ subnet_uuids }}"  
+
+- name: Define Subnet UUID to use from name
+  set_fact:
+    subnet_uuid: "{{ item['uuid'] }}"
+  when: "item['name'] == subnet_name"
+  loop: "{{ subnet_uuids }}"

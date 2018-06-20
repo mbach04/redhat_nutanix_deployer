@@ -13,7 +13,7 @@
 
 - name: Provision Nutanix Instances
   hosts: localhost
-
+  gather_facts: false
   tasks:
     - meta: refresh_inventory
     - include_role:

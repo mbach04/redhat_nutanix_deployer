@@ -1,13 +1,14 @@
 ---
 # tasks file for nutanix_provisioner
-
 - include: get_session_cookie.yml
 
 - include: get_cluster_uuids.yml
 
+- include: get_subnet_uuids.yml
+
 - include: get_image_uuids.yml
 
-- include: get_subnet_uuids.yml
+- include: define_uuid_from_name.yml
 
 #- include: provision_vm.yml
 
