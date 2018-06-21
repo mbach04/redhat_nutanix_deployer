@@ -1,45 +1,15 @@
-- debug:
-    msg: "{{ query('template', 'vm-body.json.j2') }}"
+- set_fact:
+    vm_body: "{{ lookup('template', 'vm-body.yml.j2') | from_yaml }}"
 
-- name: Create a basic VM (test1)
+- debug:
+    var: vm_body
+  when: global_debug
+
+- name: Create a basic VM
   uri:
     url: "{{ api_url_v3 }}/vms"
     body:
-      "{{ query('template', 'vm-body.json.j2') }}"
-      # api_version: '3.0'
-      # metadata:
-      #   kind: vm
-      # spec:
-      #   cluster_reference:
-      #     kind: cluster
-      #     uuid: "{{ cluster_uuid }}"
-      #   name: "automation-test-{{ item }}"
-      #   resources:
-      #     memory_size_mib: "{{ master_memory }}"
-      #     nic_list:
-      #     - subnet_reference:
-      #         kind: subnet
-      #         uuid: "{{ subnet_uuid }}"
-      #     - ip_endpoint_list:
-      #         - ip: "{{ master_ip }}" #Specifying the IP here results in successful API call with no vm created?
-      #     disk_list:
-      #     - data_source_reference:
-      #         kind: image
-      #         uuid: "{{ rhel_binary_dvd_iso }}"
-      #       device_properties:
-      #         device_type: CDROM
-      #     - disk_size_mib:
-      #         "{{ master_disk_1_size }}"
-      #     - disk_size_mib:
-      #         "{{ master_disk_2_size }}"
-      #     - disk_size_mib:
-      #         "{{ master_disk_3_size }}"
-      #     num_sockets: "{{ master_num_sockets }}"
-      #     num_vcpus_per_socket: 1
-      #     power_state: 'ON'
-      #     guest_customization:
-      #        cloud_init:
-      #          user_data: "{{ lookup('template','cloud-init') | b64encode }}"
+      "{{ vm_body }}"
     method: POST
     validate_certs: no
     body_format: json
@@ -47,19 +17,16 @@
       Cookie: "{{ session_cookie }}"
     status_code: 202
   register: json_create_result
-  # with_items:
-  #   - 1
-  #   - 2
-  #   - 3
 
 - name: Display vm creation response
   debug:
-    var: json_create_result | to_yaml
+    var: json_create_result.json | to_yaml
   when: global_debug
 
-# - name: Register the task uuid so we can reference this VM directly later
-#   set_fact:
-#     test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
+- name: Register the vm uuid so we can reference this VM directly later
+  set_fact:
+    test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
 
-# - debug:
-#     var: test_vm_uuid_1
+- debug:
+    var: test_vm_uuid_1
+  when: global_debug

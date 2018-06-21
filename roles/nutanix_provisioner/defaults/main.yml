@@ -1,8 +1,8 @@
 ---
 # defaults file for nutanix_provisioner
 
-# Control debug level
-global_debug: false
+# Control debug
+global_debug: true
 
 # Set Nutanix cluster info here
 api_version: "3.0"

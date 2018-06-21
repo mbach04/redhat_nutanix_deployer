@@ -1,0 +1,28 @@
+api_version: '3.0'
+metadata:
+  kind: vm
+spec:
+  cluster_reference:
+    kind: cluster
+    uuid: {{ cluster_uuid }}
+  name: {{ current_vm_name }}
+  resources:
+    disk_list:
+    - data_source_reference:
+        kind: image
+        uuid: {{ image_uuid }}
+{% for item in current_vm_disk_list %}
+{% for k,v in item.iteritems() %}
+    - {{ k }}: {{ v }}
+{% endfor %}
+{% endfor %}
+    memory_size_mib: {{ current_vm_ram }}
+    nic_list:
+    - ip_endpoint_list:
+      - ip: {{ current_vm_ip }}
+      subnet_reference:
+        kind: subnet
+        uuid: {{ subnet_uuid }}
+    num_sockets: {{ current_vm_num_sockets }}
+    num_vcpus_per_socket: {{ current_vm_num_cpu_per_socket }}
+    power_state: 'ON'

@@ -20,8 +20,8 @@ prism_password: !vault |
 
 cluster_name: "SOFATL"
 subnet_name: "VMtest"
-# image_name: "RHEL_Server_7.5_KVM_Guest"
-image_name: RHEL_Server_7.5
+image_name: "RHEL_Server_7.5_KVM_Guest"
+# image_name: RHEL_Server_7.5
 
 # Cloud-init values
 # These are dummy keys to test with for now
@@ -93,3 +93,12 @@ ansible_ssh_public_key: |
     W7D4zCpI43jRS9U06JVOeSc9CDk2lwiA3wIwCTB/6uc8Cq85D9YqpM10FuHjKpnP
     REPPOyrAspdeOAV+6VKRavstea123456789x
     -----END RSA PUBLIC KEY-----
+
+current_vm_ram: 1600
+current_vm_ip: "172.29.171.101"
+current_vm_name: automation-test-1
+current_vm_num_cpu_per_socket: 1
+current_vm_num_sockets: 4
+current_vm_disk_list:
+  - disk_size_mib: 40000
+  - disk_size_mib: 50000

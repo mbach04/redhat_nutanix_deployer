@@ -23,6 +23,10 @@
   register: json_images_result
   ignore_errors: yes
 
+- debug:
+    var: json_images_result.json
+  when: global_debug
+
 - name: Stash the image UUIDs
   set_fact:
     image_uuids: "{{ image_uuids | default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
