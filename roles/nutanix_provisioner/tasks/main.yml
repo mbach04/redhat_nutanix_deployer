@@ -6,7 +6,8 @@
 - include: get_cluster_uuids.yml
 - include: get_subnet_uuids.yml
 - include: get_image_uuids.yml
-- include: define_uuid_from_name.yml
+- include: define_uuids_from_names.yml
+
 
 
 # - include: provision_vm.yml
@@ -20,6 +21,8 @@
   debug:
     msg: "{{ hostvars[item] }}"
   loop: "{{ groups['test'] }}"
+
+
   
 
 
