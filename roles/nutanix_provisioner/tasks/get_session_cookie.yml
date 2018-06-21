@@ -1,4 +1,6 @@
 ---
+#Authorize to the cluster and register a cookie to be used for further API calls
+
 - name: Auth to the cluster 
   uri:
     url: "{{ api_url_v3 }}/clusters/list"

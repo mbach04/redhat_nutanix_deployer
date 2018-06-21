@@ -1,21 +1,6 @@
 ---
 #Select and define UUIDs to use based on names provided in group_vars
 
-#cluster_name: "SOFATL"
-#subnet_name: "VM1"
-#image_name: "RHEL_Server_7.5_KVM_Guest"
-
-
-#cluster_uuids
-
-
-#image_uuids
-#subnet_uuids
-
-#cluster_uuid
-#image_uuid
-#subnet_uuid
-
 - name: Debug | print cluster UUID
   debug:
     msg: "{{ item['name'] }}"

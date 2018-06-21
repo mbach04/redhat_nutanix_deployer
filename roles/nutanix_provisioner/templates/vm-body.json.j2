@@ -8,9 +8,9 @@
       "kind": "cluster",
       "uuid": "{{ cluster_uuid }}"
     },
-    "name": "automation-test",
+    "name": "{{ current_vm_name }}",
     "resources": {
-      "memory_size_mib": {{ master_memory }},
+      "memory_size_mib": {{ current_vm_ram }},
       "nic_list": [
         {
           "subnet_reference": {
@@ -19,7 +19,7 @@
           },
           "ip_endpoint_list":
             [
-              { "ip": "172.29.171.161" }
+              { "ip": "{{ current_vm_ip }}" }
             ],
         }
       ],
@@ -33,18 +33,11 @@
             "device_type": "CDROM"
           }
         },
-        {
-          "disk_size_mib": {{ master_disk_1_size }}
-        },
-        {
-          "disk_size_mib": {{ master_disk_2_size }}
-        },
-        {
-          "disk_size_mib": {{ master_disk_3_size }}
-        }
+        {{ current_vm_disk_list | to_json }}
+        
       ],
-      "num_sockets": {{ master_num_sockets }},
-      "num_vcpus_per_socket": 1,
+      "num_sockets": {{ current_vm_num_sockets }},
+      "num_vcpus_per_socket": {{ current_vm_num_cpu_per_socket }},
       "power_state": "ON"
     }
   }

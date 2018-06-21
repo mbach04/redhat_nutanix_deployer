@@ -1,11 +1,11 @@
 - debug:
-    msg: "{{ lookup('template', 'masters-body.json.j2') }}"
+    msg: "{{ query('template', 'vm-body.json.j2') }}"
 
 - name: Create a basic VM (test1)
   uri:
     url: "{{ api_url_v3 }}/vms"
     body:
-      "{{ lookup('template', 'masters-body.json.j2') }}"
+      "{{ query('template', 'vm-body.json.j2') }}"
       # api_version: '3.0'
       # metadata:
       #   kind: vm
@@ -54,7 +54,7 @@
 
 - name: Display vm creation response
   debug:
-    var: json_create_result
+    var: json_create_result | to_yaml
   when: global_debug
 
 # - name: Register the task uuid so we can reference this VM directly later
