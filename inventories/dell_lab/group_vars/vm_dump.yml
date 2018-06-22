@@ -1,0 +1,52 @@
+api_bodies:
+  - api_version: '3.0'
+    metadata:
+      kind: vm
+    spec:
+      cluster_reference:
+        kind: cluster
+        uuid: 00056e15-0223-d74a-497a-ecf4bbd9b8f0
+      name: test1
+      resources:
+        disk_list:
+        - data_source_reference:
+            kind: image
+            uuid: 2fa2ad9e-62b5-4eca-8c06-7132986525df
+        - disk_size_mib: 40000
+        - disk_size_mib: 50000
+        memory_size_mib: 1600
+        nic_list:
+        - ip_endpoint_list:
+          - ip: 172.29.171.101
+          subnet_reference:
+            kind: subnet
+            uuid: 667e301c-3cb0-4331-90c4-e942257628b3
+        num_sockets: 4
+        num_vcpus_per_socket: 1
+        power_state: 'ON'
+    - api_version: '3.0'
+    metadata:
+      kind: vm
+    spec:
+      cluster_reference:
+        kind: cluster
+        uuid: 00056e15-0223-d74a-497a-ecf4bbd9b8f0
+      name: test2
+      resources:
+        disk_list:
+        - data_source_reference:
+            kind: image
+            uuid: 2fa2ad9e-62b5-4eca-8c06-7132986525df
+        - disk_size_mib: 40000
+        - disk_size_mib: 50000
+        memory_size_mib: 1600
+        nic_list:
+        - ip_endpoint_list:
+          - ip: 172.29.171.102
+          subnet_reference:
+            kind: subnet
+            uuid: 667e301c-3cb0-4331-90c4-e942257628b3
+        num_sockets: 4
+        num_vcpus_per_socket: 1
+        power_state: 'ON'
+  

@@ -8,8 +8,11 @@
 - import_tasks: get_image_uuids.yml
 - import_tasks: define_uuids_from_names.yml
 
+- import_tasks: provision_vm.yml
 
-- include: provision_vm.yml
+
+# Can possibly remove all things below this line
+#-------------------------------------------------------
 
 # - name: Debug | list test_vms variable
 #   debug: 

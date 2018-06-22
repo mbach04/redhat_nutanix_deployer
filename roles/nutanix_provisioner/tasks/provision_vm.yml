@@ -1,32 +1,63 @@
-- set_fact:
+# Note the loop control here, set's the item var name in the template
+# with a prefix of the letters `vm`.
+# Hence all the first level items in the template that get processed
+# are referred to like `vm.vm_name` for example.
+- set_fact: 
     vm_body: "{{ lookup('template', 'vm-body.yml.j2') | from_yaml }}"
+  loop: "{{ vm_defs }}"
+  register: templates
+  loop_control:
+    loop_var: vm
 
 - debug:
-    var: vm_body
+    msg: "{{ item.ansible_facts.vm_body }}"
   when: global_debug
+  with_items: "{{ templates.results }}"
 
-- name: Create a basic VM
+# still need to add in the cloud-init part to the body of this request
+
+- name: Create a VM from a template
   uri:
     url: "{{ api_url_v3 }}/vms"
     body:
-      "{{ vm_body }}"
+      "{{ template.ansible_facts.vm_body }}"
     method: POST
     validate_certs: no
     body_format: json
-    headers: 
+    headers:
       Cookie: "{{ session_cookie }}"
     status_code: 202
   register: json_create_result
+  with_items: "{{ templates.results }}"
+  loop_control:
+    loop_var: template
+
+
+- debug:
+    var: json_create_result
+  when: global_debug
 
 - name: Display vm creation response
   debug:
-    var: json_create_result.json | to_yaml
+    msg: "{{ item.json.metadata.uuid }}"
   when: global_debug
+  with_items: "{{ json_create_result.results }}"
 
-- name: Register the vm uuid so we can reference this VM directly later
+# From here forward, need to figure out how to stash those UUIDs in something 
+# we can easily consume at the provisioning layer. Maybe gen a hosts file or something?
+- name: Register the created vm uuid's for future use
   set_fact:
-    test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
+    _uuids: "{{ item.json.metadata.uuid }}"
+  with_items: "{{ json_create_result.results }}"
+  register: vm_uuids
 
 - debug:
-    var: test_vm_uuid_1
-  when: global_debug
+    var: vm_uuids
+
+# - name: Register the vm uuid so we can reference this VM directly later
+#   set_fact:
+#     test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
+
+# - debug:
+#     var: test_vm_uuid_1
+#   when: global_debug
