@@ -14,7 +14,7 @@ users:
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     lock_passwd: false
-    passwd: $6FMi11BJFsAc
+    passwd: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
     ssh-authorized-keys: 
     - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD1FakZ9BbbkxKrpmu9tFWiZBUGiQAF23amNDjP1j4tNXVhDsqdc8L12pMD8LSysG3LXIBkXxMIN40XKbXNSz5CsQfD
       sGca54Y/zInhx/0mPwJDzGgB4ebYk64ETlcXpB06vCEfebfUcPhxOqhj+nfah9x85IzRObwYTW5vSIoffbI0RaQ9AJU2nRWanyDtm32+Yt1XqND1Mkc1Yp1CC6ytqS9X
@@ -47,17 +47,17 @@ users:
 # the instance. Also be sure that your cloud.cfg file includes this
 # configuration module in the appropriate section.
 #
-# manage_resolv_conf: true
+manage_resolv_conf: true
 
-# resolv_conf:
-#   nameservers: ['8.8.4.4', '8.8.8.8']
-#   searchdomains:
-#     - foo.example.com
-#     - bar.example.com
-#   domain: example.com
-#   options:
-#     rotate: true
-#     timeout: 1
+resolv_conf:
+  nameservers: ['172.29.170.51', '8.8.8.8']
+  searchdomains:
+    - foo.example.com
+    - bar.example.com
+  domain: example.com
+  options:
+    rotate: true
+    timeout: 1
 
 # Send pre-generated ssh private keys to the server
 # If these are present, they will be written to /etc/ssh and

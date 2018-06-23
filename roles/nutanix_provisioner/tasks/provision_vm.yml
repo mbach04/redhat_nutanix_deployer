@@ -45,6 +45,9 @@
 
 # From here forward, need to figure out how to stash those UUIDs in something 
 # we can easily consume at the provisioning layer. Maybe gen a hosts file or something?
+# If DNS entries are solid and we know the IP's ahead of time we could do without the
+# jump between provision and configuration as long as we know the hosts are up and
+# reachable. Can use a simple ansible dns lookup filter to verify against the host file
 - name: Register the created vm uuid's for future use
   set_fact:
     _uuids: "{{ item.json.metadata.uuid }}"
