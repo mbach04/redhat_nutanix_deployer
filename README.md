@@ -1,6 +1,10 @@
 # Nutanix Provisioner
 
+Use the following command on a RHEL host to generate a SHA-512 hashed password to be cloud_init_root_pass used with the `kvm` RHEL image.
 
+`python -c 'import crypt,getpass; print crypt.crypt(getpass.getpass())'`
+
+Set the resulting string equal to `cloud_init_root_pass` in `group_vars/*/all.yaml`.
 
 
 ## Encrypting secrets:

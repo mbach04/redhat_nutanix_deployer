@@ -14,7 +14,7 @@ users:
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     lock_passwd: false
-    passwd: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
+    passwd: {{ cloud_init_root_pass }}
     ssh-authorized-keys: 
     - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD1FakZ9BbbkxKrpmu9tFWiZBUGiQAF23amNDjP1j4tNXVhDsqdc8L12pMD8LSysG3LXIBkXxMIN40XKbXNSz5CsQfD
       sGca54Y/zInhx/0mPwJDzGgB4ebYk64ETlcXpB06vCEfebfUcPhxOqhj+nfah9x85IzRObwYTW5vSIoffbI0RaQ9AJU2nRWanyDtm32+Yt1XqND1Mkc1Yp1CC6ytqS9X
