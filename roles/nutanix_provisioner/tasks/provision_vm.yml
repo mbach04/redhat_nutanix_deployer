@@ -56,11 +56,3 @@
 
 - debug:
     var: vm_uuids
-
-# - name: Register the vm uuid so we can reference this VM directly later
-#   set_fact:
-#     test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
-
-# - debug:
-#     var: test_vm_uuid_1
-#   when: global_debug
