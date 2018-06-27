@@ -57,6 +57,10 @@ Single variable encyption, reading input from stdin (SSH key/etc):
 ```
 ansible-vault encrypt_string --stdin-name 'ansible_ssh_private_key'
 ```
+Single variable decryption
+```
+ansible my_server -m debug -a 'var=my_encrypted_var'
+```
 
 Note: Use same vault password for all variables, or specify --vault-id to label
 different variables with groups of passwords.
