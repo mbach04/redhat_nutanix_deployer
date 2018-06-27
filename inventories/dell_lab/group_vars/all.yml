@@ -54,8 +54,10 @@ vm_defs:
   -  {vm_name: ansible-tower-02, vm_ram: 8192, vm_ip: '172.29.171.112', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
   -  {vm_name: ansible-tower-03, vm_ram: 8192, vm_ip: '172.29.171.113', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
   -  {vm_name: ansible-tower-db, vm_ram: 8192, vm_ip: '172.29.171.114', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
-
-
+  # Gluster CNS Nodes
+  -  {vm_name: ocp-cns01, vm_ram: 24576, vm_ip: '172.29.171.120', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  -  {vm_name: ocp-cns02, vm_ram: 24576, vm_ip: '172.29.171.121', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  -  {vm_name: ocp-cns03, vm_ram: 24576, vm_ip: '172.29.171.123', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
 
 # Cloud-init values
 # These are valid keys to test with for now
