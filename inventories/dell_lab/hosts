@@ -1,25 +1,22 @@
 # This is an example of an OpenShift-Ansible host inventory
 
+[repository]
+repository.ocp.dell.local
+
 [masters]
-ocp-master[01:03].test.example.com
+ocp-master-[01:03].ocp.dell.local
 
 [etcd]
-ocp-master[01:03].test.example.com
+ocp-master-[01:03].ocp.dell.local
 
 [nodes]
-ocp-master[01:03].test.example.com
-ocp-infra[01:03].test.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ocp-node[01:03].test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+ocp-master-[01:03].ocp.dell.local
+ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+ocp-node-[01:03].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
 node11.example.com openshift_schedulable=True
 node12.example.com openshift_schedulable=True
 node13.example.com openshift_schedulable=True
-
-#[nfs]
-#ose3-master1.test.example.com
-
-#[lb]
-#ose3-lb.test.example.com
 
 [glusterfs]
 node11.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
@@ -31,8 +28,6 @@ node13.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 masters
 nodes
 etcd
-#lb
-#nfs
 glusterfs
 
 [OSEv3:vars]

@@ -1,0 +1,16 @@
+---
+- name: Deploy Ansible Tower VMs
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+    - name: Provision Ansible Tower on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_tower }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory

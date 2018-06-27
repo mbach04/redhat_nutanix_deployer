@@ -37,6 +37,6 @@
     uuid: "{{ item.uuid }}"
   with_items: "{{ vms_uuids }}"
 
-- name: Debug the hostvars
-  debug:
-    var: hostvars
+# - name: Debug the hostvars
+#  debug:
+#    var: hostvars

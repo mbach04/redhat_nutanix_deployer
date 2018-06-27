@@ -2,6 +2,9 @@
 # with a prefix of the letters `vm`.
 # Hence all the first level items in the template that get processed
 # are referred to like `vm.vm_name` for example.
+
+- debug:
+    msg: "{{ vm_defs }}"
 - set_fact: 
     vm_body: "{{ lookup('template', 'vm-body.yml.j2') | from_yaml }}"
   loop: "{{ vm_defs }}"
@@ -9,7 +12,8 @@
   loop_control:
     loop_var: vm
 
-- debug:
+- name: Debug | Template lookup result
+  debug:
     msg: "{{ item.ansible_facts.vm_body }}"
   when: global_debug
   with_items: "{{ templates.results }}"

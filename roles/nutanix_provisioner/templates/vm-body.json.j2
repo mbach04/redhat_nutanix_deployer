@@ -1,0 +1,44 @@
+{
+  "api_version": "3.0",
+  "metadata": {
+    "kind": "vm"
+  },
+  "spec": {
+    "cluster_reference": {
+      "kind": "cluster",
+      "uuid": "{{ cluster_uuid }}"
+    },
+    "name": "{{ vm_name }}",
+    "resources": {
+      "memory_size_mib": {{ vm_ram }},
+      "nic_list": [
+        {
+          "subnet_reference": {
+            "kind": "subnet",
+            "uuid": "{{ subnet_uuid }}"
+          },
+          "ip_endpoint_list":
+            [
+              { "ip": "{{ vm_ip }}" }
+            ],
+        }
+      ],
+      "disk_list": [
+        {
+          "data_source_reference": {
+            "kind": "image",
+            "uuid": "{{ image_uuid }}"
+          },
+          "device_properties": {
+            "device_type": "CDROM"
+          }
+        },
+        {{ vm_disk_list | to_json }}
+        
+      ],
+      "num_sockets": {{ vm_num_sockets }},
+      "num_vcpus_per_socket": {{ vm_num_cpu_per_socket }},
+      "power_state": "ON"
+    }
+  }
+}
