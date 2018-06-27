@@ -14,8 +14,6 @@
   when: global_debug
   with_items: "{{ templates.results }}"
 
-# still need to add in the cloud-init part to the body of this request
-
 - name: Create a VM from a template
   uri:
     url: "{{ api_url_v3 }}/vms"

@@ -11,21 +11,26 @@
 #         file: group_vars/all/env_vars_prd.yml
 #       when: not stg
 
-- name: Provision Nutanix Instances
+
+- name: Configure YUM Repository
   hosts: localhost
   gather_facts: false
   tasks:
-    - meta: refresh_inventory
-    - include_role:
-        name: nutanix_provisioner
-  tags:
-    - provision
 
-# - name: Setup OpenShift
-#   hosts: tag_app_ocp:&tag_env_{{ hostvars['localhost']['env'] }}
-#   become: yes
-#   roles:
-#     - { role: common, when: deploy_openshift }
-#     - { role: deploy_openshift, when: install_openshift }
-#   tags:
-#     - openshift
+
+- name: Nutanix/OCP Deployer
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    
+    - name: Provision OCP Cluster on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+
+
+

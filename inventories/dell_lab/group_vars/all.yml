@@ -26,32 +26,51 @@ image_name: "RHEL_Server_7.5_KVM_Guest"
 # Disk specs here are close, but not exact yet
 # Ram size is in MiB
 vm_defs:
+  # RPM Repository
+  -  {vm_name: repository, vm_ram: 4096, vm_ip: '172.29.171.100', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76294, disk_size_mib: 152588]}
+  # repository:
+  #   vm_ram: 4096
+  #   vm_ip: '172.29.171.100'
+  #   vm_num_cpu_per_socket: 1
+  #   vm_num_sockets: 4
+  #   vm_disk_list:
+  #     - disk_size_mib: 76294
+  #     - disk_size_mib: 152588
   # # masters
-  # -  {vm_name: ocp-master01, vm_ram: 20480, vm_ip: '172.29.171.101', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  # -  {vm_name: ocp-master02, vm_ram: 20480, vm_ip: '172.29.171.102', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  # -  {vm_name: ocp-master03, vm_ram: 20480, vm_ip: '172.29.171.103', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  # # app nodes
-  # -  {vm_name: ocp-node01, vm_ram: 49152, vm_ip: '172.29.171.150', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # -  {vm_name: ocp-node02, vm_ram: 49152, vm_ip: '172.29.171.151', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # -  {vm_name: ocp-node03, vm_ram: 49152, vm_ip: '172.29.171.152', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-master-01, vm_ram: 20480, vm_ip: '172.29.171.101', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master-02, vm_ram: 20480, vm_ip: '172.29.171.102', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master-03, vm_ram: 20480, vm_ip: '172.29.171.103', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
   # # infra nodes
-  # -  {vm_name: ocp-infra01, vm_ram: 24576, vm_ip: '172.29.171.104', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # -  {vm_name: ocp-infra02, vm_ram: 24576, vm_ip: '172.29.171.105', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # -  {vm_name: ocp-infra03, vm_ram: 24576, vm_ip: '172.29.171.106', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # # loadbalancer - master
-  # -  {vm_name: ocp-lb01, vm_ram: 4096, vm_ip: '172.29.171.107', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  # -  {vm_name: ocp-lb02, vm_ram: 4096, vm_ip: '172.29.171.108', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  # # loadbalancer - app
-  # -  {vm_name: ocp-lb03, vm_ram: 4096, vm_ip: '172.29.171.109', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  # -  {vm_name: ocp-lb04, vm_ram: 4096, vm_ip: '172.29.171.110', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  -  {vm_name: cloud-init-test, vm_ram: 4096, vm_ip: '172.29.171.111', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  
+  # -  {vm_name: ocp-infra-01, vm_ram: 24576, vm_ip: '172.29.171.104', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-infra-02, vm_ram: 24576, vm_ip: '172.29.171.105', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-infra-03, vm_ram: 24576, vm_ip: '172.29.171.106', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # # app nodes
+  # -  {vm_name: ocp-node-01, vm_ram: 49152, vm_ip: '172.29.171.150', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-node-02, vm_ram: 49152, vm_ip: '172.29.171.151', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-node-03, vm_ram: 49152, vm_ip: '172.29.171.152', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-node-04, vm_ram: 49152, vm_ip: '172.29.171.153', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # # masters lbs
+  # -  {vm_name: ocp-lb-01, vm_ram: 4096, vm_ip: '172.29.171.107', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # -  {vm_name: ocp-lb-02, vm_ram: 4096, vm_ip: '172.29.171.108', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # # infras lbs
+  # -  {vm_name: ocp-lb-03, vm_ram: 4096, vm_ip: '172.29.171.109', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # -  {vm_name: ocp-lb-04, vm_ram: 4096, vm_ip: '172.29.171.110', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # # Ansible Tower
+  # -  {vm_name: ansible-tower-01, vm_ram: 8192, vm_ip: '172.29.171.111', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
+  # -  {vm_name: ansible-tower-02, vm_ram: 8192, vm_ip: '172.29.171.112', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
+  # -  {vm_name: ansible-tower-03, vm_ram: 8192, vm_ip: '172.29.171.113', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
+  # -  {vm_name: ansible-tower-db, vm_ram: 8192, vm_ip: '172.29.171.114', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 152588]}
+  # # Gluster CNS Nodes
+  # -  {vm_name: ocp-cns-01, vm_ram: 24576, vm_ip: '172.29.171.120', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-cns-02, vm_ram: 24576, vm_ip: '172.29.171.121', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-cns-03, vm_ram: 24576, vm_ip: '172.29.171.123', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+
 
 # Cloud-init values
 vm_net_dns:
   - '172.29.170.51'
 
-vm_net_domain: "ocp.example.com"
+vm_net_domain: "ocp.dell.local"
 vm_yum_repos:
   rhel-local:
     baseurl:
@@ -59,7 +78,7 @@ vm_yum_repos:
     failovermethod: priority
     gpgcheck: true
     gpgkey:
-    name: {{ cluster_name }} RHEL 7 Repository
+    name: "{{ cluster_name }} RHEL 7 Repository"
 
 # yum_repos:
     # The name of the repository

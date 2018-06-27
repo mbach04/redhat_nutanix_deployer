@@ -1,0 +1,73 @@
+---
+# Deletes all VMs created from the master_deployer playbook
+# Only if the VM name in Nutanix matches against any vm_defs.vm_name definition (see group_vars/all.yml)
+
+- name: Provision Nutanix Instances
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Auth to the cluster 
+      uri:
+        url: "{{ api_url_v3 }}/clusters/list"
+        body:
+          kind: cluster
+          sort_order: ASCENDING
+          offset: 0
+          length: 10
+          sort_attribute: ''
+        method: POST
+        validate_certs: no
+        force_basic_auth: yes
+        body_format: json
+        user: "{{ prism_user }}"
+        password: "{{ prism_password }}"
+        status_code: 200
+        return_content: yes
+      register: login
+      ignore_errors: yes
+
+    - debug:
+        var: login.set_cookie
+      when: global_debug
+
+    - set_fact:
+        session_cookie: "{{ login.set_cookie }}"
+
+    - name: Get VMS list
+      uri:
+        url: "{{ api_url_v3 }}/vms/list"
+        body:
+          kind: vm
+          sort_order: ASCENDING
+          offset: 0
+          length: 1000
+          sort_attribute: ''
+        method: POST
+        validate_certs: no
+        body_format: json
+        status_code: 200
+        headers: 
+          Cookie: "{{ session_cookie }}"
+      register: vms_result
+      ignore_errors: yes
+
+    - name: Stash the VM UUIDs
+      set_fact:
+        vm_uuids: "{{ vm_uuids|default([]) + [{'name': item.spec.name, 'uuid': item.metadata.uuid}] }}"
+      with_items: "{{ vms_result.json.entities }}"
+
+    - debug:
+        var: vm_uuids
+
+    - name: Delete VMs
+      uri:
+        url: "{{ api_url_v3 }}/vms/{{ item.uuid }}"
+        method: DELETE
+        validate_certs: no
+        status_code: 202
+        headers: 
+          Cookie: "{{ session_cookie }}"
+      register: vm_delete_result
+      ignore_errors: yes
+      when: "item.name in vm_defs|map(attribute='vm_name')|list "
+      loop: "{{ vm_uuids }}"
