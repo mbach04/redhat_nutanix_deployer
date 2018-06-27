@@ -1,14 +1,16 @@
 #cloud-config
 # vim: syntax=yaml
 #
+
+# Module Configuration
 cloud_config_modules:
   - resolv_conf
 
-groups:
-  - test: [root,sys]
-  - cloud-users
+# Hostname Configuration
+hostname: {{ vm.vm_name }}.{{ vm_net_domain }}
 
-# Add users to the system. Users are added after groups are added.
+# User Configuration
+# Defines ansible user with sudo access
 users:
   - default
   - name: ansible
@@ -16,29 +18,17 @@ users:
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     lock_passwd: false
-    passwd: {{ cloud_init_root_pass }}
     ssh-authorized-keys: 
     - {{ ansible_ssh_public_key }}
 
-# Add yum repository configuration to the system
-#
-# The following example adds the file /etc/yum.repos.d/epel_testing.repo
-# which can then subsequently be used by yum for later operations.
-# yum_repos:
-    # The name of the repository
-    # epel-testing:
-        # Any repository configuration options
-        # See: man yum.conf
-        #
-        # This one is required!
+# YUM Configuration
+yum_repos:
+  {{ vm_yum_repos }}
 
-        # baseurl: http://download.fedoraproject.org/pub/epel/testing/5/$basearch
-        # enabled: false
-        # failovermethod: priority
-        # gpgcheck: true
-        # gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL
-        # name: Extra Packages for Enterprise Linux 5 - Testing
+#sshd Configuration
+ssh_pwauth: False
 
+# resolv.conf configuration
 #
 # This is an example file to automatically configure resolv.conf when the
 # instance boots for the first time.
@@ -51,30 +41,10 @@ manage_resolv_conf: true
 
 resolv_conf:
   nameservers:
-    - 172.29.170.51
-    - 8.8.8.8
+    {{ vm_net_dns }}
   searchdomains:
     - {{ vm_net_domain }}
   domain: {{ vm_net_domain }}
   options:
     rotate: true
     timeout: 1
-
-# Send pre-generated ssh private keys to the server
-# If these are present, they will be written to /etc/ssh and
-# new random keys will not be generated
-# Note this is a dummy key
-# ssh_keys:
-#   rsa_private: |
-#     -----BEGIN RSA PRIVATE KEY-----
-#     TESTTEAAJhAKDSUPERMADEUPgysO13XsJmd4fHiFyQ+00R7VVu2iV9Qcon2LZS/x
-#     1cydPZ4pQpfjEha6WxZ6o8ci/Ea/w0n+0HGPwaxlEG2Z9inNtj3pgFrYcRztfECb
-#     1j6HCibZbAzYtwIBIwJgO8h72WjcmvcpZ8OvHSvTwAguO2TkR6mPgHsgSaKy6GJo
-#     PUJnaZRWuba/HX0KGyhz19nPzLpzG5f0fYahlMJAyc13FV7K6kMBPXTRR6FxgHEg
-#     L0MPC7cdqAwOVNcPY6A7AjEA1bNaIjOzFN2sfZX0j7OMhQuc4zP7r80zaGc5oy6W
-#     p58hRAncFKEvnEq2CeL3vtuZAjEAwNBHpbNsBYTRPCHM7rZuG/iBtwp8Rxhc9I5w
-#     ixvzMgi+HpGLWzUIBS+P/XhekIjPAjA285rVmEP+DR255Ls65QbgYhJmTzIXQ2T9
-#     luLvcmFBC6l35Uc4gTgg4ALsmXLn71MCMGMpSWspEvuGInayTCL+vEjmNBT+FAdO
-#     W7D4zCpI43jRS9U06JVOeSc9CDk2lwiA3wIwCTB/6uc8Cq85D9YqpM10FuHjKpnP
-#     REPPOyrAspdeOAV+6VKRavstea7+2DZmSUgE
-#     -----END RSA PRIVATE KEY-----

@@ -2,12 +2,10 @@
 # Control debug level
 global_debug: true
 
-# Set Nutanix cluster info here
-
+# Nutanix Cluster Settings
 api_version: "3.0"
 cluster_url: 172.29.170.95
 api_url_v3: "https://{{ cluster_url }}:9440/api/nutanix/v3"
-
 prism_user: admin
 prism_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -17,43 +15,71 @@ prism_password: !vault |
           6662623531316237360a623163303538633037306163323661346332663730643633313662646539
           3331
 
-cloud_init_root_pass: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
 
-
+# Global VM Settings
 cluster_name: "SOFATL"
 subnet_name: "VMtest"
 image_name: "RHEL_Server_7.5_KVM_Guest"
 # image_name: RHEL_Server_7.5
 
-# OpenShift VM Specs
+# VM Specs
 # Disk specs here are close, but not exact yet
-# Ram size is in MB
-vm_net_domain: "ocp.example.com"
+# Ram size is in MiB
 vm_defs:
-  # masters
-  -  {vm_name: ocp-master01, vm_ram: 20480, vm_ip: '172.29.171.101', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: ocp-master02, vm_ram: 20480, vm_ip: '172.29.171.102', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: ocp-master03, vm_ram: 20480, vm_ip: '172.29.171.103', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  # app nodes
-  -  {vm_name: ocp-node01, vm_ram: 49152, vm_ip: '172.29.171.150', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-node02, vm_ram: 49152, vm_ip: '172.29.171.151', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-node03, vm_ram: 49152, vm_ip: '172.29.171.152', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # infra nodes
-  -  {vm_name: ocp-infra01, vm_ram: 24576, vm_ip: '172.29.171.104', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-infra02, vm_ram: 24576, vm_ip: '172.29.171.105', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-infra03, vm_ram: 24576, vm_ip: '172.29.171.106', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
-  # masters lbs
-  -  {vm_name: ocp-lb01, vm_ram: 4096, vm_ip: '172.29.171.107', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  -  {vm_name: ocp-lb02, vm_ram: 4096, vm_ip: '172.29.171.108', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  # infras lbs
-  -  {vm_name: ocp-lb03, vm_ram: 4096, vm_ip: '172.29.171.109', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  -  {vm_name: ocp-lb04, vm_ram: 4096, vm_ip: '172.29.171.110', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-
-
+  # # masters
+  # -  {vm_name: ocp-master01, vm_ram: 20480, vm_ip: '172.29.171.101', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master02, vm_ram: 20480, vm_ip: '172.29.171.102', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master03, vm_ram: 20480, vm_ip: '172.29.171.103', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # # app nodes
+  # -  {vm_name: ocp-node01, vm_ram: 49152, vm_ip: '172.29.171.150', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-node02, vm_ram: 49152, vm_ip: '172.29.171.151', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-node03, vm_ram: 49152, vm_ip: '172.29.171.152', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # # infra nodes
+  # -  {vm_name: ocp-infra01, vm_ram: 24576, vm_ip: '172.29.171.104', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-infra02, vm_ram: 24576, vm_ip: '172.29.171.105', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # -  {vm_name: ocp-infra03, vm_ram: 24576, vm_ip: '172.29.171.106', vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
+  # # loadbalancer - master
+  # -  {vm_name: ocp-lb01, vm_ram: 4096, vm_ip: '172.29.171.107', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # -  {vm_name: ocp-lb02, vm_ram: 4096, vm_ip: '172.29.171.108', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # # loadbalancer - app
+  # -  {vm_name: ocp-lb03, vm_ram: 4096, vm_ip: '172.29.171.109', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  # -  {vm_name: ocp-lb04, vm_ram: 4096, vm_ip: '172.29.171.110', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  -  {vm_name: cloud-init-test, vm_ram: 4096, vm_ip: '172.29.171.111', vm_num_cpu_per_socket: 2, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  
 
 # Cloud-init values
-# These are valid keys to test with for now
+vm_net_dns:
+  - '172.29.170.51'
 
+vm_net_domain: "ocp.example.com"
+vm_yum_repos:
+  rhel-local:
+    baseurl:
+    enabled: true
+    failovermethod: priority
+    gpgcheck: true
+    gpgkey:
+    name: {{ cluster_name }} RHEL 7 Repository
+
+# yum_repos:
+    # The name of the repository
+    # epel-testing:
+        # Any repository configuration options
+        # See: man yum.conf
+        #
+        # This one is required!
+
+        # baseurl: http://download.fedoraproject.org/pub/epel/testing/5/$basearch
+        # enabled: false
+        # failovermethod: priority
+        # gpgcheck: true
+        # gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL
+        # name: Extra Packages for Enterprise Linux 5 - Testing
+
+
+cloud_init_root_pass: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
+
+ansible_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIk0aYn5zx2klk/lCEtN383Og5KwLh+SBt0EeUjx3aczWKAI06pcsbfH/Wg00zFQEhtgaUMeCeQG//3Yxp6cDyy9jIhrqNdZ9WcfhElXRx1zK373mhO3uOxl3bzV/GN9IyLWt8maGz3BKLASN4GMMtrq6IG7QfXGc7pphiaKjJlJ9sHBia+6QMkOlir3Mot0/TvpLGKEFRid/WsPK34vMHLfjKTzXR+xLuyNz8g0qxt9UnM/3ygV5o95Gdf7RhyukmOfcOiW2OYGSec2gy5qEjpvRAu1x/+Yc5hGfG+emQXJVCk55UuuJElzJXT0pp+3rdZuK3dkUyAkENCtWtkT/7
 ansible_ssh_private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           36386632396663653163316162356638636132613962666462363132363134336664656639336535
@@ -144,5 +170,3 @@ ansible_ssh_private_key: !vault |
           37633263653666623666373332356530633231376133333939326638663164366564656163643663
           65306261666563323962613935373135323862636663653437353230643439323030633365333535
           35366436383434363465
-
-ansible_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIk0aYn5zx2klk/lCEtN383Og5KwLh+SBt0EeUjx3aczWKAI06pcsbfH/Wg00zFQEhtgaUMeCeQG//3Yxp6cDyy9jIhrqNdZ9WcfhElXRx1zK373mhO3uOxl3bzV/GN9IyLWt8maGz3BKLASN4GMMtrq6IG7QfXGc7pphiaKjJlJ9sHBia+6QMkOlir3Mot0/TvpLGKEFRid/WsPK34vMHLfjKTzXR+xLuyNz8g0qxt9UnM/3ygV5o95Gdf7RhyukmOfcOiW2OYGSec2gy5qEjpvRAu1x/+Yc5hGfG+emQXJVCk55UuuJElzJXT0pp+3rdZuK3dkUyAkENCtWtkT/7
