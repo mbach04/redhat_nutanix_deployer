@@ -10,12 +10,21 @@ ocp-master[01:03].test.example.com
 ocp-master[01:03].test.example.com
 ocp-infra[01:03].test.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 ocp-node[01:03].test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+# Gluster nodes
+node11.example.com openshift_schedulable=True
+node12.example.com openshift_schedulable=True
+node13.example.com openshift_schedulable=True
 
 #[nfs]
 #ose3-master1.test.example.com
 
 #[lb]
 #ose3-lb.test.example.com
+
+[glusterfs]
+node11.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+node12.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+node13.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 
 # Create an OSEv3 group that contains the masters and nodes groups
 [OSEv3:children]
@@ -24,6 +33,17 @@ nodes
 etcd
 #lb
 #nfs
+glusterfs
 
 [OSEv3:vars]
 #custom vars
+
+# Gluster CNS Vars
+openshift_storage_glusterfs_is_native=true
+openshift_storage_glusterfs_storageclass=true
+openshift_storage_glusterfs_heketi_is_native=true
+openshift_storage_glusterfs_heketi_executor=ssh
+openshift_storage_glusterfs_heketi_ssh_port=22
+openshift_storage_glusterfs_heketi_ssh_user=root
+openshift_storage_glusterfs_heketi_ssh_sudo=false
+openshift_storage_glusterfs_heketi_ssh_keyfile="/root/.ssh/id_rsa" #Need to check this
