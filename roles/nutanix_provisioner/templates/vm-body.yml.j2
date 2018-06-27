@@ -28,4 +28,4 @@ spec:
     power_state: 'ON'
     guest_customization:
       cloud_init:
-        user_data: {{ lookup('template','cloud-init') | b64encode }}
+        user_data: {{ lookup('template','cloud-init.yml.j2') | b64encode }}

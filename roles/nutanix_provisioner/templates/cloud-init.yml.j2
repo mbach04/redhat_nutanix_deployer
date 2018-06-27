@@ -1,6 +1,8 @@
 #cloud-config
 # vim: syntax=yaml
 #
+cloud_config_modules:
+  - resolv_conf
 
 groups:
   - test: [root,sys]
@@ -16,9 +18,7 @@ users:
     lock_passwd: false
     passwd: {{ cloud_init_root_pass }}
     ssh-authorized-keys: 
-    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD1FakZ9BbbkxKrpmu9tFWiZBUGiQAF23amNDjP1j4tNXVhDsqdc8L12pMD8LSysG3LXIBkXxMIN40XKbXNSz5CsQfD
-      sGca54Y/zInhx/0mPwJDzGgB4ebYk64ETlcXpB06vCEfebfUcPhxOqhj+nfah9x85IzRObwYTW5vSIoffbI0RaQ9AJU2nRWanyDtm32+Yt1XqND1Mkc1Yp1CC6ytqS9X
-      PTXZo/D8EmckkarXNbL993dOR51pWYp9IF5fTJevs2ZRvxIyKmVfqHEwqdFfsd5kXywNCFn2NRpMUVBSmISrDvUW9J/u3x9K4/8X0ORXm702mO/EY/xb9GLQq+d1
+    - {{ ansible_ssh_public_key }}
 
 # Add yum repository configuration to the system
 #
@@ -50,11 +50,12 @@ users:
 manage_resolv_conf: true
 
 resolv_conf:
-  nameservers: ['172.29.170.51', '8.8.8.8']
+  nameservers:
+    - 172.29.170.51
+    - 8.8.8.8
   searchdomains:
-    - foo.example.com
-    - bar.example.com
-  domain: example.com
+    - {{ vm_net_domain }}
+  domain: {{ vm_net_domain }}
   options:
     rotate: true
     timeout: 1
