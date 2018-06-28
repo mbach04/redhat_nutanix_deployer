@@ -1,6 +1,6 @@
 ---
 # Control debug level
-global_debug: true
+global_debug: false
 
 # Set Nutanix cluster info here
 
@@ -27,13 +27,14 @@ image_name: "RHEL_Server_7.5_KVM_Guest"
 
 # OpenShift VM Specs
 # Disk specs here are close, but not exact yet
+# TODO verify resource sizing for infra and app nodes
 # Ram size is in MB
 vm_net_domain: "ocp.dell.local"
 vm_defs:
   # # masters
-  -  {vm_name: ocp-master-01, vm_ram: 20480, vm_ip: '172.29.171.101', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: ocp-master-02, vm_ram: 20480, vm_ip: '172.29.171.102', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: ocp-master-03, vm_ram: 20480, vm_ip: '172.29.171.103', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master-01, vm_ram: 20480, vm_ip: '172.29.171.101', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master-02, vm_ram: 20480, vm_ip: '172.29.171.102', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
+  # -  {vm_name: ocp-master-03, vm_ram: 20480, vm_ip: '172.29.171.103', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 457765, disk_size_mib: 381471, disk_size_mib: 76294]}
   # # app nodes
   # -  {vm_name: ocp-node-01, vm_ram: 49152, vm_ip: '172.29.171.150', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}
   # -  {vm_name: ocp-node-02, vm_ram: 49152, vm_ip: '172.29.171.151', vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 305176, disk_size_mib: 762940, disk_size_mib: 152588]}

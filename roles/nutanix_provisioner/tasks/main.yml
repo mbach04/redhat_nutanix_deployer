@@ -8,7 +8,7 @@
 - import_tasks: get_image_uuids.yml
 - import_tasks: define_uuids_from_names.yml
 - import_tasks: provision_vm.yml
-- import_tasks: get_vms_list.yml #we may not need this task
+# - import_tasks: get_vms_list.yml #we may not need this task
 
 
 # Can possibly remove all things below this line
