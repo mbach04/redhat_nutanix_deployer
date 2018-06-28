@@ -9,8 +9,10 @@ cloud_config_modules:
 # Hostname Configuration
 hostname: {{ vm.vm_name }}.{{ vm_net_domain }}
 
-# User Configuration
-# Defines ansible user with sudo access
+# Group/User Configuration
+groups:
+  - cloud-users
+
 users:
   - default
   - name: ansible
@@ -22,8 +24,8 @@ users:
     - {{ ansible_ssh_public_key }}
 
 # YUM Configuration
-yum_repos:
-  {{ vm_yum_repos }}
+# yum_repos:
+#   
 
 #sshd Configuration
 ssh_pwauth: False

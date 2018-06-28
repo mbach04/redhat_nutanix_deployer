@@ -52,5 +52,6 @@
   with_items: "{{ json_create_result.results }}"
   register: vm_uuids
 
-- debug:
-    var: vm_uuids
+# - debug:
+#     var: vm_uuids
+#   when: global_debug

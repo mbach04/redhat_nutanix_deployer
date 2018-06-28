@@ -20,7 +20,8 @@
 
 - debug:
     var: vms_result
-
+  when: global_debug
+  
 - name: Stash the VM UUIDs
   set_fact:
     vms_uuids: "{{ vms_uuids|default([]) + [{'name': item.spec.name, 'uuid': item.metadata.uuid}] }}"
@@ -29,6 +30,7 @@
 - name: Show the vms dict
   debug:
     var: vms_uuids
+  when: global_debug
 
 - name: Add the list of vms to hosts
   add_host:
@@ -40,3 +42,4 @@
 - name: Debug the hostvars
   debug:
     var: hostvars
+  when: global_debug

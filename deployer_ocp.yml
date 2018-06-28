@@ -1,0 +1,16 @@
+---
+- name: YUM Nutanix Deployer
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Provision OCP on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_ocp }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+    

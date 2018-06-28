@@ -1,0 +1,44 @@
+---
+- name: YUM Nutanix Deployer
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Provision YUM Repository on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_repo }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+    
+# - name: YUM Nutanix Configuration
+#   hosts: repository
+#   remote_user: ansible
+#   become: yes
+#   vars_prompt:
+#     - name: "rhsm_username"
+#       prompt: "RHSM Username"
+#     - name: "rhsm_password"
+#       prompt: "RHSM Password"
+
+#   tasks:
+#     - name: Register with subscription-manager
+#       redhat_subscription:
+#         state: present
+#         username: "{{ rhsm_username }}"
+#         password: "{{ rhsm_password }}"
+#         autosubscribe: yes
+
+#     - name: Disable all repositories except those required by OCP
+#       shell: "{{ item }}"                                                                                                   
+#       with_items:                                                                                                           
+#        - subscription-manager repos --disable='*'                                                                          
+#        - >                                                                                                                 
+#          subscription-manager repos                                                                                        
+#          --enable="rhel-7-server-rpms"                                                                                     
+#          --enable="rhel-7-server-extras-rpms"                                                                              
+#          --enable="rhel-7-server-ose-3.5-rpms" 
+#          --enable="rhel-7-fast-datapath-rpms"

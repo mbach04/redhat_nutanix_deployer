@@ -1,5 +1,8 @@
 # This is an example of an OpenShift-Ansible host inventory
 
+[repository]
+repository.ocp.dell.local
+
 [masters]
 ocp-master[01:03].test.example.com
 
