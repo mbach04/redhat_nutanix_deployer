@@ -2,9 +2,13 @@
 # vim: syntax=yaml
 #
 
+runcmd:
+  - nmcli con mod "System eth0" ipv4.method manual ipv4.addresses "172.29.171.100/24 172.29.171.1" ipv4.dns 172.29.170.51
+  
+
 # Module Configuration
-cloud_config_modules:
-  - resolv_conf
+#cloud_config_modules:
+#  - resolv_conf
 
 # Hostname Configuration
 hostname: {{ vm.vm_name }}.{{ vm_net_domain }}
@@ -30,6 +34,8 @@ users:
 #sshd Configuration
 ssh_pwauth: False
 
+
+
 # resolv.conf configuration
 #
 # This is an example file to automatically configure resolv.conf when the
@@ -39,14 +45,37 @@ ssh_pwauth: False
 # the instance. Also be sure that your cloud.cfg file includes this
 # configuration module in the appropriate section.
 #
-manage_resolv_conf: true
 
-resolv_conf:
-  nameservers:
-    {{ vm_net_dns }}
-  searchdomains:
-    - {{ vm_net_domain }}
-  domain: {{ vm_net_domain }}
-  options:
-    rotate: true
-    timeout: 1
+###
+# Fix for NetworkManager clobbering resolv.conf created by resolv_conf module.
+# See: https://bugs.launchpad.net/cloud-init/+bug/1693251
+# Fixed in cloud-init v17.1
+###
+#write_files:
+#  - content: |
+#      # Created by cloud-init on instance boot automatically, do not edit.
+#      #
+#      [main]
+#      dns=none
+#    owner: root:root
+#    permissions: '0644'
+#    path: /etc/NetworkManager/conf.d/99-cloud-init.conf
+
+### End Fix
+
+#manage_resolv_conf: true
+
+#resolv_conf:
+#  nameservers:
+#    - '172.29.170.51'
+#  searchdomains:
+#    - {{ vm_net_domain }}
+#  domain: {{ vm_net_domain }}
+#  options:
+#    rotate: true
+#    timeout: 1
+
+power_state:
+  delay: now
+  mode: reboot
+  condition: True
