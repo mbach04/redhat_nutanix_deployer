@@ -8,9 +8,9 @@
       "kind": "cluster",
       "uuid": "{{ cluster_uuid }}"
     },
-    "name": "{{ current_vm_name }}",
+    "name": "{{ vm_name }}",
     "resources": {
-      "memory_size_mib": {{ current_vm_ram }},
+      "memory_size_mib": {{ vm_ram }},
       "nic_list": [
         {
           "subnet_reference": {
@@ -19,7 +19,7 @@
           },
           "ip_endpoint_list":
             [
-              { "ip": "{{ current_vm_ip }}" }
+              { "ip": "{{ vm_ip }}" }
             ],
         }
       ],
@@ -33,11 +33,11 @@
             "device_type": "CDROM"
           }
         },
-        {{ current_vm_disk_list | to_json }}
+        {{ vm_disk_list | to_json }}
         
       ],
-      "num_sockets": {{ current_vm_num_sockets }},
-      "num_vcpus_per_socket": {{ current_vm_num_cpu_per_socket }},
+      "num_sockets": {{ vm_num_sockets }},
+      "num_vcpus_per_socket": {{ vm_num_cpu_per_socket }},
       "power_state": "ON"
     }
   }

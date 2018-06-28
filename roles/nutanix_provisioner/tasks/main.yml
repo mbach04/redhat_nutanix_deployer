@@ -1,28 +1,32 @@
 ---
 # tasks file for nutanix_provisioner
-- include: get_session_cookie.yml
+- import_tasks: get_session_cookie.yml
 
 # Collect uuids needed for VM provisioning
-- include: get_cluster_uuids.yml
-- include: get_subnet_uuids.yml
-- include: get_image_uuids.yml
-- include: define_uuids_from_names.yml
+- import_tasks: get_cluster_uuids.yml
+- import_tasks: get_subnet_uuids.yml
+- import_tasks: get_image_uuids.yml
+- import_tasks: define_uuids_from_names.yml
+- import_tasks: provision_vm.yml
+# - import_tasks: get_vms_list.yml #we may not need this task
 
 
+# Can possibly remove all things below this line
+#-------------------------------------------------------
 
-# - include: provision_vm.yml
-
-- name: Debug | list test_vms variable
-  debug: 
-    msg: "{{ groups | list }}"
-
-
-- name: Provision Test VMs
-  debug:
-    msg: "{{ hostvars[item] }}"
-  loop: "{{ groups['test'] }}"
+# - name: Debug | list test_vms variable
+#   debug: 
+#     msg: "{{ groups | list }}"
 
 
+# - name: Provision Test VMs
+#   debug:
+#     msg: "{{ hostvars[item] }}"
+#   loop: "{{ groups['test'] }}"
+
+# - name: Debug the test group
+#   debug:
+#     var: groups['test']
   
 
 

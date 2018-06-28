@@ -1,0 +1,54 @@
+#cloud-config
+# vim: syntax=yaml
+#
+
+# Module Configuration
+cloud_config_modules:
+  - resolv_conf
+
+# Hostname Configuration
+hostname: {{ vm.vm_name }}.{{ vm_net_domain }}
+
+
+
+# Group/User Configuration
+groups:
+  - cloud-users
+
+users:
+  - default
+  - name: ansible
+    groups: [ wheel ]
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    lock_passwd: false
+    ssh-authorized-keys: 
+    - {{ ansible_ssh_public_key }}
+
+# YUM Configuration
+yum_repos:
+  {{ vm_yum_repos }}
+
+#sshd Configuration
+ssh_pwauth: False
+
+# resolv.conf configuration
+#
+# This is an example file to automatically configure resolv.conf when the
+# instance boots for the first time.
+#
+# Ensure that your yaml is valid and pass this as user-data when starting
+# the instance. Also be sure that your cloud.cfg file includes this
+# configuration module in the appropriate section.
+#
+manage_resolv_conf: true
+
+resolv_conf:
+  nameservers:
+    {{ vm_net_dns }}
+  searchdomains:
+    - {{ vm_net_domain }}
+  domain: {{ vm_net_domain }}
+  options:
+    rotate: true
+    timeout: 1

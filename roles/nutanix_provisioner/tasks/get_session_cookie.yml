@@ -27,19 +27,3 @@
 
 - set_fact:
     session_cookie: "{{ login.set_cookie }}"
-
-- name: Login with session cookie test on clusters endpoint
-  uri:
-    url: "{{ api_url_v3 }}/clusters/list"
-    body:
-      kind: cluster
-      sort_order: ASCENDING
-      offset: 0
-      length: 10
-      sort_attribute: ''
-    method: POST
-    validate_certs: no
-    body_format: json
-    headers: 
-      Cookie: "{{ session_cookie }}"
-    status_code: 200

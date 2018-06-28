@@ -1,65 +1,60 @@
-- debug:
-    msg: "{{ query('template', 'vm-body.json.j2') }}"
+# Note the loop control here, set's the item var name in the template
+# with a prefix of the letters `vm`.
+# Hence all the first level items in the template that get processed
+# are referred to like `vm.vm_name` for example.
 
-- name: Create a basic VM (test1)
+- debug:
+    msg: "{{ vm_defs }}"
+- set_fact: 
+    vm_body: "{{ lookup('template', 'vm-body.yml.j2') | from_yaml }}"
+  loop: "{{ vm_defs }}"
+  register: templates
+  loop_control:
+    loop_var: vm
+
+- name: Debug | Template lookup result
+  debug:
+    msg: "{{ item.ansible_facts.vm_body }}"
+  when: global_debug
+  with_items: "{{ templates.results }}"
+
+- name: Create a VM from a template
   uri:
     url: "{{ api_url_v3 }}/vms"
     body:
-      "{{ query('template', 'vm-body.json.j2') }}"
-      # api_version: '3.0'
-      # metadata:
-      #   kind: vm
-      # spec:
-      #   cluster_reference:
-      #     kind: cluster
-      #     uuid: "{{ cluster_uuid }}"
-      #   name: "automation-test-{{ item }}"
-      #   resources:
-      #     memory_size_mib: "{{ master_memory }}"
-      #     nic_list:
-      #     - subnet_reference:
-      #         kind: subnet
-      #         uuid: "{{ subnet_uuid }}"
-      #     - ip_endpoint_list:
-      #         - ip: "{{ master_ip }}" #Specifying the IP here results in successful API call with no vm created?
-      #     disk_list:
-      #     - data_source_reference:
-      #         kind: image
-      #         uuid: "{{ rhel_binary_dvd_iso }}"
-      #       device_properties:
-      #         device_type: CDROM
-      #     - disk_size_mib:
-      #         "{{ master_disk_1_size }}"
-      #     - disk_size_mib:
-      #         "{{ master_disk_2_size }}"
-      #     - disk_size_mib:
-      #         "{{ master_disk_3_size }}"
-      #     num_sockets: "{{ master_num_sockets }}"
-      #     num_vcpus_per_socket: 1
-      #     power_state: 'ON'
-      #     guest_customization:
-      #        cloud_init:
-      #          user_data: "{{ lookup('template','cloud-init') | b64encode }}"
+      "{{ template.ansible_facts.vm_body }}"
     method: POST
     validate_certs: no
     body_format: json
-    headers: 
+    headers:
       Cookie: "{{ session_cookie }}"
     status_code: 202
   register: json_create_result
-  # with_items:
-  #   - 1
-  #   - 2
-  #   - 3
+  with_items: "{{ templates.results }}"
+  loop_control:
+    loop_var: template
+
+
+- debug:
+    var: json_create_result
+  when: global_debug
 
 - name: Display vm creation response
   debug:
-    var: json_create_result | to_yaml
+    msg: "{{ item.json.metadata.uuid }}"
   when: global_debug
+  with_items: "{{ json_create_result.results }}"
 
-# - name: Register the task uuid so we can reference this VM directly later
-#   set_fact:
-#     test_vm_uuid_1: "{{ json_create_result.json.metadata.uuid }}"
+# From here forward, need to figure out how to stash those UUIDs in something 
+# we can easily consume at the provisioning layer. Maybe gen a hosts file or something?
+# If DNS entries are solid and we know the IP's ahead of time we could do without the
+# jump between provision and configuration as long as we know the hosts are up and
+# reachable. Can use a simple ansible dns lookup filter to verify against the host file
+- name: Register the created vm uuid's for future use
+  set_fact:
+    _uuids: "{{ item.json.metadata.uuid }}"
+  with_items: "{{ json_create_result.results }}"
+  register: vm_uuids
 
-# - debug:
-#     var: test_vm_uuid_1
+- debug:
+    var: vm_uuids
