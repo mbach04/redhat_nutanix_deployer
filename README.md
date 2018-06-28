@@ -4,8 +4,11 @@ Lab deployer
 A. Deploy to external lab
 - Provision an Ansible core control/bastion node
 - Import Ansible roles / playbooks as necessary
+- Verify DNS entries are available
 - Deploy Ansible Tower (remaining tasks deploy from Tower)
+- Provision all 3 Masters
 - Deploy all 4 load balancers
+- Verify DNS entries resolve correctly
 - Deploy Quay
 - Deploy OpenShift with CNS
 - Run integration code to configure Quay with OCP deployment
@@ -17,6 +20,7 @@ B. Deploy to internal lab
 - Upload all images, RPM's and source code to Ansible core VM
 - Import Ansible roles / playbooks as necessary
 - Deploy Ansible Tower (remaining tasks deploy from Tower)
+- Provision all 3 Masters
 - Deploy all 4 load balancers
 - Deploy Quay
 - Deploy OpenShift with CNS

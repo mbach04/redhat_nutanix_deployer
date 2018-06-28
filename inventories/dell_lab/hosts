@@ -31,8 +31,10 @@ node13.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 masters
 nodes
 etcd
-#lb
+masters-lbs
+routers-lbs
 #nfs
+#lbs
 glusterfs
 
 [OSEv3:vars]
