@@ -30,5 +30,7 @@
     cluster_uuids: "{{ cluster_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
   with_items: "{{ json_clusters_result.json.entities }}"
 
-- debug:
+- name: Debug | Print cluster name/UUIDs
+  debug:
     var: cluster_uuids
+  when: global_debug

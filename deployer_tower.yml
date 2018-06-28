@@ -1,9 +1,8 @@
 ---
-- name: Deploy Ansible Tower VMs
+- name: YUM Nutanix Deployer
   hosts: localhost
   gather_facts: false
   tasks:
-
     - name: Provision Ansible Tower on Nutanix
       include_role:
         name: nutanix_provisioner
@@ -14,3 +13,4 @@
 
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
+    

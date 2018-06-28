@@ -3,16 +3,20 @@
 # Hence all the first level items in the template that get processed
 # are referred to like `vm.vm_name` for example.
 
-- debug:
-    msg: "{{ vm_defs }}"
-- set_fact: 
+- name: Debug | Print VM definitions
+  debug:
+    var: vm_defs
+  when: global_debug
+
+- name: Create fact with VM template contents
+  set_fact: 
     vm_body: "{{ lookup('template', 'vm-body.yml.j2') | from_yaml }}"
   loop: "{{ vm_defs }}"
   register: templates
   loop_control:
     loop_var: vm
 
-- name: Debug | Template lookup result
+- name: Debug | Print Template lookup result
   debug:
     msg: "{{ item.ansible_facts.vm_body }}"
   when: global_debug
@@ -35,11 +39,12 @@
     loop_var: template
 
 
-- debug:
+- name: Debug | Print VM creation result
+  debug:
     var: json_create_result
   when: global_debug
 
-- name: Display vm creation response
+- name: Debug | Display VM creation response
   debug:
     msg: "{{ item.json.metadata.uuid }}"
   when: global_debug
@@ -56,5 +61,7 @@
   with_items: "{{ json_create_result.results }}"
   register: vm_uuids
 
-- debug:
-    var: vm_uuids
+#  - name: Debug | Print VM uuids 
+#    debug:
+#     var: vm_uuids
+#   when: global_debug

@@ -7,7 +7,7 @@
 #   {'name': 'subnetB', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f1'}
 # ]
 
-- name: Get images list
+- name: Get Subnet List
   uri:
     url: "{{ api_url_v3 }}/subnets/list"
     body:
@@ -23,10 +23,12 @@
   register: json_images_result
   ignore_errors: yes
 
-- name: Stash the image UUIDs
+- name: Stash the subnet UUIDs
   set_fact:
     subnet_uuids: "{{ subnet_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
   with_items: "{{ json_images_result.json.entities }}"
 
-- debug:
+- name: Debug | Print Subnet name/UUIDs
+  debug:
     var: subnet_uuids
+  when: global_debug

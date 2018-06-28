@@ -21,9 +21,11 @@
   register: login
   ignore_errors: yes
 
-- debug:
+- name: Debug | Print Auth Cookie
+  debug:
     var: login.set_cookie
   when: global_debug
 
-- set_fact:
+- name: Set fact for Session Cookie
+  set_fact:
     session_cookie: "{{ login.set_cookie }}"

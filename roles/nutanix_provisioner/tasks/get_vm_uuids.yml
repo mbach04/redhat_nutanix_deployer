@@ -7,7 +7,7 @@
 #   {'name': 'virtualmachineB', 'uuid': '00056e15-0223-d74a-497a-ecf4bbd9b8f1'}
 # ]
 
-- name: Get vms list
+- name: Get VMs list
   uri:
     url: "{{ api_url_v3 }}/vms/list"
     body:
@@ -24,10 +24,12 @@
   ignore_errors: yes
 
 
-- name: Stash the image UUIDs
+- name: Stash the VM UUIDs
   set_fact:
     vm_uuids: "{{ vm_uuids|default([]) + [ {'name': item.spec.name, 'uuid': item.metadata.uuid } ] }}"
   with_items: "{{ json_vms_result.json.entities }}"
 
-- debug:
-    var: json_vms_result.json.entities[0].metadata.uuid
+- name: Debug | Print VM name/UUIDs
+  debug:
+    var: vm_uuids
+  when: global_debug

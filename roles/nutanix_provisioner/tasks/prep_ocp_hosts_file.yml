@@ -1,9 +1,0 @@
-# tasks file for deploy_openshift
-- name: Create OCP Hosts file from template
-  template:
-    src: templates/hosts.j2
-    dest: /etc/ansible/hosts_ocp_{{ hostvars['localhost']['env'] }}
-  run_once: true
-  delegate_to: localhost
-  tags:
-    - hosts_file

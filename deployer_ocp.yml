@@ -1,5 +1,5 @@
 ---
-- name: Nutanix/OCP Deployer
+- name: YUM Nutanix Deployer
   hosts: localhost
   gather_facts: false
   tasks:

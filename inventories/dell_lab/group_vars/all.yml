@@ -1,6 +1,6 @@
 ---
 # Control debug level
-global_debug: false
+global_debug: true
 
 # Nutanix Cluster Settings
 api_version: "3.0"
@@ -68,14 +68,14 @@ vm_net_dns:
   - '172.29.170.51'
 
 vm_net_domain: "ocp.dell.local"
-vm_yum_repos:
-  rhel-local:
-    baseurl: "http://repository.{{ vm_net_domain }}"
-    enabled: true
-    failovermethod: priority
-    gpgcheck: true
-    gpgkey: false
-    name: "{{ cluster_name }} RHEL 7 Repository"
+# vm_yum_repos:
+#   rhel-local:
+#     baseurl:
+#     enabled: true
+#     failovermethod: priority
+#     gpgcheck: true
+#     gpgkey:
+#     name: "{{ cluster_name }} RHEL 7 Repository"
 
 cloud_init_root_pass: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
 

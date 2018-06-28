@@ -9,6 +9,10 @@ ocp-master-[01:03].ocp.dell.local
 [etcd]
 ocp-master-[01:03].ocp.dell.local
 
+[masters-lbs]
+
+[routers-lbs]
+
 [nodes]
 ocp-master-[01:03].ocp.dell.local
 ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
