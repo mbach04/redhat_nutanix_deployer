@@ -8,4 +8,49 @@
 - import_tasks: get_image_uuids.yml
 - import_tasks: define_uuids_from_names.yml
 - import_tasks: provision_vm.yml
+<<<<<<< HEAD
 - import_tasks: get_vms_list.yml #we may not need this task
+=======
+# - import_tasks: get_vms_list.yml #we may not need this task
+
+
+# Can possibly remove all things below this line
+#-------------------------------------------------------
+
+# - name: Debug | list test_vms variable
+#   debug: 
+#     msg: "{{ groups | list }}"
+
+
+# - name: Provision Test VMs
+#   debug:
+#     msg: "{{ hostvars[item] }}"
+#   loop: "{{ groups['test'] }}"
+
+# - name: Debug the test group
+#   debug:
+#     var: groups['test']
+  
+
+
+# Loop to provision master VMs
+
+
+# Loop to provision infrastructure VMs
+
+
+# Loop to provision worker VMs
+
+
+# - include:  provision_lbs.yml
+#   when: deploy_openshift
+
+# - include:  provision_masters.yml
+#   when: deploy_openshift
+
+# - include:  provision_infras.yml
+#   when: deploy_openshift
+
+# - include:  provision_nodes.yml
+#   when: deploy_openshift
+>>>>>>> dba3d66c682ed15c806afa75574ca84750782b49

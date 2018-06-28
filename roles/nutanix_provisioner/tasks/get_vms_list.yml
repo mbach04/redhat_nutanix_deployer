@@ -20,6 +20,7 @@
 
 - debug:
     var: vms_result
+  when: global_debug
 
 - name: Stash the VM UUIDs
   set_fact:
@@ -29,6 +30,7 @@
 - name: Show the vms dict
   debug:
     var: vms_uuids
+  when: global_debug
 
 - name: Add the list of vms to hosts
   add_host:
@@ -37,6 +39,13 @@
     uuid: "{{ item.uuid }}"
   with_items: "{{ vms_uuids }}"
 
+<<<<<<< HEAD
 # - name: Debug the hostvars
 #  debug:
 #    var: hostvars
+=======
+- name: Debug the hostvars
+  debug:
+    var: hostvars
+  when: global_debug
+>>>>>>> dba3d66c682ed15c806afa75574ca84750782b49

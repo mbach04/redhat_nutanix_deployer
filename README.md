@@ -1,4 +1,32 @@
-# Nutanix Provisioner
+Lab deployer
+------------------
+### High level Order of operations
+A. Deploy to external lab
+- Provision an Ansible core control/bastion node
+- Import Ansible roles / playbooks as necessary
+- Verify DNS entries are available
+- Deploy Ansible Tower (remaining tasks deploy from Tower)
+- Provision all 3 Masters
+- Deploy all 4 load balancers
+- Verify DNS entries resolve correctly
+- Deploy Quay
+- Deploy OpenShift with CNS
+- Run integration code to configure Quay with OCP deployment
+- Deploy integrated Open Innovation Labs CI/CD tools (Gitlab, Nexus, Jenkins, example project)
+- Collect and export all required images, RPM's, and source code
+
+B. Deploy to internal lab
+- Provision an Ansible core control/bastion node
+- Upload all images, RPM's and source code to Ansible core VM
+- Import Ansible roles / playbooks as necessary
+- Deploy Ansible Tower (remaining tasks deploy from Tower)
+- Provision all 3 Masters
+- Deploy all 4 load balancers
+- Deploy Quay
+- Deploy OpenShift with CNS
+- Deploy integrated Open Innovation Labs CI/CD tools (Gitlab, Nexus, Jenkins, example project)
+
+### Hash the password for cloud-config (optional, this can be left blank)
 
 Use the following command on a RHEL host to generate a SHA-512 hashed password to be cloud_init_root_pass used with the `kvm` RHEL image.
 
@@ -6,7 +34,7 @@ Use the following command on a RHEL host to generate a SHA-512 hashed password t
 
 Set the resulting string equal to `cloud_init_root_pass` in `group_vars/*/all.yaml`.
 
-## Ansible Host Prep
+### Ansible Core Host Prep
 [Refer to OpenShift host prep documentation here](https://docs.openshift.com/container-platform/3.9/install_config/install/host_preparation.html "OpenShift Documentation")
 
 
@@ -29,7 +57,7 @@ Set the resulting string equal to `cloud_init_root_pass` in `group_vars/*/all.ya
 # yum install atomic-openshift-utils
 ```
 
-## SSH key prep
+### SSH key prep
 
 From your bastion node (or the node you wish to execute ansible from)  
 First generate an ssh key pair
@@ -45,7 +73,7 @@ First generate an ssh key pair
 ```
 
 
-## Encrypting secrets:
+### Encrypting secrets:
 
 Single variable encryption:
 ```

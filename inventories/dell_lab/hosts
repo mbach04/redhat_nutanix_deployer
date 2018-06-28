@@ -28,6 +28,13 @@ node13.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 masters
 nodes
 etcd
+<<<<<<< HEAD
+=======
+masters-lbs
+routers-lbs
+#nfs
+#lbs
+>>>>>>> dba3d66c682ed15c806afa75574ca84750782b49
 glusterfs
 
 [OSEv3:vars]
@@ -36,9 +43,12 @@ glusterfs
 # Gluster CNS Vars
 openshift_storage_glusterfs_is_native=true
 openshift_storage_glusterfs_storageclass=true
-openshift_storage_glusterfs_heketi_is_native=true
-openshift_storage_glusterfs_heketi_executor=ssh
-openshift_storage_glusterfs_heketi_ssh_port=22
-openshift_storage_glusterfs_heketi_ssh_user=root
-openshift_storage_glusterfs_heketi_ssh_sudo=false
-openshift_storage_glusterfs_heketi_ssh_keyfile="/root/.ssh/id_rsa" #Need to check this
+# openshift_storage_glusterfs_heketi_is_native=true
+# openshift_storage_glusterfs_heketi_executor=ssh
+# openshift_storage_glusterfs_heketi_ssh_port=22
+# openshift_storage_glusterfs_heketi_ssh_user=root
+# openshift_storage_glusterfs_heketi_ssh_sudo=false
+# openshift_storage_glusterfs_heketi_ssh_keyfile="/root/.ssh/id_rsa" #Need to check this
+
+openshift_metrics_storage_kind=dynamic
+openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
