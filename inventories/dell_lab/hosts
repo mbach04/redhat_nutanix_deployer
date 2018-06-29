@@ -1,7 +1,7 @@
 # This is an example of an OpenShift-Ansible host inventory
 
 [repository]
-repository.ocp.dell.local
+#repository.ocp.dell.local
 
 [masters]
 ocp-master-[01:03].ocp.dell.local
@@ -10,22 +10,25 @@ ocp-master-[01:03].ocp.dell.local
 ocp-master-[01:03].ocp.dell.local
 
 [masters-lbs]
-
+ocp-lb-01.ocp.dell.local
+ocp-lb-02.ocp.dell.local
 [routers-lbs]
+ocp-lb-03.ocp.dell.local
+ocp-lb-04.ocp.dell.local
 
 [nodes]
 ocp-master-[01:03].ocp.dell.local
 ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 ocp-node-[01:03].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
-node11.example.com openshift_schedulable=True
-node12.example.com openshift_schedulable=True
-node13.example.com openshift_schedulable=True
+#node11.example.com openshift_schedulable=True
+#node12.example.com openshift_schedulable=True
+#node13.example.com openshift_schedulable=True
 
 [glusterfs]
-node11.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
-node12.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
-node13.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+#node11.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+#node12.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+#node13.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 
 # Create an OSEv3 group that contains the masters and nodes groups
 [OSEv3:children]
@@ -53,3 +56,19 @@ openshift_storage_glusterfs_storageclass=true
 
 openshift_metrics_storage_kind=dynamic
 openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
+
+# Configure master API and console ports.
+#openshift_master_api_port=8443
+#openshift_master_console_port=8443
+
+#lb_masters_vip
+openshift_master_cluster_hostname=masters-internal.ocp.dell.local
+#lb_masters_vip
+openshift_master_cluster_public_hostname=masters.ocp.dell.local
+openshift_master_default_subdomain=apps.ocp.dell.local
+
+# KeepaliveD load balancer vars
+static_pod_manifest_path=/root
+static_pod_config_path=/root
+lb_masters_vip='172.29.171.111'
+lb_routers_vip='172.29.171.112'
