@@ -12,6 +12,7 @@ ocp-master-[01:03].ocp.dell.local
 [masters-lbs]
 ocp-lb-01.ocp.dell.local
 ocp-lb-02.ocp.dell.local
+
 [routers-lbs]
 ocp-lb-03.ocp.dell.local
 ocp-lb-04.ocp.dell.local

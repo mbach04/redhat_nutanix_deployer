@@ -19,7 +19,8 @@ prism_password: !vault |
 # Global VM Settings
 cluster_name: "SOFATL"
 subnet_name: "VMtest"
-image_name: "RHEL_Server_7.5_KVM_Guest"
+image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
+# image_name: "RHEL_Server_7.5_KVM_Guest"
 # image_name: RHEL_Server_7.5
 
 # VM Specs
