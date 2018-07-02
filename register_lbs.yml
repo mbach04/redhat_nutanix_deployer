@@ -1,0 +1,16 @@
+---
+- hosts: 
+    - masters-lbs
+    - routers-lbs
+  gather_facts: true
+
+- name: Masters Load Balancers RHSM Register
+  hosts:
+    - masters-lbs
+    - routers-lbs
+  gather_facts: true
+  become: yes
+  tasks:
+    - name: Register to RHSM
+      include_role:
+        name: rhsm-registration

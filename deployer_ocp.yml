@@ -1,9 +1,9 @@
 ---
-- name: YUM Nutanix Deployer
+- name: OCP VMs Provisioner
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Provision OCP on Nutanix
+    - name: Provision OCP VMs on Nutanix
       include_role:
         name: nutanix_provisioner
       vars:

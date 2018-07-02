@@ -1,0 +1,26 @@
+---
+- name: COMMON | rhn_registration | Register host to the Red Hat Network (RHN)
+  redhat_subscription:
+    state: present
+    username: "{{ rhn_user }}"
+    password: "{{ rhn_password }}"
+    autosubscribe: false
+  register: task_result
+  until: task_result is succeeded
+  retries: 10
+  delay: 5
+
+# Pull SKU from available subscription pool (Openshift)
+- name: COMMON | rhn_registration | Search for available OpenShift subscription
+  shell: /usr/bin/subscription-manager list --all --available --matches="*OpenShift Container*" | awk '/Pool ID/ {print $3}' | head -1
+  register: pool_id_openshift
+  ignore_errors: yes
+
+# Attaching host to Pool ID from above
+- name: COMMON | rhn_registration | Attach machine to Pool ID (OpenShift)
+  command: /usr/bin/subscription-manager attach --pool={{ pool_id_openshift.stdout }}
+  register: task_result
+  until: task_result.rc == 0
+  retries: 10
+  delay: 1
+  any_errors_fatal: true
