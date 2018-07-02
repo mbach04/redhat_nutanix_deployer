@@ -1,0 +1,11 @@
+- name: OCP-prereqs | Install OCP Pre-req packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ ocp_packages }}"
+
+- name: OCP-prereqs | Yum Update
+  command: yum update
+
+- name: OCP-prereqs | Restart
+  command: systemctl reboot

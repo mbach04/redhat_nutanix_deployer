@@ -1,5 +1,4 @@
----
-- name: COMMON | rhn_registration | Register host to the Red Hat Network (RHN)
+- name: COMMON | register-openshift | Register host to the Red Hat Network (RHN)
   redhat_subscription:
     state: present
     username: "{{ rhn_user }}"
@@ -12,9 +11,14 @@
 
 # Pull SKU from available subscription pool (Openshift)
 - name: COMMON | rhn_registration | Search for available OpenShift subscription
-  shell: /usr/bin/subscription-manager list --all --available --matches="*OpenShift Container*" | awk '/Pool ID/ {print $3}' | head -1
+  shell: /usr/bin/subscription-manager list --all --available --matches "*OpenShift*" --matches "Employee*"| awk '/Pool ID/ {print $3}' | head -1
+  # shell: /usr/bin/subscription-manager list --available --matches "*OpenShift*"
   register: pool_id_openshift
   ignore_errors: yes
+
+- debug:
+    var: pool_id_openshift
+  when: global_debug
 
 # Attaching host to Pool ID from above
 - name: COMMON | rhn_registration | Attach machine to Pool ID (OpenShift)

@@ -10,17 +10,18 @@ ocp-master-[01:03].ocp.dell.local
 ocp-master-[01:03].ocp.dell.local
 
 [masters-lbs]
-ocp-lb-01.ocp.dell.local
-ocp-lb-02.ocp.dell.local
+ocp-master-01.ocp.dell.local
+ocp-master-02.ocp.dell.local
+ocp-master-03.ocp.dell.local
 
 [routers-lbs]
-ocp-lb-03.ocp.dell.local
-ocp-lb-04.ocp.dell.local
+ocp-lb-01.ocp.dell.local
+ocp-lb-02.ocp.dell.local
 
 [nodes]
 ocp-master-[01:03].ocp.dell.local
 ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ocp-node-[01:03].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
 #node11.example.com openshift_schedulable=True
 #node12.example.com openshift_schedulable=True
@@ -43,7 +44,12 @@ routers-lbs
 glusterfs
 
 [OSEv3:vars]
+openshift_release="3.9"
+
+
+
 #custom vars
+
 
 # Gluster CNS Vars
 openshift_storage_glusterfs_is_native=true
@@ -73,3 +79,4 @@ static_pod_manifest_path=/root
 static_pod_config_path=/root
 lb_masters_vip='172.29.171.111'
 lb_routers_vip='172.29.171.112'
+openshift_hosted_router_selector='node-role.kubernetes.io/infra=true'
