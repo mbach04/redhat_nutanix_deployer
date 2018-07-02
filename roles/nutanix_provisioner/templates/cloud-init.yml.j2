@@ -1,7 +1,7 @@
 #cloud-config
 # vim: syntax=yaml
 #
-
+ 
 # Module Configuration
 cloud_config_modules:
   - resolv_conf
@@ -39,13 +39,14 @@ ssh_pwauth: False
 # the instance. Also be sure that your cloud.cfg file includes this
 # configuration module in the appropriate section.
 #
+
 manage_resolv_conf: true
 
 resolv_conf:
   nameservers:
-    {{ vm_net_dns }}
-  searchdomains:
-    - {{ vm_net_domain }}
+{% for dnshost in vm_net_dns %}
+    - {{ dnshost }}
+{% endfor %}  
   domain: {{ vm_net_domain }}
   options:
     rotate: true
