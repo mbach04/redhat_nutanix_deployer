@@ -26,6 +26,15 @@ B. Deploy to internal lab
 - Deploy OpenShift with CNS
 - Deploy integrated Open Innovation Labs CI/CD tools (Gitlab, Nexus, Jenkins, example project)
 
+
+### RHEL KVM Disk Image
+Resize root size for qcow2 image to 76G:
+`qemu-img resize rhel-server-7.5-update-1-x86_64-kvm.qcow2 +65G`
+
+Check qcow2 image:
+`qemu-img info rhel-server-7.5-update-1-x86_64-kvm.qcow2`
+
+
 ### Hash the password for cloud-config (optional, this can be left blank)
 
 Use the following command on a RHEL host to generate a SHA-512 hashed password to be cloud_init_root_pass used with the `kvm` RHEL image.

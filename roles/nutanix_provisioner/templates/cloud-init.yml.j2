@@ -6,6 +6,9 @@
 cloud_config_modules:
   - resolv_conf
 
+#Disk configuration
+resize_rootfs: True
+  
 # Hostname Configuration
 hostname: {{ vm.vm_name }}.{{ vm_net_domain }}
 
