@@ -3,7 +3,7 @@
   gather_facts: true
 
 - name: Masters Load Balancers Deployer
-  hosts: all
+  hosts: masters-lbs
   gather_facts: true
   become: yes
   tasks:
@@ -12,7 +12,7 @@
         name: deploy-masters-loadbalancers
 
 - name: Routers Load Balancers Deployer
-  hosts: all
+  hosts: routers-lbs
   gather_facts: true
   become: yes
   tasks:

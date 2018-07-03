@@ -35,7 +35,7 @@
     permanent: yes
     state: enabled
     immediate: yes
-  when: os_firewall_use_firewalld      
+  when: os_firewall_use_firewalld 
   
 - name: open VRRP port - iptables
   iptables: 
@@ -54,6 +54,7 @@
   when: not os_firewall_use_firewalld    
   
 - name: reload iptables
+  become: yes
   service:
     name: iptables
     state: restarted
