@@ -1,4 +1,4 @@
-- name: COMMON | register-openshift | Register host to the Red Hat Network (RHN)
+- name: OCP Prereqs | register-openshift | Register host to the Red Hat Network (RHN)
   redhat_subscription:
     state: present
     username: "{{ rhn_user }}"
@@ -8,23 +8,29 @@
   until: task_result is succeeded
   retries: 10
   delay: 5
+  tags:
+    - register
 
 # Pull SKU from available subscription pool (Openshift)
-- name: COMMON | rhn_registration | Search for available OpenShift subscription
+- name: OCP Prereqs | rhn_registration | Search for available OpenShift subscription
   shell: /usr/bin/subscription-manager list --all --available --matches "*OpenShift*" --matches "Employee*"| awk '/Pool ID/ {print $3}' | head -1
   # shell: /usr/bin/subscription-manager list --available --matches "*OpenShift*"
   register: pool_id_openshift
   ignore_errors: yes
+  tags:
+    - register
 
 - debug:
     var: pool_id_openshift
   when: global_debug
 
 # Attaching host to Pool ID from above
-- name: COMMON | rhn_registration | Attach machine to Pool ID (OpenShift)
+- name: OCP Prereqs | rhn_registration | Attach machine to Pool ID (OpenShift)
   command: /usr/bin/subscription-manager attach --pool={{ pool_id_openshift.stdout }}
   register: task_result
   until: task_result.rc == 0
   retries: 10
   delay: 1
   any_errors_fatal: true
+  tags:
+    - register
