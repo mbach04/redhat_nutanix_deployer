@@ -2,14 +2,12 @@
 - hosts: 
     - masters
     - nodes
-    - routers-lbs
   gather_facts: true
 
 - name: OCP Hosts, Handle Prereqs
   hosts:
     - masters
     - nodes
-    - routers-lbs
   gather_facts: true
   become: yes
   tasks:

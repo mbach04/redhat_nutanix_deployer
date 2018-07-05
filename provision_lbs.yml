@@ -1,0 +1,16 @@
+---
+- name: LBs VMs Provisioner
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Provision LBs VMs on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_lbs }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+    

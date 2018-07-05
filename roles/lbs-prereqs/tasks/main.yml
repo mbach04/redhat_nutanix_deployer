@@ -1,0 +1,3 @@
+- import_tasks: register-lbs.yml
+- import_tasks: configure-repos.yml
+- import_tasks: install-packages.yml

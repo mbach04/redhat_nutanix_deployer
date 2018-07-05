@@ -1,27 +1,27 @@
 #- load ip_vs iptables and ipset modules
 
-- name: make sure modules are loaded at boot
+- name: Deploy Masters LBs | make sure modules are loaded at boot
   template: 
     src: keepalived-pod.conf
     dest: /etc/modules-load.d/keepalived-pod.conf
     
-- name: make sure ip_vs is loaded
+- name: Deploy Masters LBs | make sure ip_vs is loaded
   modprobe:
     name: ip_vs
     state: present
 
-- name: make sure ipset is loaded
+- name: Deploy Masters LBs | make sure ipset is loaded
   modprobe:
     name: ip_set
     state: present    
 
-- name: install python-firewall
+- name: Deploy Masters LBs | install python-firewall
   package:
     name: python-firewall
     state: present
   when: os_firewall_use_firewalld        
 
-- name: open VRRP port - firewalld
+- name: Deploy Masters LBs | open VRRP port - firewalld
   firewalld:
     rich_rule: 'rule protocol value="vrrp" accept'
     permanent: true
@@ -29,7 +29,7 @@
     immediate: true
   when: os_firewall_use_firewalld   
 
-- name: 'Open Firewalld for HAproxy use'
+- name: Deploy Masters LBs | 'Open Firewalld for HAproxy use'
   firewalld: 
     port: "{{ openshift_master_api_port }}"
     permanent: yes
@@ -37,14 +37,14 @@
     immediate: yes
   when: os_firewall_use_firewalld 
   
-- name: open VRRP port - iptables
+- name: Deploy Masters LBs | open VRRP port - iptables
   iptables: 
     chain: INPUT
     protocol: vrrp
     jump: ACCEPT
   when: not os_firewall_use_firewalld
   
-- name: open iptables for HAproxy use
+- name: Deploy Masters LBs | open iptables for HAproxy use
   iptables: 
     chain: INPUT 
     jump: ACCEPT 
@@ -53,56 +53,56 @@
     comment: 'Accept HAProxy traffic for masters'
   when: not os_firewall_use_firewalld    
   
-- name: reload iptables
+- name: Deploy Masters LBs | reload iptables
   become: yes
   service:
     name: iptables
     state: restarted
   when: not os_firewall_use_firewalld  
     
-- name: Enable IPv4 forwarding sysctl
+- name: Deploy Masters LBs | Enable IPv4 forwarding sysctl
   sysctl: 
     name: net.ipv4.ip_forward 
     value: 1 
     sysctl_set: yes  
 
-- name: Enable binding to non local ip
+- name: Deploy Masters LBs | Enable binding to non local ip
   sysctl: 
     name: net.ipv4.ip_nonlocal_bind 
     value: 1 
     sysctl_set: yes      
   
-- name: 'Enable syslog logging' 
+- name: Deploy Masters LBs | 'Enable syslog logging' 
   copy:
     src: rsyslog_haproxy.conf
     dest: /etc/rsyslog.d/haproxy.conf
     
-- name: 'restart rsyslog'
+- name: Deploy Masters LBs | 'restart rsyslog'
   service:
     name: rsyslog
     state: restarted          
 
-- name: make sure conf dir is present
+- name: Deploy Masters LBs | make sure conf dir is present
   file:
     name: "{{ static_pod_config_path }}"
     state: directory 
     
-- name: create masters keepalived configuration
+- name: Deploy Masters LBs | create masters keepalived configuration
   template:
     src: masters-keepalived.conf.j2
     dest: "{{ static_pod_config_path }}/masters-keepalived.conf"
     
-- name: create the masters haproxy configuration  
+- name: Deploy Masters LBs | create the masters haproxy configuration  
   template:
     src: masters-haproxy.conf.j2
     dest: "{{ static_pod_config_path }}/masters-haproxy.conf"  
 
-- name: make sure pod dir is present
+- name: Deploy Masters LBs | make sure pod dir is present
   file:
     name: "{{ static_pod_manifest_path }}"
     state: directory
 
-- name: create masters keepalived pod definition
+- name: Deploy Masters LBs | create masters keepalived pod definition
   template:
     src: masters-keepalived-pod.yaml.j2
     dest: "{{ static_pod_manifest_path }}/masters-keepalived-pod.yaml"

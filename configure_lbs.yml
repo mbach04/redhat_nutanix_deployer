@@ -1,0 +1,16 @@
+---
+- hosts: 
+    - routers-lbs
+    - masters-lbs
+  gather_facts: true
+
+- name: LB Hosts, Handle Prereqs
+  hosts:
+    - routers-lbs
+    - masters-lbs
+  gather_facts: true
+  become: yes
+  tasks:
+    - name: Handle Load Balancer Prereqs
+      include_role:
+        name: lbs-prereqs
