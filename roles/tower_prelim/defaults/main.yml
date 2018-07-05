@@ -1,0 +1,22 @@
+---
+## remove this var and set cluster:True for clustered install
+tower_node: "192.168.122.137"
+
+## need these regardless of single node/clustered install
+pull_tarball: "True"
+cluster: "True"
+domain: "ocp.dell.local"
+tower_license: "license.txt"
+tower_artifact_url: "https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz"
+tower_install_user: "ansible"
+inventory_cluster: "inventory_cluster.j2"
+inventory_allinone: "inventory_allinone.j2"
+ansible_tower_tar_name: "ansible-tower-setup-bundle-latest.el7.tar.gz"
+tower_version: "ansible-tower-setup-bundle-3.2.5-1.el7"
+ansible_tower_tar_path: "/tmp/{{ ansible_tower_tar_name }}"
+tower_install_user_home_dir: "/home/ansible"
+pg_port: "5432"
+pg_pw: "redhat"
+rabbitmq_pw: "redhat"
+admin_tower_pw: "redhat"
+admin_tower_user: "admin"

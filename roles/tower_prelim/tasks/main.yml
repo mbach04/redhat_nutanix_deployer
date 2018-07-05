@@ -1,0 +1,88 @@
+---
+- name: for internet reachable installs include the tarball pull
+  include_tasks: pull_tower_tarball.yml
+  when:
+  - pull_tarball == 'True'
+  - inventory_hostname in groups['tower_nodes'] | first
+
+- name: copy the tarball to the first tower node
+  copy:
+    src: "{{ ansible_tower_tar_path }}"
+    dest: "{{ tower_install_user_home_dir }}"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_user }}"
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: unpack tower tarball {{ ansible_tower_tar_name }}
+  unarchive:
+    src: "{{ tower_install_user_home_dir }}/{{ ansible_tower_tar_name }}"
+    dest: "{{ tower_install_user_home_dir }}"
+    remote_src: yes 
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: copy {{ inventory_allinone }} to {{ tower_install_user_home_dir }}/{{ tower_version }}
+  template:
+    src: "{{ inventory_allinone }}"
+    dest: "{{ tower_install_user_home_dir }}/{{ tower_version }}/inventory_custom"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_user }}"
+    force: yes
+  when:
+  - inventory_hostname in groups['tower_nodes'] | first
+  - cluster == 'False'
+
+- name: copy {{ inventory_cluster }} to {{ tower_install_user_home_dir }}/{{ tower_version }}
+  template:
+    src: "{{ inventory_cluster }}"
+    dest: "{{ tower_install_user_home_dir }}/{{ tower_version }}/inventory_custom"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_user }}"
+    force: yes
+  when:
+  - inventory_hostname in groups['tower_nodes'] | first
+  - cluster == 'True'
+
+- name: insure the tower nodes have ansible installed
+  become: true
+  become_user: root
+  yum:
+    name: ansible
+    state: present
+
+- name: copy custom installer script to first tower node
+  copy:
+    src: files/ansible_tower_custom.sh
+    dest: "{{ tower_install_user_home_dir }}/{{ tower_version }}"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_user }}"
+    mode: 0755 
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: install tower 
+  shell: "./ansible_tower_custom.sh"
+  args:
+    chdir: "{{ tower_install_user_home_dir }}/{{ tower_version }}"
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+
+- name: add eula acceptance to license before posting to tower api
+  lineinfile:
+    path: files/license.txt
+    regexp: '^{'
+    insertafter: '^{'
+    line: '{ "eula_accepted" : "true",'
+  delegate_to: localhost
+
+- name: post the tower license to the api
+  uri:
+    url: "https://{{ inventory_hostname }}.{{ domain }}/api/v2/config/"
+    method: POST
+    user: "{{ admin_tower_user }}"
+    password: "{{ admin_tower_pw }}"
+    body: "{{ lookup('file', '{{ tower_license }}') }}"
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    validate_certs: false
+  when: inventory_hostname in groups['tower_nodes'] | first
+ 
