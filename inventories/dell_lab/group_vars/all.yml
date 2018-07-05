@@ -29,7 +29,8 @@ image_name: RHEL Server 7.5 KVM Guest May 2018 Update
 
 vm_defs_repo:
   # RPM Repository
-  -  {vm_name: repository, vm_ip: '172.29.171.100', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
+  # -  {vm_name: repository, vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
+  -  {vm_name: repository1, vm_ip: '172.29.171.99', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
 
 vm_defs_tower:
   # Ansible Tower
@@ -74,14 +75,31 @@ vm_net_cidr: "24"
 vm_net_gateway: "172.29.171.1"
 vm_net_domain: "ocp.dell.local"
 
-# vm_yum_repos:
-#   rhel-local:
-#     baseurl:
-#     enabled: true
-#     failovermethod: priority
-#     gpgcheck: true
-#     gpgkey:
-#     name: "{{ cluster_name }} RHEL 7 Repository"
+vm_yum_repos:
+  - reponame: "local_fast_datapath"
+    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-fast-datapath-rpms"
+    enabled: true
+    failovermethod: priority
+    gpgcheck: false
+    name: "{{ cluster_name }} RHEL 7 Fast Datapath Repository"
+  - reponame: "local_server_extras"
+    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-server-extras-rpms"
+    enabled: true
+    failovermethod: priority
+    gpgcheck: false
+    name: "{{ cluster_name }} RHEL 7 Server Extras Repository"
+  - reponame: "local_ose_3.9"
+    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-server-ose-3.9-rpms"
+    enabled: true
+    failovermethod: priority
+    gpgcheck: false
+    name: "{{ cluster_name }} RHEL 7 OSE 3.9 Repository"
+  - reponame: "local_server"
+    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-server-rpms"
+    enabled: true
+    failovermethod: priority
+    gpgcheck: false
+    name: "{{ cluster_name }} RHEL 7 Server Repository"
 
 cloud_init_root_pass: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
 

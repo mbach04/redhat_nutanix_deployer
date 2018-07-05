@@ -5,12 +5,14 @@
 # Module Configuration
 cloud_config_modules:
   - resolv_conf
+  - yum_add_repo
 
 #Disk configuration
 resize_rootfs: True
   
 # Hostname Configuration
 hostname: {{ vm.vm_name }}.{{ vm_net_domain }}
+
 
 # Group/User Configuration
 groups:
@@ -27,8 +29,16 @@ users:
     - {{ ansible_ssh_public_key }}
 
 # YUM Configuration
-# yum_repos:
-#   
+# Using a list of dicionary
+yum_repos:
+{% for repo in vm_yum_repos %}
+  {{ repo.reponame }}:
+    baseurl: {{ repo.baseurl }}
+    enabled: {{ repo.enabled }}
+    failovermethod: {{ repo.failovermethod }}
+    gpgcheck: {{ repo.gpgcheck }}
+    name: {{ repo.name }}
+{% endfor %}  
 
 #sshd Configuration
 ssh_pwauth: False

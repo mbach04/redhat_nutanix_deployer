@@ -1,4 +1,5 @@
 ---
+# Deploy the VM
 - name: YUM Nutanix Deployer
   hosts: localhost
   gather_facts: false
@@ -13,7 +14,22 @@
 
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
+
+# Deploy ansible private key to VM
+- name: Ansible private key
+  hosts: repository
+  remote_user: ansible
+  become: yes
+  tasks:
+    - name: Deploy private key to server
+      copy:
+        content: "{{ ansible_ssh_private_key }}"
+        dest: /home/ansible/.ssh/id_rsa
+        owner: ansible
+        group: ansible
+        mode: 0600
     
+# Configure the VM
 - name: YUM Nutanix Configuration
   hosts: repository
   remote_user: ansible
@@ -26,7 +42,7 @@
   vars:
     openshift_repos:
       - "rhel-7-server-rpms"                                                                                     
-      - "rhel-7-server-extras-rpms"                                                                              
+      - "rhel-7-server-extras-rpms"
       - "rhel-7-server-ose-3.9-rpms" 
       - "rhel-7-fast-datapath-rpms"
     repo_disk_dev: "/dev/sdb"
@@ -35,8 +51,21 @@
     repo_dir: "/repos"
     yum_repo_dir: "{{ repo_dir }}/yum"
     docker_repo_dir: "{{ repo_dir }}/docker"
+    base_packages:
+      - yum-utils
+      - createrepo
+      - docker
+      - git
+      - httpd
+      - ansible
 
   tasks:
+    - name: Remove self-referencing yum repos defined from cloud-init
+      yum_repository:
+        name: "{{ item }}"
+        state: absent
+        enabled: no
+      loop: "{{ vm_yum_repos | map(attribute='reponame') | list }}"
 
     - name: Define partition for repository storage
       parted:
@@ -71,7 +100,7 @@
 
     - name: Import GPG Key
       shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
-      vars:
+      args:
         warn: no
 
     - name: Register with subscription-manager
@@ -95,18 +124,24 @@
 
     - name: Install Packages for repository creation
       yum:
-        name: "{{ packages }}"
-      vars:
-        packages:
-          - yum-utils
-          - createrepo
-          - docker
-          - git
-          - httpd
+        name: "{{ base_packages }}"
+        state: installed     
 
-    - name: Download repositories
+    - name: Async Download of repositories
       shell: "reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ yum_repo_dir }}"
+      async: 43200
+      poll: 5
+      register: "async_repo_download"
       loop: "{{ openshift_repos }}"
+
+    - name: Check Download status
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ async_repo_download.results }}"
+      register: async_poll_results
+      until: async_poll_results.finished
+      retries: 30
+
 
     - name: Create YUM repositories
       shell: "createrepo -v {{ yum_repo_dir }}/{{ item }} -o {{ yum_repo_dir }}/{{ item }}"
@@ -120,14 +155,6 @@
     
     - name: Set context rule on directory
       shell: "restorecon -R {{ repo_dir }}"
-
-    - name: Create directories in web dir
-      file:
-        path: "{{ item }}"
-        state: directory
-      loop:
-        - "/var/www/html/yum"
-        - "/var/www/html/docker"
 
     - name: Create softlink from repo dir to web dir
       file:
