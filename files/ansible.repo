@@ -1,0 +1,11 @@
+[rhel-7-server]
+name = rhel-7-server
+baseurl = http://repository.ocp.dell.local/repos/yum/rhel-7-server-rpms/
+enabled = 1
+gpgcheck = 0
+
+[rhel-7-server-extras]
+name = rhel-7-server-extras
+baseurl = http://repository.ocp.dell.local/repos/yum/rhel-7-server-extras-rpms/
+enabled = 1
+gpgcheck = 0 
