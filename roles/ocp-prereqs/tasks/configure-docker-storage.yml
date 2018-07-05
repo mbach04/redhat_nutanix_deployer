@@ -1,0 +1,22 @@
+- name: OCP-prereqs | configure docker storage setup file
+  lineinfile:
+    path: /etc/sysconfig/docker-storage-setup
+    line: "{{ item }}"
+  with_items:
+    - DEVS=/dev/sdb
+    - VG=docker-vg
+
+- name: OCP-prereqs | remove docker overlay2 line
+  lineinfile:
+    path: /etc/sysconfig/docker-storage-setup
+    line: "STORAGE_DRIVER=overlay2"
+    state: absent
+
+- name: OCP-prereqs | Run docker storage setup
+  command: docker-storage-setup
+
+- name: OCP-prereqs | Start and Enable Docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
