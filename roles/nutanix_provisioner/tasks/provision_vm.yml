@@ -46,10 +46,29 @@
 
 - name: Debug | Display VM creation response
   debug:
-    msg: "{{ item.json.metadata.uuid }}"
+    msg: "VM UUID: {{ item.json.metadata.uuid }}"
   when: global_debug
   with_items: "{{ json_create_result.results }}"
 
+- name: Debug | Display VM creation task uuid
+  debug:
+    msg: "Task UUID: {{ item.json.status.execution_context.task_uuid }}"
+  when: global_debug
+  with_items: "{{ json_create_result.results }}"
+
+- name: Register the vm creation task uuid for future use
+  set_fact:
+    _uuids: "{{ item.json.status.execution_context.task_uuid }}"
+  with_items: "{{ json_create_result.results }}"
+  register: vm_create_tasks
+
+- name: Wait for hosts to come up on port 22
+  wait_for:
+    port: 22
+    delay: 5
+    host: "{{ item.vm_name }}.{{ vm_net_domain }}"
+  loop: "{{ vm_defs }}"
+  
 # From here forward, need to figure out how to stash those UUIDs in something 
 # we can easily consume at the provisioning layer. Maybe gen a hosts file or something?
 # If DNS entries are solid and we know the IP's ahead of time we could do without the
