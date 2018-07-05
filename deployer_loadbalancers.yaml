@@ -2,20 +2,51 @@
 - hosts: all
   gather_facts: true
 
-- name: Masters Load Balancers Deployer
+# - name: Masters Load Balancers Deployer
+#   hosts: masters-lbs
+#   gather_facts: true
+#   become: yes
+#   tasks:
+#     - name: Deploy Masters LBs
+#       include_role:
+#         name: deploy-masters-loadbalancers
+
+# - name: Routers Load Balancers Deployer
+#   hosts: routers-lbs
+#   gather_facts: true
+#   become: yes
+#   tasks:
+#     - name: Deploy Routers LBs
+#       include_role:
+#         name: deploy-routers-loadbalancers
+
+- name: Deploy Masters Loadbalancer
   hosts: masters-lbs
   gather_facts: true
   become: yes
+  vars: 
+    ports:
+      - "{{ lb_master_port }}/tcp"
+    lb_type: master
+    haproxy_template: master-haproxy.conf.j2
+    lb_vip: "{{ lb_masters_vip }}" 
   tasks:
-    - name: Deploy Masters LBs
+    - name: Deploy Masters Loadbalancer
       include_role:
-        name: deploy-masters-loadbalancers
+        name: deploy-ocp-loadbalancers
 
-- name: Routers Load Balancers Deployer
+- name: Deploy Routers Loadbalancer
   hosts: routers-lbs
   gather_facts: true
   become: yes
+  vars: 
+    ports:
+      - 80/tcp
+      - 443/tcp
+    lb_type: infranode
+    haproxy_template: infranode-haproxy.conf.j2
+    lb_vip: "{{ lb_routers_vip }}" 
   tasks:
-    - name: Deploy Routers LBs
-      include_role:
-        name: deploy-routers-loadbalancers
+    - name: Deploy Routers Loadbalancer
+      include_role: 
+        name: deploy-ocp-loadbalancers

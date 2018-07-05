@@ -45,6 +45,11 @@ glusterfs
 
 [OSEv3:vars]
 openshift_release="3.9"
+openshift_deployment_type=openshift-enterprise
+ansible_become=true
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+
 
 
 
@@ -52,8 +57,8 @@ openshift_release="3.9"
 
 
 # Gluster CNS Vars
-openshift_storage_glusterfs_is_native=true
-openshift_storage_glusterfs_storageclass=true
+#openshift_storage_glusterfs_is_native=true
+#openshift_storage_glusterfs_storageclass=true
 # openshift_storage_glusterfs_heketi_is_native=true
 # openshift_storage_glusterfs_heketi_executor=ssh
 # openshift_storage_glusterfs_heketi_ssh_port=22
@@ -61,8 +66,8 @@ openshift_storage_glusterfs_storageclass=true
 # openshift_storage_glusterfs_heketi_ssh_sudo=false
 # openshift_storage_glusterfs_heketi_ssh_keyfile="/root/.ssh/id_rsa" #Need to check this
 
-openshift_metrics_storage_kind=dynamic
-openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
+#openshift_metrics_storage_kind=dynamic
+#openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
 
 # Configure master API and console ports.
 #openshift_master_api_port=8443
@@ -77,6 +82,9 @@ openshift_master_default_subdomain=apps.ocp.dell.local
 # KeepaliveD load balancer vars
 static_pod_manifest_path=/root
 static_pod_config_path=/root
-lb_masters_vip='172.29.171.111'
-lb_routers_vip='172.29.171.112'
-openshift_hosted_router_selector='node-role.kubernetes.io/infra=true'
+
+#NOTE: These need to match the inventory in group_vars
+lb_masters_vip='172.29.171.109'
+lb_routers_vip='172.29.171.110'
+#openshift_hosted_router_selector='node-role.kubernetes.io/infra=true'
+openshift_hosted_router_selector = 'region=infra'
