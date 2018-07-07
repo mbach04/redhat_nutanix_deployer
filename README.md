@@ -1,5 +1,8 @@
 Lab deployer
 ------------------
+
+Testing git push permissions
+
 ### High level Order of operations
 A. Deploy to external lab
 - Provision an Ansible core control/bastion node
