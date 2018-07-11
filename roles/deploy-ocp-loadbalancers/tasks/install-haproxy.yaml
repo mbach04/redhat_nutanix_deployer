@@ -1,27 +1,29 @@
 ---
+
   
 #- name: install openssl-devel
 #  package:
 #    name: openssl-devel
 #    state: present  
 
-- name: install python-firewall
-  package:
-    name: python-firewall
-    state: present
+# - name: install python-firewall
+#   package:
+#     name: python-firewall
+#     state: present
 
-- name: install firewalld
-  package:
-    name: firewalld
-    state: present
+# - name: install firewalld
+#   package:
+#     name: firewalld
+#     state: present
+
     
-- name: enable and start or reload firewalld
+- name: Deploy Loadbalancers | install-haproxy | enable and start or reload firewalld
   service:
     name: firewalld
     state: reloaded
-    enabled: yes       
+    enabled: yes
 
-- name: 'Open Firewall for HAproxy use'
+- name: Deploy Loadbalancers | install-haproxy | Open Firewall for HAproxy use
   firewalld: 
     port: "{{ item }}"
     permanent: yes
@@ -29,27 +31,20 @@
     immediate: yes
   with_items: "{{ ports }}"
 
-- name: 'Enable syslog logging' 
+- name: Deploy Loadbalancers | install-haproxy | Enable syslog logging
   copy:
     src: rsyslog_haproxy.conf
     dest: /etc/rsyslog.d/haproxy.conf
   notify: 'restart rsyslog'
 
-- name: install haproxy
-  package:
+- name: Deploy Loadbalancers | install-haproxy |  install haproxy
+  yum:
     name: haproxy
     state: present
-
-#- name: debug
-#  debug:
-#    msg: "{{ hostvars[item].openshift_node_labels }}"
-#  with_items: "{{ groups['nodes'] }}"   
-
   
-- name: deploy haproxy config file
+- name: Deploy Loadbalancers | install-haproxy |  deploy haproxy config file
   template:
     src: "{{ haproxy_template }}"
     dest: "/etc/haproxy/haproxy.cfg"
     validate: 'haproxy -c -f %s'     
   notify: 'enable and start or reload haproxy'
-    

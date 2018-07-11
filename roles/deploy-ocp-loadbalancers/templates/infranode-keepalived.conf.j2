@@ -9,16 +9,16 @@ vrrp_instance VI_1 {
   state {% if ansible_nodename == hostvars[groups['routers-lbs'][0]].ansible_hostname %} MASTER {% else %} BACKUP {% endif %}
   
   virtual_router_id 52
-  priority {% if ansible_nodename == hostvars[groups['masters-lbs'][0]].ansible_hostname %} 101 {% else %} 100 {% endif %}
+  priority {% if ansible_nodename == hostvars[groups['routers-lbs'][0]].ansible_hostname %} 101 {% else %} 100 {% endif %}
   
   unicast_peer {
-  {% for ip in (groups['masters-lbs'] | map('extract', hostvars, ['ansible_default_ipv4', 'address' ]) | list | difference( [ ansible_default_ipv4.address ] )) %}
+  {% for ip in (groups['routers-lbs'] | map('extract', hostvars, ['ansible_default_ipv4', 'address' ]) | list | difference( [ ansible_default_ipv4.address ] )) %}
       {{ ip }}
   {% endfor %}    
   }  
   
   virtual_ipaddress {
-    {{ lb_infranode_vip }}
+    {{ lb_routers_vip }}/24
   }
   track_script {
     chk_haproxy

@@ -6,7 +6,7 @@ A. Deploy to external lab
 - Import Ansible roles / playbooks as necessary
 - Verify DNS entries are available
 - Deploy Ansible Tower (remaining tasks deploy from Tower)
-- Provision all 3 Masters
+- Provision all OCP instances (don't configure, they need to just be provisioned for the benefit of the load balancer deployer role)
 - Deploy all 4 load balancers
 - Verify DNS entries resolve correctly
 - Deploy Quay

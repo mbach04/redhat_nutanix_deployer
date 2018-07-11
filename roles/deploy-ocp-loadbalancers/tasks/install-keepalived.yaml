@@ -1,25 +1,24 @@
 ---
-
 - name: install python-firewall
-  package:
+  yum:
     name: python-firewall
     state: present
     
-#- name: install python-dns
-#  package:
-#    name: python-dns
-#    state: present    
+- name: install python-dns
+  yum:
+    name: python-dns
+    state: present    
     
 - name: install firewalld
-  package:
+  yum:
     name: firewalld
-    state: present    
+    state: present  
     
 - name: enable and start firewalld
   service:
     name: firewalld
     state: reloaded
-    enabled: yes     
+    enabled: yes
 
 - name: open VRRP port
   firewalld:
@@ -42,13 +41,18 @@
   notify: 'reload sysctl'
     
 - name: install keepalived
-  package:
+  yum:
     name: keepalived
     state: present
   
-    
 - name: deploy keepalived config file
   template:
     src: "{{ lb_type }}-keepalived.conf.j2"
     dest: /etc/keepalived/keepalived.conf
   notify: 'enable and start or reload keepalived'
+
+- name: Start keepalived service
+  service:
+    name: keepalived
+    state: started
+    enabled: yes

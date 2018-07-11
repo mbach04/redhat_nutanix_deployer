@@ -4,10 +4,12 @@ lbs_packages:
   - net-tools
   - bind-utils
   - yum-utils
-  - iptables-services
   - bridge-utils
   - bash-completion
   - kexec-tools
   - sos 
   - psacct
   - tmux
+  - python-firewall
+  - firewalld
+  # - iptables-services
