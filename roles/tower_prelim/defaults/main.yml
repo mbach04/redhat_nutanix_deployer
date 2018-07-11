@@ -4,7 +4,9 @@ tower_node: "192.168.122.137"
 
 ## need these regardless of single node/clustered install
 pull_tarball: "True"
-cluster: "True"
+cluster: "True"pipPackage: "python2-pip"
+towerCliTar: "tower-cli_tar.tar.gz"
+towerCliDir: "/tmp/tower-cli"
 domain: "ocp.dell.local"
 tower_license: "license.txt"
 tower_artifact_url: "https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz"
