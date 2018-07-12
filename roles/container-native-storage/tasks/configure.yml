@@ -1,0 +1,48 @@
+---
+- name: Container Native Storage | Enable gluster repository
+  rhsm_repository:
+    name: rh-gluster-3-for-rhel-7-server-rpms
+  # need to ensure we're only doing this on the appropriate hosts
+
+- name: Container Native Storage | install cns packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ cns_packages }}"
+  # need to ensure we're only doing this on the appropriate hosts
+
+- name: Container Native Storage | Disable gluster repository
+  rhsm_repository:
+    name: rh-gluster-3-for-rhel-7-server-rpms
+    state: disabled
+  # need to ensure we're only doing this on the appropriate hosts
+
+- name: Container Native Storage | Setup multipath (CNS reqs)
+  command: mpathconf --enable
+
+- name: Container Native Storage | Template out the multipath.conf file
+  template:
+    src: multipath.conf.j2
+    dest: /etc/multipath.conf
+
+- name: Container Native Storage | Restart the multipathd service
+  service:
+    name: multipathd
+    state: restarted
+
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 24007 -j ACCEPT
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 24008 -j ACCEPT
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2222 -j ACCEPT
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m multiport --dports 49152:49664 -j ACCEPT
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 24010 -j ACCEPT
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 3260 -j ACCEPT
+-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT
+
+- name: Container Native Storage | Set iptables rules to allow gluster connections
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ item.port }}"
+    ctstate: NEW
+    jump: ACCEPT
+  with_items: "{{ iptables_rules }}"

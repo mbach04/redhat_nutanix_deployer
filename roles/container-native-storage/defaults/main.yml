@@ -1,0 +1,6 @@
+cns_packages:
+  - cns-deploy
+  - heketi-client
+  - iscsi-initiator-utils
+  - device-mapper-multipath
+  - atomic-openshift-clients
