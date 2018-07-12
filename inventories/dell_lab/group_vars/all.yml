@@ -85,29 +85,35 @@ vm_net_domain: "ocp.dell.local"
 
 vm_yum_repos:
   - reponame: "local_fast_datapath"
-    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-fast-datapath-rpms"
+    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-fast-datapath-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Fast Datapath Repository"
   - reponame: "local_server_extras"
-    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-server-extras-rpms"
+    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-extras-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Server Extras Repository"
   - reponame: "local_ose_3.9"
-    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-server-ose-3.9-rpms"
+    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-ose-3.9-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 OSE 3.9 Repository"
   - reponame: "local_server"
-    baseurl: "http://repository1.{{ vm_net_domain }}/repos/yum/rhel-7-server-rpms"
+    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Server Repository"
+  - reponame: "local_server_ansible"
+    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-ansible-2.4-rpms"
+    enabled: true
+    failovermethod: priority
+    gpgcheck: false
+    name: "{{ cluster_name }} RHEL 7 Server Ansible Repository"
 
 cloud_init_root_pass: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
 

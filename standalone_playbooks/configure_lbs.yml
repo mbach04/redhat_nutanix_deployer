@@ -1,9 +1,4 @@
 ---
-- hosts: 
-    - routers-lbs
-    - masters-lbs
-  gather_facts: true
-
 - name: LB Hosts, Handle Prereqs
   hosts:
     - routers-lbs

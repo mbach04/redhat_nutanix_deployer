@@ -1,25 +1,7 @@
 ---
 - hosts: all
   gather_facts: true
-
-# - name: Masters Load Balancers Deployer
-#   hosts: masters-lbs
-#   gather_facts: true
-#   become: yes
-#   tasks:
-#     - name: Deploy Masters LBs
-#       include_role:
-#         name: deploy-masters-loadbalancers
-
-# - name: Routers Load Balancers Deployer
-#   hosts: routers-lbs
-#   gather_facts: true
-#   become: yes
-#   tasks:
-#     - name: Deploy Routers LBs
-#       include_role:
-#         name: deploy-routers-loadbalancers
-
+  
 - name: Deploy Masters Loadbalancer
   hosts: masters-lbs
   gather_facts: true

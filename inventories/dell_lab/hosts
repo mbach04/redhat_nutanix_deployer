@@ -10,13 +10,12 @@ ocp-master-[01:03].ocp.dell.local
 ocp-master-[01:03].ocp.dell.local
 
 [masters-lbs]
-ocp-master-01.ocp.dell.local
-ocp-master-02.ocp.dell.local
-ocp-master-03.ocp.dell.local
-
-[routers-lbs]
 ocp-lb-01.ocp.dell.local
 ocp-lb-02.ocp.dell.local
+
+[routers-lbs]
+ocp-lb-03.ocp.dell.local
+ocp-lb-04.ocp.dell.local
 
 [nodes]
 ocp-master-[01:03].ocp.dell.local
@@ -26,6 +25,9 @@ ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zo
 #node11.example.com openshift_schedulable=True
 #node12.example.com openshift_schedulable=True
 #node13.example.com openshift_schedulable=True
+
+[infranodes]
+ocp-infra-[01:03].ocp.dell.local
 
 [glusterfs]
 #node11.example.com glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
@@ -80,11 +82,11 @@ openshift_master_cluster_public_hostname=masters.ocp.dell.local
 openshift_master_default_subdomain=apps.ocp.dell.local
 
 # KeepaliveD load balancer vars
-static_pod_manifest_path=/root
-static_pod_config_path=/root
+#static_pod_manifest_path=/root
+#static_pod_config_path=/root
 
 #NOTE: These need to match the inventory in group_vars
 lb_masters_vip='172.29.171.109'
 lb_routers_vip='172.29.171.110'
-#openshift_hosted_router_selector='node-role.kubernetes.io/infra=true'
 openshift_hosted_router_selector = 'region=infra'
+openshift_node_open_ports=[{'service': 'router stats port', 'port': '1936/tcp'}]

@@ -1,21 +1,16 @@
-- name: LBs-prereqs | Install LBs Pre-req packages
+- name: Deploy Loadbalancers | LBs-prereqs | Install LBs Pre-req packages
   yum:
     name: "{{ item }}"
     state: latest
   with_items: "{{ lbs_packages }}"
 
-- name: LBs-prereqs | Install Packages | Yum Update
+- name: Deploy LB Prereqs | Install Packages | Yum Update
   yum:
     name: '*'
     state: latest
 
-- name: LBs-prereqs | Install Packages | Restart
-  shell: nohup bash -c "sleep 2s && shutdown -r now" &
-  ignore_errors: true
-  tags:
-    - reboot
-
-- name: LBs-Prereqs | Install Packages | Validate SSH before continuing
-  wait_for_connection:
-    timeout: 480
-    delay: 10
+# - name: Deploy LB Prereqs | Install Packages | Restart
+#   shell: nohup bash -c "sleep 2s && shutdown -r now" &
+#   ignore_errors: true
+#   tags:
+#     - reboot
