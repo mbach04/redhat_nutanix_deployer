@@ -1,0 +1,16 @@
+galaxy_info:
+  author: ky13
+  description: unpack tower, populate inventory, deploy tower
+  license: BSD
+  min_ansible_version: 2.4
+  platforms:
+  - name: EL
+    versions:
+    - 7
+
+  galaxy_tags:
+    - tower
+    - bundle
+    - offline
+
+dependencies: []

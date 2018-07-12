@@ -1,0 +1,14 @@
+---
+- name: has the artifact already been pulled?
+  stat:
+    path: "{{ ansible_tower_tar_path }}"
+  ignore_errors: true
+  register: towerartifact
+  delegate_to: localhost
+
+- name: pull tower artifact from internet tower repo
+  get_url:
+    url: "{{ tower_artifact_url }}"
+    dest: "{{ ansible_tower_tar_path }}"
+  delegate_to: localhost
+  run_once: true

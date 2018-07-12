@@ -1,0 +1,7 @@
+[tower_nodes]
+ansible-tower-01
+ansible-tower-02
+ansible-tower-03
+
+[db_nodes]
+ansible-tower-db

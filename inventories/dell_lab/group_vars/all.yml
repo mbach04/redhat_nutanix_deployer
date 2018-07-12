@@ -31,7 +31,8 @@ image_name: RHEL Server 7.5 KVM Guest May 2018 Update
 
 vm_defs_repo:
   # RPM Repository
-  -  {vm_name: repository, vm_ip: '172.29.171.100', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
+  # -  {vm_name: repository, vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
+  -  {vm_name: repository1, vm_ip: '172.29.171.99', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
 
 
 vm_defs_tower:
