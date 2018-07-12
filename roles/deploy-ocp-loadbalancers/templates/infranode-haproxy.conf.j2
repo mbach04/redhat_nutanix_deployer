@@ -68,7 +68,7 @@ backend infranode-80
 {% if hostvars[server].openshift_node_labels is defined %}
 {% for k,v in hostvars[server].openshift_node_labels.items() %}
 {% if ((k~'='~v) == hostvars[server].openshift_hosted_router_selector) %}
-    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:80 check ssl verify none 
+    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:80
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -83,7 +83,7 @@ backend infranode-443
 {% if hostvars[server].openshift_node_labels is defined %}
 {% for k,v in hostvars[server].openshift_node_labels.items() %}
 {% if ((k~'='~v) == hostvars[server].openshift_hosted_router_selector) %}
-    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:443 check ssl verify none 
+    server  {{ hostvars[server].ansible_nodename }} {{ hostvars[server].ansible_default_ipv4.address }}:443
 {% endif %}
 {% endfor %}
 {% endif %}

@@ -1,22 +1,4 @@
----
-
-  
-#- name: install openssl-devel
-#  package:
-#    name: openssl-devel
-#    state: present  
-
-# - name: install python-firewall
-#   package:
-#     name: python-firewall
-#     state: present
-
-# - name: install firewalld
-#   package:
-#     name: firewalld
-#     state: present
-
-    
+--- 
 - name: Deploy Loadbalancers | install-haproxy | enable and start or reload firewalld
   service:
     name: firewalld

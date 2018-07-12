@@ -12,4 +12,5 @@ lbs_packages:
   - tmux
   - python-firewall
   - firewalld
-  # - iptables-services
+  - haproxy
+  - keepalived

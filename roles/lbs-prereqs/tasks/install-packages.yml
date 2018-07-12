@@ -9,13 +9,8 @@
     name: '*'
     state: latest
 
-- name: Deploy LB Prereqs | Install Packages | Restart
-  shell: nohup bash -c "sleep 2s && shutdown -r now" &
-  ignore_errors: true
-  tags:
-    - reboot
-
-- name: Deploy LB Prereqs | Install Packages | Validate SSH before continuing
-  wait_for_connection:
-    timeout: 480
-    delay: 10
+# - name: Deploy LB Prereqs | Install Packages | Restart
+#   shell: nohup bash -c "sleep 2s && shutdown -r now" &
+#   ignore_errors: true
+#   tags:
+#     - reboot
