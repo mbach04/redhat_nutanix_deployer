@@ -2,3 +2,4 @@
 .vaultpass
 .keyfile
 .notes
+*.DS_Store
