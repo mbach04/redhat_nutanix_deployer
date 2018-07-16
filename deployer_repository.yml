@@ -40,11 +40,13 @@
     - name: "rhsm_password"
       prompt: "RHSM Password"
   vars:
-    openshift_repos:
+    repo_list:
       - "rhel-7-server-rpms"                                                                                     
       - "rhel-7-server-extras-rpms"
       - "rhel-7-server-ose-3.9-rpms" 
       - "rhel-7-fast-datapath-rpms"
+      - "rhel-7-server-ansible-2.4-rpms"
+      - "rh-gluster-3-for-rhel-7-server-rpms"
     repo_disk_dev: "/dev/sdb"
     repo_partition_num: 1
     repo_fstype: "xfs"
@@ -115,7 +117,7 @@
       
     - name: Enable repositories needed by OCP
       shell: "subscription-manager repos --enable={{ item }}"
-      loop: "{{ openshift_repos }}"
+      loop: "{{ repo_list }}"
 
     - name: Get latest YUM updates
       yum:
@@ -132,7 +134,7 @@
       async: 43200
       poll: 5
       register: "async_repo_download"
-      loop: "{{ openshift_repos }}"
+      loop: "{{ repo_list }}"
 
     - name: Check Download status
       async_status:
@@ -145,7 +147,7 @@
 
     - name: Create YUM repositories
       shell: "createrepo -v {{ yum_repo_dir }}/{{ item }} -o {{ yum_repo_dir }}/{{ item }}"
-      loop: "{{ openshift_repos }}"
+      loop: "{{ repo_list }}"
 
     - name: Set SELinux context rule for repository directory
       sefcontext:
