@@ -35,11 +35,14 @@
 
 - name: Container Native Storage | Set iptables rules for gluster connections
   lineinfile:
-    path: /etc/modules-load.d/dm_thin_pool.conf
+    path: /etc/sysconfig/iptables
     state: present
     regexp: "{{ item }}"
   loop: "{{ ip_tables_rules }}"
   when: inventory_hostname in groups[glusterfs]
+
+- name: Container Native Storage | Reload iptables
+  command: systemctl reload iptables
 
 - name: Container Native Storage | Load kernel modules for CNS
     modprobe:
