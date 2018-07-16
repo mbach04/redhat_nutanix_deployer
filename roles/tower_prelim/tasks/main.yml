@@ -1,81 +1,59 @@
 ---
-- name: for internet reachable installs include the tarball pull
-  include_tasks: pull_tower_tarball.yml
-  when:
-  - pull_tarball == 'True'
-  - inventory_hostname in groups['tower_nodes'] | first
-
-- name: copy the tarball to the first tower node
-  copy:
-    src: "{{ ansible_tower_tar_path }}"
-    dest: "{{ tower_install_user_home_dir }}"
-    owner: "{{ tower_install_user }}"
-    group: "{{ tower_install_user }}"
-  when: inventory_hostname in groups['tower_nodes'] | first
-
-- name: unpack tower tarball {{ ansible_tower_tar_name }}
-  unarchive:
-    src: "{{ tower_install_user_home_dir }}/{{ ansible_tower_tar_name }}"
-    dest: "{{ tower_install_user_home_dir }}"
-    remote_src: yes 
-  when: inventory_hostname in groups['tower_nodes'] | first
-
-- name: copy {{ inventory_allinone }} to {{ tower_install_user_home_dir }}/{{ tower_version }}
-  template:
-    src: "{{ inventory_allinone }}"
-    dest: "{{ tower_install_user_home_dir }}/{{ tower_version }}/inventory_custom"
-    owner: "{{ tower_install_user }}"
-    group: "{{ tower_install_user }}"
-    force: yes
-  when:
-  - inventory_hostname in groups['tower_nodes'] | first
-  - cluster == 'False'
-
-- name: copy {{ inventory_cluster }} to {{ tower_install_user_home_dir }}/{{ tower_version }}
-  template:
-    src: "{{ inventory_cluster }}"
-    dest: "{{ tower_install_user_home_dir }}/{{ tower_version }}/inventory_custom"
-    owner: "{{ tower_install_user }}"
-    group: "{{ tower_install_user }}"
-    force: yes
-  when:
-  - inventory_hostname in groups['tower_nodes'] | first
-  - cluster == 'True'
-
-- name: insure the tower nodes have ansible installed
-  become: true
-  become_user: root
+- name: Ensure Ansible is installed on nodes
   yum:
     name: ansible
     state: present
 
-- name: copy custom installer script to first tower node
+- name: Download Ansible Tower tarball
+  get_url:
+    url: "{{ tower_artifact_url }}"
+    dest: "{{ tower_install_dir }}/{{ tower_tar_name }}"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_group }}"
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: Unpack Ansible Tower tarball
+  unarchive:
+    src: "{{ tower_install_dir }}/{{ tower_tar_name }}"
+    dest: "{{ tower_install_dir }}"
+    remote_src: yes 
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: Copy custom inventory file for installation 
+  template:
+    src: "inventory_cluster.j2"
+    dest: "{{ tower_install_dir }}/{{ tower_install_folder }}/inventory_custom"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_group }}"
+    force: yes
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: Copy custom installation script
   copy:
     src: files/ansible_tower_custom.sh
-    dest: "{{ tower_install_user_home_dir }}/{{ tower_version }}"
+    dest: "{{ tower_install_dir }}/{{ tower_install_folder }}"
     owner: "{{ tower_install_user }}"
-    group: "{{ tower_install_user }}"
+    group: "{{ tower_install_group }}"
     mode: 0755 
   when: inventory_hostname in groups['tower_nodes'] | first
 
-- name: install tower 
+- name: Run custom installation script
   shell: "./ansible_tower_custom.sh"
   args:
-    chdir: "{{ tower_install_user_home_dir }}/{{ tower_version }}"
+    chdir: "{{ tower_install_dir }}/{{ tower_install_folder }}"
   when: inventory_hostname in groups['tower_nodes'] | first
 
-
-- name: add eula acceptance to license before posting to tower api
+- name: Add EULA acceptance
   lineinfile:
     path: files/license.txt
     regexp: '^{'
     insertafter: '^{'
     line: '{ "eula_accepted" : "true",'
-  delegate_to: localhost
+  when: inventory_hostname in groups['tower_nodes'] | first
 
-- name: post the tower license to the api
+- name: Post license to Ansible Tower
   uri:
-    url: "https://{{ inventory_hostname }}.{{ domain }}/api/v2/config/"
+    url: "https://{{ inventory_hostname }}.{{ vm_net_domain }}/api/v2/config/"
     method: POST
     user: "{{ admin_tower_user }}"
     password: "{{ admin_tower_pw }}"

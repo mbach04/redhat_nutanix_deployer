@@ -1,0 +1,7 @@
+[tower_nodes]
+ansible-tower-011.ocp.dell.local
+ansible-tower-021.ocp.dell.local
+ansible-tower-031.ocp.dell.local
+
+[tower_db_nodes]
+ansible-tower-db1.ocp.dell.local

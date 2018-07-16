@@ -1,8 +1,5 @@
 # This is an example of an OpenShift-Ansible host inventory
 
-[repository]
-repository1.ocp.dell.local 
-
 [masters]
 ocp-master-[01:03].ocp.dell.local
 
@@ -39,8 +36,6 @@ nodes
 etcd
 masters-lbs
 routers-lbs
-#nfs
-#lbs
 glusterfs
 
 [OSEv3:vars]
@@ -48,10 +43,6 @@ openshift_release="3.9"
 openshift_deployment_type=openshift-enterprise
 ansible_become=true
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-
-
-
-
 
 #custom vars
 

@@ -4,26 +4,32 @@
 {% endfor %}
 
 [database]
-{% for host in groups['db_nodes'] %}
+{% for host in groups['tower_db_nodes'] %}
 {{ host }}
 {% endfor %}
 
 [all:vars]
-admin_password='{{ admin_tower_pw }}'
+ansible_connection=ssh
+ansible_user=ansible
+ansible_become=true
+ansible_become_method=sudo
+ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 
-{% for host in groups['db_nodes'] %}
+admin_password='{{ tower_admin_pw }}'
+
+{% for host in groups['tower_db_nodes'] %}
 pg_host='{{ host }}'
 {% endfor %}
-pg_port='{{ pg_port }}'
+pg_port='{{ tower_pg_port }}'
 
 pg_database='awx'
 pg_username='awx'
-pg_password='{{ pg_pw }}'
+pg_password='{{ tower_pg_pw }}'
 
 rabbitmq_port=5672
 rabbitmq_vhost=tower
 rabbitmq_username=tower
-rabbitmq_password='{{ rabbitmq_pw }}'
+rabbitmq_password='{{ tower_rabbitmq_pw }}'
 rabbitmq_cookie=cookiemonster
 
 # Needs to be true for fqdns and ip addresses
