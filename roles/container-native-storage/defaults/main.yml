@@ -1,0 +1,20 @@
+cns_packages:
+  - cns-deploy
+  - heketi-client
+  - iscsi-initiator-utils
+  - device-mapper-multipath
+  - atomic-openshift-clients
+
+mod_probe_list:
+  - dm_thin_pool
+  - dm_multipath
+  - target_core_user
+
+ip_tables_rules:
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 24007 -j ACCEPT"
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 24008 -j ACCEPT"
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2222 -j ACCEPT"
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m multiport --dports 49152:49664 -j ACCEPT"
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 24010 -j ACCEPT"
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 3260 -j ACCEPT"
+  - "-A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT"
