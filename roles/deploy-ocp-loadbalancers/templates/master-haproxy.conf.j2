@@ -78,8 +78,10 @@ frontend ansible_tower_frontend *:443
 backend ansible_towers
     balance source
     mode tcp
-    option httpchck GET /#/login
+    option httpchk GET /#/login
     http-check expect status 200
-{% for server in vm_defs_tower[0:3] %}
-    server {{ server.vm_name }}.ocp.dell.local {{ server.vm_ip }}:443
+{% for tower in vm_defs_tower %}
+{% if 'db' not in tower.vm_name %}
+    server {{ tower.vm_name }}.ocp.dell.local {{ tower.vm_ip }}:443
+{% endif %}
 {% endfor %}

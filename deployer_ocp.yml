@@ -66,6 +66,7 @@
     ports:
       - 80/tcp
       - 443/tcp
+      - 9000/tcp
     lb_type: infranode
     haproxy_template: infranode-haproxy.conf.j2
     lb_vip: "{{ lb_routers_vip }}" 
@@ -84,3 +85,5 @@
     - name: Handle OCP Prereqs
       include_role:
         name: ocp-prereqs
+      tags:
+       - install

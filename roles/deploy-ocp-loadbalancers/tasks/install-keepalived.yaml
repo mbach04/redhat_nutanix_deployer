@@ -3,22 +3,30 @@
   yum:
     name: python-firewall
     state: present
+  tags:
+    - install
     
 - name: install python-dns
   yum:
     name: python-dns
-    state: present    
+    state: present
+  tags:
+    - install  
     
 - name: install firewalld
   yum:
     name: firewalld
-    state: present  
+    state: present
+  tags:
+    - install
     
 - name: enable and start firewalld
   service:
     name: firewalld
     state: reloaded
     enabled: yes
+  tags:
+    - install
 
 - name: open VRRP port
   firewalld:
@@ -26,7 +34,8 @@
     permanent: true
     state: enabled
     immediate: true
-
+  tags:
+    - install
 
 - name: 'Allow bind to the VIP'
   lineinfile: 
@@ -39,11 +48,15 @@
     group: root
     mode: 0644
   notify: 'reload sysctl'
+  tags:
+    - install
     
 - name: install keepalived
   yum:
     name: keepalived
     state: present
+  tags:
+    - install
   
 - name: deploy keepalived config file
   template:
