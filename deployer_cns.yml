@@ -1,0 +1,11 @@
+---
+- hosts: all
+  gather_facts: true
+
+- name: OCP CNS Deployer
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Deploy CNS on OCP
+      include_role:
+        name: container-native-storage

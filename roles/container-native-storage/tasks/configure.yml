@@ -45,10 +45,10 @@
   command: systemctl reload iptables
 
 - name: Container Native Storage | Load kernel modules for CNS
-    modprobe:
-      name: "{{ item }}"
-      state: present
-    loop: "{{ mod_probe_list }}"
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ mod_probe_list }}"
   when: inventory_hostname in groups[glusterfs]
 
 - name: Container Native Storage | Persist kernel modules across reboots

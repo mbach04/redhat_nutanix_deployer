@@ -46,7 +46,7 @@
       - "rhel-7-server-ose-3.9-rpms" 
       - "rhel-7-fast-datapath-rpms"
       - "rhel-7-server-ansible-2.4-rpms"
-      - "rh-gluster-3-for-rhel-7-server-rpms"
+      - "rh-gluster-3-client-for-rhel-7-server-rpms"
     repo_disk_dev: "/dev/sdb"
     repo_partition_num: 1
     repo_fstype: "xfs"
