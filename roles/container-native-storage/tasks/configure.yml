@@ -2,7 +2,7 @@
 - name: Container Native Storage | Enable gluster repository
   rhsm_repository:
     name: rh-gluster-3-for-rhel-7-server-rpms
-  when: inventory_hostname in groups[glusterfs]
+  when: "inventory_hostname in groups[glusterfs]"
 
 - name: Container Native Storage | install cns packages
   yum:
@@ -42,10 +42,10 @@
   when: inventory_hostname in groups[glusterfs]
 
 - name: Container Native Storage | Load kernel modules for CNS
-    modprobe:
-      name: "{{ item }}"
-      state: present
-    loop: "{{ mod_probe_list }}"
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ mod_probe_list }}"
   when: inventory_hostname in groups[glusterfs]
 
 - name: Container Native Storage | Persist kernel modules across reboots
