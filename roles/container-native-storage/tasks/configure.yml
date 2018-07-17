@@ -1,37 +1,34 @@
 ---
-- name: Container Native Storage | Enable gluster repository
-  rhsm_repository:
-    name: rh-gluster-3-for-rhel-7-server-rpms
-  when: inventory_hostname in groups[glusterfs]
+# - name: Container Native Storage | Enable gluster repository
+#   rhsm_repository:
+#     name: rh-gluster-3-client-for-rhel-7-server-rpms
 
-- name: Container Native Storage | install cns packages
+- name: Container Native Storage | install cns packages on the cluster
   yum:
     name: "{{ item }}"
     state: latest
   with_items: "{{ cns_packages }}"
-  when: inventory_hostname in groups[glusterfs]
 
 - name: Container Native Storage | Disable gluster repository
   rhsm_repository:
-    name: rh-gluster-3-for-rhel-7-server-rpms
+    name: rh-gluster-3-client-for-rhel-7-server-rpms
     state: disabled
-  when: inventory_hostname in groups[glusterfs]
 
 - name: Container Native Storage | Setup multipath (CNS reqs)
   command: mpathconf --enable
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Template out the multipath.conf file
   template:
     src: multipath.conf.j2
     dest: /etc/multipath.conf
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Restart the multipathd service
   service:
     name: multipathd
     state: restarted
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Set iptables rules for gluster connections
   lineinfile:
@@ -39,7 +36,7 @@
     state: present
     regexp: "{{ item }}"
   loop: "{{ ip_tables_rules }}"
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Reload iptables
   command: systemctl reload iptables
@@ -49,37 +46,37 @@
     name: "{{ item }}"
     state: present
   loop: "{{ mod_probe_list }}"
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Persist kernel modules across reboots
   lineinfile:
     path: /etc/modules-load.d/dm_thin_pool.conf
     state: present
     regexp: 'dm_thin_pool'
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Persist kernel modules across reboots
   lineinfile:
     path: /etc/modules-load.d/dm_multipath.conf
     state: present
     regexp: 'dm_multipath'
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Persist kernel modules across reboots
   lineinfile:
     path: /etc/modules-load.d/target_core_user.conf
     state: present
     regexp: 'target_core_user'
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storgage | Set rpcbind service options
   command: add-wants multi-user rpcbind.service
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Enable rpcbind.service
   service:
     name: rpcbind
     state: restart
     enabled: yes
-  when: inventory_hostname in groups[glusterfs]
+  when: inventory_hostname in groups.glusterfs
 

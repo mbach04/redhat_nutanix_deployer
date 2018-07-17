@@ -1,10 +1,10 @@
 ---
-- hosts: all
-  gather_facts: true
+# - hosts: all
+#   gather_facts: true
 
 - name: OCP CNS Deployer
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
   tasks:
     - name: Deploy CNS on OCP
       include_role:

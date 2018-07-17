@@ -73,12 +73,12 @@ frontend ansible_tower_frontend *:443
     mode tcp
     option tcplog
     redirect scheme https if !{ ssl_fc }
-    default_backend towers
+    default_backend ansible_towers
 
-backend towers
+backend ansible_towers
     balance source
     mode tcp
-    option httpchck GET /api/v1/ping
+    option httpchck GET /#/login
     http-check expect status 200
 {% for server in vm_defs_tower[0:3] %}
     server {{ server.vm_name }}.ocp.dell.local {{ server.vm_ip }}:443
