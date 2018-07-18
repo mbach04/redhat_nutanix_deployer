@@ -29,7 +29,9 @@ ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
 ocp-infra-[01:03].ocp.dell.local
 
 [glusterfs]
-ocp-cns-[01:03].ocp.dell.local glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+ocp-cns-02.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+ocp-cns-03.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
@@ -59,7 +61,7 @@ openshift_storage_glusterfs_block_deploy=false
 
 
 # metrics
-openshift_metrics_install_metrics=true
+openshift_metrics_install_metrics=false
 openshift_metrics_hawkular_nodeselector={"role":"infra"}
 openshift_metrics_cassandra_nodeselector={"role":"infra"}
 openshift_metrics_heapster_nodeselector={"role":"infra"}
@@ -67,7 +69,7 @@ openshift_metrics_cassandra_pvc_size=25Gi
 openshift_metrics_storage_kind=dynamic
 
 # logging
-openshift_logging_install_logging=true                
+openshift_logging_install_logging=false            
 openshift_logging_es_cluster_size=3
 openshift_logging_es_nodeselector={"role":"infra"}
 openshift_logging_kibana_nodeselector={"role":"infra"}
