@@ -3,16 +3,17 @@
 #   rhsm_repository:
 #     name: rh-gluster-3-client-for-rhel-7-server-rpms
 
+
 - name: Container Native Storage | install cns packages on the cluster
-  yum:
+  package:
     name: "{{ item }}"
     state: latest
   with_items: "{{ cns_packages }}"
 
-- name: Container Native Storage | Disable gluster repository
-  rhsm_repository:
-    name: rh-gluster-3-client-for-rhel-7-server-rpms
-    state: disabled
+# - name: Container Native Storage | Disable gluster repository
+#   rhsm_repository:
+#     name: local_server_gluster
+#     state: disabled
 
 - name: Container Native Storage | Setup multipath (CNS reqs)
   command: mpathconf --enable
@@ -34,12 +35,14 @@
   lineinfile:
     path: /etc/sysconfig/iptables
     state: present
-    regexp: "{{ item }}"
+    line: "{{ item }}"
+    insertbefore: '^COMMIT'
   loop: "{{ ip_tables_rules }}"
   when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Reload iptables
-  command: systemctl reload iptables
+  become: yes
+  shell: iptables-restore <  /etc/sysconfig/iptables
 
 - name: Container Native Storage | Load kernel modules for CNS
   modprobe:
@@ -52,31 +55,34 @@
   lineinfile:
     path: /etc/modules-load.d/dm_thin_pool.conf
     state: present
-    regexp: 'dm_thin_pool'
+    line: dm_thin_pool
+    create: yes
   when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Persist kernel modules across reboots
   lineinfile:
     path: /etc/modules-load.d/dm_multipath.conf
     state: present
-    regexp: 'dm_multipath'
+    line: dm_multipath
+    create: yes
   when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Persist kernel modules across reboots
   lineinfile:
     path: /etc/modules-load.d/target_core_user.conf
     state: present
-    regexp: 'target_core_user'
+    line: target_core_user
+    create: yes
   when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storgage | Set rpcbind service options
-  command: add-wants multi-user rpcbind.service
+  command: systemctl add-wants multi-user rpcbind.service
   when: inventory_hostname in groups.glusterfs
 
 - name: Container Native Storage | Enable rpcbind.service
   service:
     name: rpcbind
-    state: restart
+    state: restarted
     enabled: yes
   when: inventory_hostname in groups.glusterfs
 

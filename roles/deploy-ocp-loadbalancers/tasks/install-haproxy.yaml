@@ -4,8 +4,6 @@
     name: firewalld
     state: reloaded
     enabled: yes
-  tags:
-    - install
 
 - name: Deploy Loadbalancers | install-haproxy | Open Firewall for HAproxy use
   firewalld: 
@@ -14,16 +12,12 @@
     state: enabled
     immediate: yes
   with_items: "{{ ports }}"
-  tags:
-    - install
 
 - name: Deploy Loadbalancers | install-haproxy | enable and start or reload firewalld
   service:
     name: firewalld
     state: reloaded
     enabled: yes
-  tags:
-    - install
 
 - name: Deploy Loadbalancers | install-haproxy | Enable syslog logging
   copy:

@@ -3,7 +3,7 @@
 #   gather_facts: true
 
 - name: OCP CNS Deployer
-  hosts: localhost
+  hosts: glusterfs
   gather_facts: true
   tasks:
     - name: Deploy CNS on OCP
