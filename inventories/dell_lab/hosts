@@ -23,17 +23,13 @@ ocp-master-[01:03].ocp.dell.local
 ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
-#node11.example.com openshift_schedulable=True
-#node12.example.com openshift_schedulable=True
-#node13.example.com openshift_schedulable=True
+ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
 
 [infranodes]
 ocp-infra-[01:03].ocp.dell.local
 
 [glusterfs]
-ocp-cns-01.ocp.dell.local glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
-ocp-cns-02.ocp.dell.local glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
-ocp-cns-03.ocp.dell.local glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
+ocp-cns-[01:03].ocp.dell.local glusterfs_devices='[ "/dev/sdb", "/dev/sdc" ]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
@@ -81,9 +77,9 @@ openshift_logging_storage_kind=dynamic
 
 
 
-# custom vars
+# other vars
 #----------------------------------------------------
-
+osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others are installed by default
 
 
 #openshift_metrics_storage_kind=dynamic

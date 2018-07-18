@@ -77,7 +77,6 @@
 
 - name: OCP Hosts, Handle Prereqs
   hosts:
-    - masters
     - nodes
   gather_facts: true
   become: yes

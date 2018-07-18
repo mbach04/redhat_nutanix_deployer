@@ -6,7 +6,7 @@
 # ansible-playbook -i inventories/dell_lab cleanup_deployer.yml --tags "tower,ocp"
 
 
-- name: Provision Nutanix Instances
+- name: Delete Nutanix Instances
   hosts: localhost
   gather_facts: false
   tasks:
