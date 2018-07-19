@@ -13,20 +13,30 @@
     immediate: yes
   with_items: "{{ ports }}"
 
+- name: Deploy Loadbalancers | install-haproxy | enable and start or reload firewalld
+  service:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+
 - name: Deploy Loadbalancers | install-haproxy | Enable syslog logging
   copy:
     src: rsyslog_haproxy.conf
     dest: /etc/rsyslog.d/haproxy.conf
   notify: 'restart rsyslog'
+  tags:
+    - install
 
 - name: Deploy Loadbalancers | install-haproxy |  install haproxy
   yum:
     name: haproxy
     state: present
+  tags:
+    - install
   
 - name: Deploy Loadbalancers | install-haproxy |  deploy haproxy config file
   template:
     src: "{{ haproxy_template }}"
     dest: "/etc/haproxy/haproxy.cfg"
-    validate: 'haproxy -c -f %s'     
+    validate: 'haproxy -c -f %s'  
   notify: 'enable and start or reload haproxy'

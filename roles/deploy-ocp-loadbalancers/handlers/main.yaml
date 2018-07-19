@@ -7,13 +7,13 @@
   service:
     name: keepalived
     state: reloaded
-    enabled: yes  
+    enabled: yes
     
 - name: 'enable and start or reload haproxy'
   service:
     name: haproxy
     state: reloaded
-    enabled: yes    
+    enabled: yes
 
 - name: 'restart rsyslog'
   service:

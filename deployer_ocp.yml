@@ -66,6 +66,7 @@
     ports:
       - 80/tcp
       - 443/tcp
+      - 9000/tcp
     lb_type: infranode
     haproxy_template: infranode-haproxy.conf.j2
     lb_vip: "{{ lb_routers_vip }}" 
@@ -76,7 +77,6 @@
 
 - name: OCP Hosts, Handle Prereqs
   hosts:
-    - masters
     - nodes
   gather_facts: true
   become: yes
@@ -84,3 +84,30 @@
     - name: Handle OCP Prereqs
       include_role:
         name: ocp-prereqs
+      tags:
+       - install
+
+- name: Configure masters for CNS deployment
+  hosts: masters
+  gather_facts: true
+  tasks:
+    - name: Enable the gluster repos for all Masters
+      yum_repository:
+        name: local_server_gluster
+        state: present
+        baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rh-gluster-3-client-for-rhel-7-server-rpms"
+        description: local_server_gluster
+        gpgcheck: no
+
+    - name: Install required CNS packages on OCP Masters
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - cns-deploy
+        - heketi-client
+
+    - name: Disable the gluster repos for all Masters
+      yum_repository:
+        name: local_server_gluster
+        state: absent
