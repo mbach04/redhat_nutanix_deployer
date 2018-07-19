@@ -83,6 +83,8 @@ openshift_logging_storage_kind=dynamic
 #----------------------------------------------------
 osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others are installed by default
 
+#glusterfs_storageclass_default=true #testing showed this doesn't work
+
 
 #openshift_metrics_storage_kind=dynamic
 #openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
@@ -101,7 +103,7 @@ openshift_master_default_subdomain=apps.ocp.dell.local
 #NOTE: These need to match the inventory in group_vars
 lb_masters_vip='172.29.171.109'
 lb_routers_vip='172.29.171.110'
-openshift_hosted_router_selector = 'region=infra'
+openshift_hosted_router_selector='region=infra'
 #openshift_node_open_ports=[{'service': 'router stats port', 'port': '1936/tcp'}]#This might not be required now that we're using actual Loadbalancer VMs
 
 
