@@ -1,0 +1,5 @@
+- name: Validate Required Group Configuration
+  fail:
+    msg: "'database', 'redis' and 'quay_enterprise' groups must be specified"
+  when:
+    - "'redis' not in groups or groups['redis']| length == 0 or 'database' not in groups or groups['database']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"

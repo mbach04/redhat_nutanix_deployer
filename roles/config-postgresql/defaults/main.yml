@@ -3,7 +3,6 @@
 mode: containerized
 
 postgresql_name: postgresql
-postgresql_username: postgresql
 postgresql_service: "{{ postgresql_name }}.service"
 
 #Systemd

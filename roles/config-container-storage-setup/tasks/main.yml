@@ -7,7 +7,9 @@
         owner: root
         group: root
         mode: 0644
-      become: yes
+  when:
+    - ansible_distribution_version is version_compare('7.4', '>=')
+    - ansible_distribution == "RedHat"
 
 - block:
     - name: create the docker-storage-setup config file
@@ -17,4 +19,17 @@
         owner: root
         group: root
         mode: 0644
-      become: yes
+  when:
+    - ansible_distribution_version is version_compare('7.4', '<')
+    - ansible_distribution == "RedHat"
+
+- block:
+    - name: create the docker-storage-setup config file for CentOS
+      template:
+        src: docker-storage-setup-dm.j2
+        dest: /etc/sysconfig/docker-storage-setup
+        owner: root
+        group: root
+        mode: 0644
+  when:
+    - ansible_distribution == "CentOS"
