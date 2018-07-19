@@ -1,0 +1,11 @@
+[quay_enterprise]
+quay-[01:03].ocp.dell.local
+
+[db]
+quay-[01:03].ocp.dell.local
+
+[redis]
+quay-[01:03].ocp.dell.local
+
+[quay_lb]
+quay.ocp.dell.local

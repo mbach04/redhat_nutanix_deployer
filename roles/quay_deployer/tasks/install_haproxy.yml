@@ -1,0 +1,50 @@
+- name: Setup
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  with_items:
+    - "{{ groups['quay_enterprise'] }}"
+- name: Set Configuration File Facts
+  set_fact:
+    haproxy_cfg_tmp_file: "/tmp/haproxy-{{ inventory_hostname }}.cfg"
+- name: Open Allow Redis Port
+  seport:
+    ports: 6379
+    proto: tcp
+    setype: http_port_t
+    state: present
+- name: Create HAProxy Template
+  template:
+    src: "haproxy.cfg.j2"
+    dest: "{{ haproxy_cfg_tmp_file }}"
+- name: Fetch HAProxy file
+  fetch:
+    src: "{{ haproxy_cfg_tmp_file }}"
+    dest: "{{ haproxy_cfg_tmp_file }}"
+    flat: yes
+  delegate_to: "{{ groups['quay_lb'][0] }}"
+- name: Delete HAProxy Configuration File from Remote
+  file:
+    state: absent
+    path: "{{ haproxy_cfg_tmp_file }}"
+  become: yes
+- name: Install HAProxy
+  include_role:
+    name: haproxy
+  vars:
+    haproxy_temp_file: "{{ haproxy_cfg_tmp_file }}"
+- name: Delete Local HAProxy Configuration File
+  file:
+    state: absent
+    path: "{{ haproxy_cfg_tmp_file }}"
+  delegate_to: "localhost"
+  ignore_errors: yes
+- name: 'Open Additional HAProxy Ports'
+  firewalld: 
+    port: "{{item}}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+    - 8080/tcp
+    - 6379/tcp

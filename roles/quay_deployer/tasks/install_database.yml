@@ -1,0 +1,30 @@
+- name: Install and Configure PostgreSQL
+  block:
+    - name: Install PostgreSQL
+      include_role:
+        name: config-postgresql
+      vars:
+        mode: containerized
+        postgresql_username: "{{ postgresql_username }}"
+        postgresql_password: "{{ postgresql_password }}"
+        postgresql_admin_password: "{{ postgresql_admin_password }}"
+        postgresql_database: "{{ postgresql_name }}"
+    
+    - name: Flush Handlers
+      meta: flush_handlers
+
+    - name: Sleep to give PostgreSQL a chance to finish starting up
+      pause:
+        seconds: 10
+
+    - name: Locate PostgreSQL Container
+      command: docker ps --filter=name=postgresql.service -q
+      register: postgresql_container
+
+    - name: Configure PostgreSQL
+      shell: docker exec -i {{ postgresql_container.stdout }} /bin/bash -c 'PGPASSWORD={{ postgresql_admin_password }} psql {{ postgresql_name }} -c "CREATE EXTENSION pg_trgm;"'
+      register: shell_result
+      failed_when:
+        - shell_result.rc != 0
+        - "'already exists' not in shell_result.stderr"
+  when: postgresql_type == "postgresql"

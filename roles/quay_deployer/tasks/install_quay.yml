@@ -1,0 +1,11 @@
+- name: Set Quay Hostname
+  set_fact:
+    quay_hostname: "{{ hostvars[groups['quay_lb'][0]]['inventory_hostname'] }}"
+  when: quay_hostname is undefined and groups['quay_lb'] | length > 0
+- name: Install Quay
+  include_role:
+    name: config-quay-enterprise
+  vars:
+    database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
+    redis_host: "{{ quay_hostname | default(hostvars[groups['quay_lb'][0]]['inventory_hostname']) if groups['quay_lb'] | length > 0 else hostvars[groups['redis'][0]]['ansible_eth0']['ipv4']['address'] }}"
+    quay_server_hostname: "{{ quay_hostname | default(inventory_hostname) }}"

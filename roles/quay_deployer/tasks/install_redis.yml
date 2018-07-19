@@ -1,0 +1,5 @@
+- name: Install Redis
+  include_role:
+    name: config-redis
+  vars:
+    mode: containerized

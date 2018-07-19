@@ -1,0 +1,31 @@
+---
+- name: Quay VMs Provisioner
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Provision Quay VMs on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_quay }}"
+      tags:
+        - provision
+
+- name: Preflight Checks
+  hosts: localhost
+  tasks:
+    - name: Validate Required Group Configuration
+      fail:
+        msg: "'database', 'redis' and 'quay_enterprise' groups must be specified"
+      when:
+        - "'redis' not in groups or groups['redis']| length == 0 or 'db' not in groups or groups['db']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"
+
+- name: Configure / Install quay and dependencies
+  hosts: quay_enterprise:quay_lb
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Configure Quay
+      include_role:
+        name: quay_deployer
+

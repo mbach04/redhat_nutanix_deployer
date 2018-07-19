@@ -1,0 +1,20 @@
+---
+- block:
+    - name: create the docker-storage config file
+      template:
+        src: docker-storage-setup-overlayfs.j2
+        dest: /etc/sysconfig/docker-storage-setup
+        owner: root
+        group: root
+        mode: 0644
+      become: yes
+
+- block:
+    - name: create the docker-storage-setup config file
+      template:
+        src: docker-storage-setup-dm.j2
+        dest: /etc/sysconfig/docker-storage-setup
+        owner: root
+        group: root
+        mode: 0644
+      become: yes
