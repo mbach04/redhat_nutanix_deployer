@@ -1,0 +1,9 @@
+---
+packages: ['docker', 'python2-pip']
+ports: ['5000']
+dockerregistryimage: "registry"
+daemonjsonj2: "daemon.json.j2"
+dockerconfigpath: "/etc/docker/daemon.json"
+dockerpyinstalldir: "/tmp/docker-py/"
+dockerpytar: "docker-py.tar.gz"
+ocpimagepath: "/tmp/ocp_images"

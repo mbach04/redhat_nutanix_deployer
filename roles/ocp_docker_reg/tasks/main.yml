@@ -1,0 +1,73 @@
+---
+- name: install requisite packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - "{{ packages }}"
+
+- name: add insecure registry option to docker
+  template:
+    src: "{{ daemonjsonj2 }}"
+    dest:  "{{ dockerconfigpath }}"
+
+- name: start firewalld 
+  systemd:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: add ports to firewalld
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    state: enabled
+  with_items:
+  - "{{ ports }}"
+
+- name: start and enable docker
+  systemd:
+    name: docker
+    state: started
+    daemon-reload: yes
+    enabled: yes
+
+- name: unpack python-py if not already installed
+  unarchive:
+    src: "files/{{ dockerpytar }}"
+    dest: /tmp/docker-py
+
+- name: use pip to install docker-py
+  shell: "pip install -e {{ dockerpyinstalldir }}"
+  register: dockerpy
+
+- name: create volume on the filesystem for image storage
+  file:
+    path: "{{ ocpimagepath }}"
+    state: directory
+    mode: 777
+    setype: svirt_sandbox_file_t
+
+- name: pull docker-registry image
+  docker_image: 
+    name: "{{ dockerregistryimage }}" 
+
+- name: start registry container
+  docker_container:
+    name: ocp-local-registry
+    image: "{{ dockerregistryimage }}"
+    ports:
+    - "5000:5000"
+    volumes:
+    - "/tmp/ocp_images:/var/lib/registry"
+
+## testing of pull, tag, push pipeline
+- name: pull centos7-ansible
+  docker_image:
+    name: docker.io/ansible/centos7-ansible
+
+- name: tag and push to local docker repo
+  docker_image:
+    name: docker.io/ansible/centos7-ansible
+    repository: "{{ inventory_hostname }}:5000/ky13-centos7-ansible"
+    push: yes
