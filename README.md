@@ -1,6 +1,6 @@
 Lab deployer
 ------------------
-### High level Order of operations
+### High level Order of Operations
 A. Deploy to external lab
 - Provision an Ansible core control/bastion node
 - Import Ansible roles / playbooks as necessary
