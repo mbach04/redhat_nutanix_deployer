@@ -1,0 +1,7 @@
+---
+- name: Configure default storage class with Gluster CNS
+  hosts: ocp-master-01.ocp.dell.local
+  become: yes
+  tasks:
+    - name: Patch glusterfs-storage storageclass to default
+      command: oc patch storageclass glusterfs-storage -p '{"metadata":{"annotations":{"storageclass.beta.kubernetes.io/is-default-class":"true"}}}'
