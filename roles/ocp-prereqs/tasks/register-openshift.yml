@@ -14,7 +14,6 @@
 # Pull SKU from available subscription pool (Openshift)
 - name: OCP Prereqs | rhn_registration | Search for available OpenShift subscription
   shell: /usr/bin/subscription-manager list --all --available --matches "*OpenShift*" --matches "Employee*"| awk '/Pool ID/ {print $3}' | head -1
-  # shell: /usr/bin/subscription-manager list --available --matches "*OpenShift*"
   register: pool_id_openshift
   ignore_errors: yes
   tags:
@@ -23,6 +22,8 @@
 - debug:
     var: pool_id_openshift
   when: global_debug
+  tags:
+    - register
 
 # Attaching host to Pool ID from above
 - name: OCP Prereqs | rhn_registration | Attach machine to Pool ID (OpenShift)

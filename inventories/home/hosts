@@ -1,0 +1,89 @@
+[masters]
+ocp-master-01.ocp.example.com
+
+[etcd]
+ocp-master-01.ocp.example.com
+
+
+[nodes]
+ocp-master-01.ocp.example.com
+ocp-infra-01.ocp.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+ocp-node-01.ocp.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+# Gluster nodes
+ocp-glst-[01:03].ocp.example.com openshift_schedulable=True
+
+[infranodes]
+ocp-infra-01.ocp.example.com
+
+[glusterfs]
+ocp-glst-[01:03].ocp.example.com glusterfs_devices='["/dev/sdc"]'
+
+
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+glusterfs
+temphosts
+
+
+[OSEv3:vars]
+openshift_release="3.9"
+openshift_deployment_type=openshift-enterprise
+ansible_become=true
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+openshift_master_dynamic_provisioning_enabled=True
+
+
+# CNS storage for applications
+openshift_storage_glusterfs_namespace=app-storage
+openshift_storage_glusterfs_block_deploy=false
+
+
+# metrics
+openshift_metrics_install_metrics=false
+openshift_metrics_hawkular_nodeselector={"role":"infra"}
+openshift_metrics_cassandra_nodeselector={"role":"infra"}
+openshift_metrics_heapster_nodeselector={"role":"infra"}
+openshift_metrics_cassandra_pvc_size=5Gi
+openshift_metrics_storage_kind=dynamic
+
+# logging
+openshift_logging_install_logging=false            
+openshift_logging_es_cluster_size=3
+openshift_logging_es_nodeselector={"role":"infra"}
+openshift_logging_kibana_nodeselector={"role":"infra"}
+openshift_logging_curator_nodeselector={"role":"infra"}
+openshift_logging_es_pvc_size=5Gi
+openshift_logging_storage_kind=dynamic
+
+
+
+# other vars
+#----------------------------------------------------
+osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others are installed by default
+
+#glusterfs_storageclass_default=true #testing showed this doesn't work
+
+
+#openshift_metrics_storage_kind=dynamic
+#openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
+
+# Configure master API and console ports.
+#openshift_master_api_port=8443
+#openshift_master_console_port=8443
+
+#lb_masters_vip
+openshift_master_cluster_hostname=ocp-masters-internal.ocp.example.com
+#lb_masters_vip
+openshift_master_cluster_public_hostname=ocp-master-01.ocp.example.com
+openshift_master_default_subdomain=apps.ocp.example.com
+
+
+openshift_hosted_router_selector='region=infra'
+openshift_disable_check=memory_availability,disk_availability
+
+# An attempt to clean up failed CNS deployment
+openshift_storage_glusterfs_wipe=True
