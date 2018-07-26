@@ -1,0 +1,21 @@
+- name: OCP-prereqs | Install OCP Pre-req packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ ocp_packages }}"
+
+- name: OCP-prereqs | Install Packages | Yum Update
+  yum:
+    name: '*'
+    state: latest
+
+- name: OCP-prereqs | Install Packages | Restart
+  shell: nohup bash -c "sleep 2s && shutdown -r now" &
+  ignore_errors: true
+  tags:
+    - reboot
+
+- name: OCP-Prereqs | Install Packages | Validate SSH before continuing
+  wait_for_connection:
+    timeout: 480
+    delay: 10

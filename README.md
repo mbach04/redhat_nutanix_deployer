@@ -1,12 +1,12 @@
 Lab deployer
 ------------------
-### High level Order of operations
+### High level Order of Operations
 A. Deploy to external lab
 - Provision an Ansible core control/bastion node
 - Import Ansible roles / playbooks as necessary
 - Verify DNS entries are available
 - Deploy Ansible Tower (remaining tasks deploy from Tower)
-- Provision all 3 Masters
+- Provision all OCP instances (don't configure, they need to just be provisioned for the benefit of the load balancer deployer role)
 - Deploy all 4 load balancers
 - Verify DNS entries resolve correctly
 - Deploy Quay
@@ -25,6 +25,15 @@ B. Deploy to internal lab
 - Deploy Quay
 - Deploy OpenShift with CNS
 - Deploy integrated Open Innovation Labs CI/CD tools (Gitlab, Nexus, Jenkins, example project)
+
+
+### RHEL KVM Disk Image
+Resize root size for qcow2 image to 76G:
+`qemu-img resize rhel-server-7.5-update-1-x86_64-kvm.qcow2 +65G`
+
+Check qcow2 image:
+`qemu-img info rhel-server-7.5-update-1-x86_64-kvm.qcow2`
+
 
 ### Hash the password for cloud-config (optional, this can be left blank)
 

@@ -1,0 +1,16 @@
+lbs_packages:
+  - wget
+  - git 
+  - net-tools
+  - bind-utils
+  - yum-utils
+  - bridge-utils
+  - bash-completion
+  - kexec-tools
+  - sos 
+  - psacct
+  - tmux
+  - python-firewall
+  - firewalld
+  - haproxy
+  - keepalived

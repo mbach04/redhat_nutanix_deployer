@@ -1,4 +1,5 @@
 ---
+# Deploy the VM
 - name: YUM Nutanix Deployer
   hosts: localhost
   gather_facts: false
@@ -13,32 +14,157 @@
 
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
+
+# Deploy ansible private key to VM
+- name: Ansible private key
+  hosts: repository
+  remote_user: ansible
+  become: yes
+  tasks:
+    - name: Deploy private key to server
+      copy:
+        content: "{{ ansible_ssh_private_key }}"
+        dest: /home/ansible/.ssh/id_rsa
+        owner: ansible
+        group: ansible
+        mode: 0600
     
-# - name: YUM Nutanix Configuration
-#   hosts: repository
-#   remote_user: ansible
-#   become: yes
-#   vars_prompt:
-#     - name: "rhsm_username"
-#       prompt: "RHSM Username"
-#     - name: "rhsm_password"
-#       prompt: "RHSM Password"
+# Configure the VM
+- name: YUM Nutanix Configuration
+  hosts: repository
+  remote_user: ansible
+  become: yes
+  vars_prompt:
+    - name: "rhsm_username"
+      prompt: "RHSM Username"
+    - name: "rhsm_password"
+      prompt: "RHSM Password"
+  vars:
+    repo_list:
+      - "rhel-7-server-rpms"                                                                                     
+      - "rhel-7-server-extras-rpms"
+      - "rhel-7-server-ose-3.9-rpms" 
+      - "rhel-7-fast-datapath-rpms"
+      - "rhel-7-server-ansible-2.4-rpms"
+      - "rh-gluster-3-client-for-rhel-7-server-rpms"
+    repo_disk_dev: "/dev/sdb"
+    repo_partition_num: 1
+    repo_fstype: "xfs"
+    repo_dir: "/repos"
+    yum_repo_dir: "{{ repo_dir }}/yum"
+    docker_repo_dir: "{{ repo_dir }}/docker"
+    base_packages:
+      - yum-utils
+      - createrepo
+      - docker
+      - git
+      - httpd
+      - ansible
 
-#   tasks:
-#     - name: Register with subscription-manager
-#       redhat_subscription:
-#         state: present
-#         username: "{{ rhsm_username }}"
-#         password: "{{ rhsm_password }}"
-#         autosubscribe: yes
+  tasks:
+    - name: Remove self-referencing yum repos defined from cloud-init
+      yum_repository:
+        name: "{{ item }}"
+        state: absent
+        enabled: no
+      loop: "{{ vm_yum_repos | map(attribute='reponame') | list }}"
 
-#     - name: Disable all repositories except those required by OCP
-#       shell: "{{ item }}"                                                                                                   
-#       with_items:                                                                                                           
-#        - subscription-manager repos --disable='*'                                                                          
-#        - >                                                                                                                 
-#          subscription-manager repos                                                                                        
-#          --enable="rhel-7-server-rpms"                                                                                     
-#          --enable="rhel-7-server-extras-rpms"                                                                              
-#          --enable="rhel-7-server-ose-3.5-rpms" 
-#          --enable="rhel-7-fast-datapath-rpms"
+    - name: Define partition for repository storage
+      parted:
+        device: "{{ repo_disk_dev}}"
+        number: "{{repo_partition_num }}"
+        state: present
+    
+    - name: Define filesystem on partition for repository storage
+      filesystem:
+        fstype: "{{ repo_fstype }}"
+        dev: "{{ repo_disk_dev }}{{ repo_partition_num }}"
+
+    - name: Create directory for repository storage
+      file:
+        path: "{{ repo_dir }}"
+        state: directory
+
+    - name: Mount repository filesystem
+      mount:
+        path: "{{ repo_dir }}"
+        src: "{{ repo_disk_dev }}{{ repo_partition_num }}"
+        fstype: "{{ repo_fstype }}"
+        state: mounted
+
+    - name: Create directories for yum and docker storage
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - "{{ yum_repo_dir }}"
+        - "{{ docker_repo_dir }}"
+
+    - name: Import GPG Key
+      shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+      args:
+        warn: no
+
+    - name: Register with subscription-manager
+      redhat_subscription:
+        state: present
+        username: "{{ rhsm_username }}"
+        password: "{{ rhsm_password }}"
+        autosubscribe: yes
+
+    - name: Disable all repositories
+      shell: "subscription-manager repos --disable='*'"                                                                                                   
+      
+    - name: Enable repositories needed by OCP
+      shell: "subscription-manager repos --enable={{ item }}"
+      loop: "{{ repo_list }}"
+
+    - name: Get latest YUM updates
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install Packages for repository creation
+      yum:
+        name: "{{ base_packages }}"
+        state: installed     
+
+    - name: Async Download of repositories
+      shell: "reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ yum_repo_dir }}"
+      async: 43200
+      poll: 5
+      register: "async_repo_download"
+      loop: "{{ repo_list }}"
+
+    - name: Check Download status
+      async_status:
+        jid: "{{ item.ansible_job_id }}"
+      loop: "{{ async_repo_download.results }}"
+      register: async_poll_results
+      until: async_poll_results.finished
+      retries: 30
+
+
+    - name: Create YUM repositories
+      shell: "createrepo -v {{ yum_repo_dir }}/{{ item }} -o {{ yum_repo_dir }}/{{ item }}"
+      loop: "{{ repo_list }}"
+
+    - name: Set SELinux context rule for repository directory
+      sefcontext:
+        target: "{{ repo_dir }}(/.*)?"
+        setype: httpd_sys_content_t
+        state: present
+    
+    - name: Set context rule on directory
+      shell: "restorecon -R {{ repo_dir }}"
+
+    - name: Create softlink from repo dir to web dir
+      file:
+        src: "{{ repo_dir }}"
+        dest: "/var/www/html/repos"
+        state: link
+
+    - name: Start httpd server
+      service:
+        name: httpd
+        state: started

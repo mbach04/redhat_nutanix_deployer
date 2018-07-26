@@ -1,0 +1,4 @@
+# - import_tasks: register-openshift.yml # use only when subscribing direct to redhat cdn with sub-man
+# - import_tasks: configure-repos.yml # use only when subscribing direct to redhat cdn with sub-man
+- import_tasks: install-packages.yml
+- import_tasks: configure-docker-storage.yml

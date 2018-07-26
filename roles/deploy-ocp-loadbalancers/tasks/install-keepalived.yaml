@@ -1,0 +1,71 @@
+---
+- name: install python-firewall
+  yum:
+    name: python-firewall
+    state: present
+  tags:
+    - install
+    
+- name: install python-dns
+  yum:
+    name: python-dns
+    state: present
+  tags:
+    - install  
+    
+- name: install firewalld
+  yum:
+    name: firewalld
+    state: present
+  tags:
+    - install
+    
+- name: enable and start firewalld
+  service:
+    name: firewalld
+    state: reloaded
+    enabled: yes
+  tags:
+    - install
+
+- name: open VRRP port
+  firewalld:
+    rich_rule: 'rule protocol value="vrrp" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+  tags:
+    - install
+
+- name: 'Allow bind to the VIP'
+  lineinfile: 
+    path: /etc/sysctl.d/50-keepalived.conf
+    regexp: '^net.ipv4.ip_nonlocal_bind.*'
+    line: 'net.ipv4.ip_nonlocal_bind=1'
+    create: yes
+    state: present
+    owner: root
+    group: root
+    mode: 0644
+  notify: 'reload sysctl'
+  tags:
+    - install
+    
+- name: install keepalived
+  yum:
+    name: keepalived
+    state: present
+  tags:
+    - install
+  
+- name: deploy keepalived config file
+  template:
+    src: "{{ lb_type }}-keepalived.conf.j2"
+    dest: /etc/keepalived/keepalived.conf
+  notify: 'enable and start or reload keepalived'
+
+- name: Start keepalived service
+  service:
+    name: keepalived
+    state: started
+    enabled: yes

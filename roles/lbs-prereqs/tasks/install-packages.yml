@@ -1,0 +1,16 @@
+- name: Deploy Loadbalancers | LBs-prereqs | Install LBs Pre-req packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ lbs_packages }}"
+
+- name: Deploy LB Prereqs | Install Packages | Yum Update
+  yum:
+    name: '*'
+    state: latest
+
+# - name: Deploy LB Prereqs | Install Packages | Restart
+#   shell: nohup bash -c "sleep 2s && shutdown -r now" &
+#   ignore_errors: true
+#   tags:
+#     - reboot
