@@ -1,0 +1,23 @@
+---
+- name: upgrade ansible to the version available in the tower bundle
+  hosts: localhost
+  become: true
+  become_user: root
+  vars:
+  - ansible_pkg_files_path: "/home/ansible/files/ansible_pkgs"
+  - ansible_pkgs: ['ansible-2.5.2-1.el7.ans.noarch.rpm', 'python2-crypto-2.6.1-13.el7.x86_64.rpm', 'python-jinja2-2.8-7.rhel7.noarch.rpm', python-paramiko-2.1.1-0.4.el7.noarch.rpm']
+  tasks:
+  - name: upgrade to ansible 2.5.2 on the ansible core box
+    yum:
+      name: "{{ ansible_pkg_files }}/{{ item }}"
+      state: present
+    with_items:
+    - "{{ ansible_pkgs }}"
+
+  - name: collect ansible installed version
+    shell: ansible --version
+    register: ansvers
+
+  - name: print ansible installed version
+    debug:
+      msg: "{{ ansvers.stdout }}"
