@@ -14,7 +14,7 @@
 
 - name: Open port in firewalld
   firewalld:
-    port: "{{ postgresql_port }}/TCP"
+    port: "{{ postgresql_port }}/tcp"
     permanent: true
     state: enabled
   when: firewalld_status.rc == 0

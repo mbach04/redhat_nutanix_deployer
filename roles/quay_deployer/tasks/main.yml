@@ -4,7 +4,7 @@
 - import_tasks: install_haproxy.yml
   when: "inventory_hostname in groups.quay_lb"
 - import_tasks: install_database.yml
-  when: "inventory_hostname in groups.db"
+  when: "inventory_hostname in groups.database"
 - import_tasks: install_redis.yml
   when: "inventory_hostname in groups.redis"
 - import_tasks: install_quay.yml

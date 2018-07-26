@@ -18,11 +18,11 @@
       fail:
         msg: "'database', 'redis' and 'quay_enterprise' groups must be specified"
       when:
-        - "'redis' not in groups or groups['redis']| length == 0 or 'db' not in groups or groups['db']| length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise']| length == 0"
+        - "'redis' not in groups or groups['redis'] | length == 0 or 'database' not in groups or groups['database'] | length == 0 or 'quay_enterprise' not in groups or groups['quay_enterprise'] | length == 0"
 
 - name: Configure / Install quay and dependencies
-  hosts: quay_enterprise:quay_lb
-  gather_facts: false
+  hosts: quay_enterprise:quay_lb:database:redis
+  gather_facts: true
   become: yes
   tasks:
     - name: Configure Quay
