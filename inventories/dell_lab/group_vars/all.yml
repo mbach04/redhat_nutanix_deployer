@@ -38,6 +38,7 @@ database_password: quay
 database_admin_username: root
 database_admin_password: quayadmin
 postgresql_port: 5432
+redis_port: 6379
 
 
 # VM Specs

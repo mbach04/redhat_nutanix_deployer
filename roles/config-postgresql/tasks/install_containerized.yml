@@ -28,20 +28,31 @@
     group: root
     mode: g+rw
     path: "{{ postgresql_storage_dir }}"
-  notify: "Restart PostgreSQL Service"
+  notify: 
+    - "Restart PostgreSQL Service"
 
 
 - name: Configure systemd environment files
   template:
     src: "{{ postgresql_name }}.j2"
     dest: "{{ systemd_environmentfile_dir}}/{{ postgresql_name }}"
-  notify: "Restart PostgreSQL Service"
+  notify: 
+    - "Restart PostgreSQL Service"
 
 - name: Configure systemd unit files
   template:
     src: "{{ postgresql_service }}.j2"
     dest: "{{ systemd_service_dir}}/{{ postgresql_service }}"
-  notify: "Restart PostgreSQL Service"
+  notify: 
+    - "Restart PostgreSQL Service"
+
+#including this explicitly because the handler isn't registering the changes for some reason
+- name: Restart PostgreSQL Service
+  systemd:
+    name: "{{ postgresql_name }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
 
 - name: Include firewall tasks
   include_tasks: firewall.yml
