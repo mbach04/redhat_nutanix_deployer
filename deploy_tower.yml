@@ -1,0 +1,5 @@
+---
+- name: automated tower deploy code
+  hosts: tower_nodes 
+  roles:
+  - tower_prelim
