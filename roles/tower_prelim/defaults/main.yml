@@ -4,7 +4,8 @@ tower_node: "192.168.122.137"
 
 ## need these regardless of single node/clustered install
 pull_tarball: "True"
-cluster: "True"pipPackage: "python2-pip"
+cluster: "True"
+pipPackage: "python2-pip"
 towerCliTar: "tower-cli_tar.tar.gz"
 towerCliDir: "/tmp/tower-cli"
 domain: "ocp.dell.local"
