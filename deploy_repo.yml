@@ -1,0 +1,13 @@
+---
+- name: push server and extras repo config to tower nodes and db
+  hosts: all
+  tasks: 
+  - name: push the ansible repo to tower nodes and db
+    become: true
+    become_user: root
+    copy: 
+      src: files/ansible.repo
+      dest: /etc/yum.repos.d/ansible.repo
+      owner: root
+      group: root
+    
