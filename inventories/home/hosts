@@ -12,9 +12,6 @@ node-[01:03].bachexample.com openshift_node_group_name='node-config-compute'
 # Gluster nodes
 #gluster-[01:03].bachexample.com openshift_schedulable=False
 
-[infranodes]
-infra-01.bachexample.com
-
 [glusterfs]
 node-01.bachexample.com glusterfs_devices='["/dev/sdc"]'
 node-02.bachexample.com glusterfs_devices='["/dev/sdc"]'
@@ -83,5 +80,5 @@ openshift_master_cluster_public_hostname=masters.bachexample.com
 openshift_master_default_subdomain=apps.bachexample.com
 
 
-openshift_hosted_router_selector='region=infra'
+openshift_hosted_router_selector='node-role.kubernetes.io/infra=true'
 openshift_disable_check=memory_availability,disk_availability
