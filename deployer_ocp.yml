@@ -2,8 +2,7 @@
 
 - name: OCP Hosts, Handle Prereqs
   hosts:
-    # - nodes
-    - temphosts
+    - nodes
   gather_facts: true
   become: yes
   tasks:
@@ -13,22 +12,22 @@
       tags:
        - install
 
-# - name: Configure masters for CNS deployment
-#   hosts: masters
-#   gather_facts: true
-#   tasks:
-#     - name: Enable the gluster repos for all Masters
-#       command: subscription-manager repos --enable="rh-gluster-3-client-for-rhel-7-server-rpms"
+- name: Configure masters for CNS deployment
+  hosts: masters
+  gather_facts: true
+  tasks:
+    - name: Enable the gluster repos for all Masters
+      command: subscription-manager repos --enable="rh-gluster-3-client-for-rhel-7-server-rpms"
 
-#     - name: Install required CNS packages on OCP Masters
-#       yum:
-#         name: "{{ item }}"
-#         state: latest
-#       with_items:
-#         - cns-deploy
-#         - heketi-client
+    - name: Install required CNS packages on OCP Masters
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - cns-deploy
+        - heketi-client
 
-    # - name: Disable the gluster repos for all Masters
-    #   yum_repository:
-    #     name: local_server_gluster
-    #     state: absent
+    - name: Disable the gluster repos for all Masters
+      yum_repository:
+        name: local_server_gluster
+        state: absent

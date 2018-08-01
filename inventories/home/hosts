@@ -1,22 +1,24 @@
 [masters]
-ocp-master-01.ocp.example.com
+master-01.ocp.example.com
 
 [etcd]
-ocp-master-01.ocp.example.com
+master-01.ocp.example.com
 
 
 [nodes]
-ocp-master-01.ocp.example.com
-ocp-infra-01.ocp.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ocp-node-01.ocp.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+master-01.ocp.example.com
+infra-01.ocp.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+node-[01:03].ocp.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" openshift_schedulable=True
 # Gluster nodes
-ocp-glst-[01:03].ocp.example.com openshift_schedulable=True
+#gluster-[01:03].ocp.example.com openshift_schedulable=False
 
 [infranodes]
-ocp-infra-01.ocp.example.com
+infra-01.ocp.example.com
 
 [glusterfs]
-ocp-glst-[01:03].ocp.example.com glusterfs_devices='["/dev/sdc"]'
+node-01.ocp.example.com glusterfs_devices='["/dev/sdc"]'
+node-02.ocp.example.com glusterfs_devices='["/dev/sdc"]'
+node-03.ocp.example.com glusterfs_devices='["/dev/sdc"]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
@@ -25,7 +27,6 @@ masters
 nodes
 etcd
 glusterfs
-temphosts
 
 
 [OSEv3:vars]
@@ -47,7 +48,7 @@ openshift_metrics_install_metrics=false
 openshift_metrics_hawkular_nodeselector={"role":"infra"}
 openshift_metrics_cassandra_nodeselector={"role":"infra"}
 openshift_metrics_heapster_nodeselector={"role":"infra"}
-openshift_metrics_cassandra_pvc_size=5Gi
+openshift_metrics_cassandra_pvc_size=25Gi
 openshift_metrics_storage_kind=dynamic
 
 # logging
@@ -56,7 +57,7 @@ openshift_logging_es_cluster_size=3
 openshift_logging_es_nodeselector={"role":"infra"}
 openshift_logging_kibana_nodeselector={"role":"infra"}
 openshift_logging_curator_nodeselector={"role":"infra"}
-openshift_logging_es_pvc_size=5Gi
+openshift_logging_es_pvc_size=50Gi
 openshift_logging_storage_kind=dynamic
 
 
@@ -72,18 +73,15 @@ osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others 
 #openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
 
 # Configure master API and console ports.
-#openshift_master_api_port=8443
-#openshift_master_console_port=8443
+openshift_master_api_port=8443
+openshift_master_console_port=8443
 
 #lb_masters_vip
-openshift_master_cluster_hostname=ocp-masters-internal.ocp.example.com
+openshift_master_cluster_hostname=master-01.ocp.example.com
 #lb_masters_vip
-openshift_master_cluster_public_hostname=ocp-master-01.ocp.example.com
+openshift_master_cluster_public_hostname=masters.ocp.example.com
 openshift_master_default_subdomain=apps.ocp.example.com
 
 
 openshift_hosted_router_selector='region=infra'
 openshift_disable_check=memory_availability,disk_availability
-
-# An attempt to clean up failed CNS deployment
-openshift_storage_glusterfs_wipe=True
