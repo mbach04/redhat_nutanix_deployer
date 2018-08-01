@@ -98,5 +98,6 @@
         repo: "{{ git_repo_remote }}"
         dest: "{{ git_repo_local }}"
         version: "{{ git_repo_version }}"
+      become: no
       tags:
         - git
