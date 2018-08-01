@@ -1,24 +1,24 @@
 [masters]
-master-01.ocp.example.com
+master-01.bachexample.com
 
 [etcd]
-master-01.ocp.example.com
+master-01.bachexample.com
 
 
 [nodes]
-master-01.ocp.example.com
-infra-01.ocp.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-node-[01:03].ocp.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}" openshift_schedulable=True
+master-01.bachexample.com openshift_node_group_name='node-config-master'
+infra-01.bachexample.com openshift_node_group_name='node-config-infra'
+node-[01:03].bachexample.com openshift_node_group_name='node-config-compute'
 # Gluster nodes
-#gluster-[01:03].ocp.example.com openshift_schedulable=False
+#gluster-[01:03].bachexample.com openshift_schedulable=False
 
 [infranodes]
-infra-01.ocp.example.com
+infra-01.bachexample.com
 
 [glusterfs]
-node-01.ocp.example.com glusterfs_devices='["/dev/sdc"]'
-node-02.ocp.example.com glusterfs_devices='["/dev/sdc"]'
-node-03.ocp.example.com glusterfs_devices='["/dev/sdc"]'
+node-01.bachexample.com glusterfs_devices='["/dev/sdc"]'
+node-02.bachexample.com glusterfs_devices='["/dev/sdc"]'
+node-03.bachexample.com glusterfs_devices='["/dev/sdc"]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
@@ -30,11 +30,11 @@ glusterfs
 
 
 [OSEv3:vars]
-openshift_release="3.9"
+openshift_release="3.10"
 openshift_deployment_type=openshift-enterprise
 ansible_become=true
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-
+#openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
 openshift_master_dynamic_provisioning_enabled=True
 
 
@@ -77,10 +77,10 @@ openshift_master_api_port=8443
 openshift_master_console_port=8443
 
 #lb_masters_vip
-openshift_master_cluster_hostname=master-01.ocp.example.com
+openshift_master_cluster_hostname=master-01.bachexample.com
 #lb_masters_vip
-openshift_master_cluster_public_hostname=masters.ocp.example.com
-openshift_master_default_subdomain=apps.ocp.example.com
+openshift_master_cluster_public_hostname=masters.bachexample.com
+openshift_master_default_subdomain=apps.bachexample.com
 
 
 openshift_hosted_router_selector='region=infra'

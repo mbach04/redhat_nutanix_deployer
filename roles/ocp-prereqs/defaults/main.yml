@@ -11,5 +11,5 @@ ocp_packages:
   - sos 
   - psacct
   - docker-1.13.1
-  - atomic-openshift-utils
+  - openshift-ansible
   - glusterfs-fuse
