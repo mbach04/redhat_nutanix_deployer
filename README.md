@@ -1,6 +1,6 @@
 Lab deployer
 ------------------
-### High level Order of Operations
+## High level Order of Operations
 A. Deploy to external lab
 - Provision an Ansible core control/bastion node
 - Import Ansible roles / playbooks as necessary
@@ -27,13 +27,25 @@ B. Deploy to internal lab
 - Deploy integrated Open Innovation Labs CI/CD tools (Gitlab, Nexus, Jenkins, example project)
 
 
-### RHEL KVM Disk Image
+
+## Misc. Operations
+
+### RHEL KVM Disk Image Resize
+The default RHEL KVM cloud image has a root disk size of 10G. To establish larger sizes the qcow2 image virtual size must be adjusted before uploading to the Nutanix cluster. 
+
+Example:
+
 Resize root size for qcow2 image to 76G:
-`qemu-img resize rhel-server-7.5-update-1-x86_64-kvm.qcow2 +65G`
+
+```bash
+qemu-img resize rhel-server-7.5-update-1-x86_64-kvm.qcow2 +65G
+```
 
 Check qcow2 image:
-`qemu-img info rhel-server-7.5-update-1-x86_64-kvm.qcow2`
 
+```bash
+qemu-img info rhel-server-7.5-update-1-x86_64-kvm.qcow2
+```
 
 ### Hash the password for cloud-config (optional, this can be left blank)
 
@@ -71,29 +83,27 @@ Set the resulting string equal to `cloud_init_root_pass` in `group_vars/*/all.ya
 From your bastion node (or the node you wish to execute ansible from)  
 First generate an ssh key pair
 ```
-# ssh-keygen
+# ssh-keygen -f <location>/<keyname>
 ```
-```
-# for host in master.example.com \
-    node1.example.com \
-    node2.example.com; \
-    do ssh-copy-id -i ~/.ssh/id_rsa.pub $host; \
-    done
-```
+
+This will generate a public and private keypair. The ansible scripts expect the public/private key used for all provisioned VMs to be in `inventories/group_vars/*/all.yml` under the variable names: `ansible_ssh_public_key` and `ansible_ssh_private_key` (Note: see below on how to encrypt the private key)
+
+In addition, many post-provisioning playbooks will need access to the private key for ssh connections. See the `ansible.cfg` file for the specific filename and location of this key.
 
 
 ### Encrypting secrets:
 
 Single variable encryption:
-```
+
+```bash
 ansible-vault encrypt_string <string> --ask-vault-pass
-
 ```
-Single variable encyption, reading input from stdin (SSH key/etc):
 
+Single variable encyption, reading input from stdin (useful for SSH key or pasting large text sections):
 ```
 ansible-vault encrypt_string --stdin-name 'ansible_ssh_private_key'
 ```
+
 Single variable decryption
 ```
 ansible my_server -m debug -a 'var=my_encrypted_var'

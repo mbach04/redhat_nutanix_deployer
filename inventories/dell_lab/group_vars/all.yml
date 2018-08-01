@@ -8,7 +8,7 @@ ocp_version: 3.9
 api_version: "3.0"
 cluster_url: 172.29.170.95
 api_url_v3: "https://{{ cluster_url }}:9440/api/nutanix/v3"
-prism_user: admin
+prism_user: "admin"
 prism_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           61633163353738633566663562333065653033626533626362653836653933656434343963366634
@@ -21,9 +21,7 @@ prism_password: !vault |
 # Global VM Settings
 cluster_name: "SOFATL"
 subnet_name: "VMtest"
-
-image_name: RHEL Server 7.5 KVM Guest May 2018 Update
-# image_name: RHEL_Server_7.5
+image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
 
 # VM Specs
 # Disk specs here are close, but not exact yet
@@ -31,52 +29,51 @@ image_name: RHEL Server 7.5 KVM Guest May 2018 Update
 
 vm_defs_repo:
   # RPM Repository
-  # -  {vm_name: repository, vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
-  -  {vm_name: repository1, vm_ip: '172.29.171.99', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 143051]}
+  -  {vm_name: "{{ vm_repository_hostname }}", vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 153600]}
 
 
 vm_defs_tower:
   # Ansible Tower
-  -  {vm_name: ansible-tower-01, vm_ip: '172.29.171.111', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 143051]}
-  -  {vm_name: ansible-tower-02, vm_ip: '172.29.171.112', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 143051]}
-  -  {vm_name: ansible-tower-03, vm_ip: '172.29.171.113', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 143051]}
-  -  {vm_name: ansible-tower-db, vm_ip: '172.29.171.114', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 143051]}
+  -  {vm_name: ansible-tower-01, vm_ip: '172.29.171.111', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 153600]}
+  -  {vm_name: ansible-tower-02, vm_ip: '172.29.171.112', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 153600]}
+  -  {vm_name: ansible-tower-03, vm_ip: '172.29.171.113', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 153600]}
+  -  {vm_name: ansible-tower-db, vm_ip: '172.29.171.114', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 153600]}
 
 vm_defs_ocp:
   # masters
-  -  {vm_name: ocp-master-01, vm_ip: '172.29.171.101', vm_ram: 20480, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: ocp-master-02, vm_ip: '172.29.171.102', vm_ram: 20480, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: ocp-master-03, vm_ip: '172.29.171.103', vm_ram: 20480, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
+  -  {vm_name: ocp-master-01, vm_ip: '172.29.171.101', vm_ram: 20480, vm_num_cpu_per_socket: 1, vm_num_sockets: 4}
+  -  {vm_name: ocp-master-02, vm_ip: '172.29.171.102', vm_ram: 20480, vm_num_cpu_per_socket: 1, vm_num_sockets: 4}
+  -  {vm_name: ocp-master-03, vm_ip: '172.29.171.103', vm_ram: 20480, vm_num_cpu_per_socket: 1, vm_num_sockets: 4}
   # infra nodes
-  -  {vm_name: ocp-infra-01, vm_ip: '172.29.171.104', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-infra-02, vm_ip: '172.29.171.105', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-infra-03, vm_ip: '172.29.171.106', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
+  -  {vm_name: ocp-infra-01, vm_ip: '172.29.171.104', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 102400]}
+  -  {vm_name: ocp-infra-02, vm_ip: '172.29.171.105', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 102400]}
+  -  {vm_name: ocp-infra-03, vm_ip: '172.29.171.106', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 102400]}
   # app nodes
-  -  {vm_name: ocp-node-01, vm_ip: '172.29.171.150', vm_ram: 49152, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-node-02, vm_ip: '172.29.171.151', vm_ram: 49152, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-node-03, vm_ip: '172.29.171.152', vm_ram: 49152, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-node-04, vm_ip: '172.29.171.153', vm_ram: 49152, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
+  -  {vm_name: ocp-node-01, vm_ip: '172.29.171.150', vm_ram: 32768, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 102400]}
+  -  {vm_name: ocp-node-02, vm_ip: '172.29.171.151', vm_ram: 32768, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 102400]}
+  -  {vm_name: ocp-node-03, vm_ip: '172.29.171.152', vm_ram: 32768, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 102400]}
+  -  {vm_name: ocp-node-04, vm_ip: '172.29.171.153', vm_ram: 32768, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 102400]}
   # Gluster CNS Nodes
-  -  {vm_name: ocp-cns-01, vm_ip: '172.29.171.120', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-cns-02, vm_ip: '172.29.171.121', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-cns-03, vm_ip: '172.29.171.123', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
+  -  {vm_name: ocp-cns-01, vm_ip: '172.29.171.120', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 768000, disk_size_mib: 102400]}
+  -  {vm_name: ocp-cns-02, vm_ip: '172.29.171.121', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 768000, disk_size_mib: 102400]}
+  -  {vm_name: ocp-cns-03, vm_ip: '172.29.171.123', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 768000, disk_size_mib: 102400]}
 
 vm_defs_cns:
   # Gluster CNS Nodes
-  -  {vm_name: ocp-cns-01, vm_ip: '172.29.171.120', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-cns-02, vm_ip: '172.29.171.121', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
-  -  {vm_name: ocp-cns-03, vm_ip: '172.29.171.123', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
+  -  {vm_name: ocp-cns-01, vm_ip: '172.29.171.120', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 768000, disk_size_mib: 102400]}
+  -  {vm_name: ocp-cns-02, vm_ip: '172.29.171.121', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 768000, disk_size_mib: 102400]}
+  -  {vm_name: ocp-cns-03, vm_ip: '172.29.171.123', vm_ram: 24576, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 768000, disk_size_mib: 102400]}
 
 vm_defs_bastion:
--  {vm_name: ansible-bastion, vm_ip: '172.29.171.154', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 762940, disk_size_mib: 152588]}
+-  {vm_name: ansible-bastion, vm_ip: '172.29.171.154', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 153600]}
 
 vm_defs_lbs:
   # masters lbs
-  -  {vm_name: ocp-lb-01, vm_ip: '172.29.171.107', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
-  -  {vm_name: ocp-lb-02, vm_ip: '172.29.171.108', vm_ram: 4096,  vm_num_cpu_per_socket: 1, vm_num_sockets: 6, vm_disk_list: [disk_size_mib: 76294,]}
+  -  {vm_name: ocp-lb-01, vm_ip: '172.29.171.107', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76800]}
+  -  {vm_name: ocp-lb-02, vm_ip: '172.29.171.108', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76800]}
   # infras lbs
-  -  {vm_name: ocp-lb-03, vm_ip: '172.29.171.124', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76294,]}
-  -  {vm_name: ocp-lb-04, vm_ip: '172.29.171.125', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76294,]}
+  -  {vm_name: ocp-lb-03, vm_ip: '172.29.171.124', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76800]}
+  -  {vm_name: ocp-lb-04, vm_ip: '172.29.171.125', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76800]}
 
 # Virtual IP assignments
 masters_lbs_vip: '172.29.171.109'
@@ -88,48 +85,49 @@ vm_net_dns:
 vm_net_cidr: "24"
 vm_net_gateway: "172.29.171.1"
 vm_net_domain: "ocp.dell.local"
-
+vm_repository_hostname: "repository"
+vm_repository_fqdn: "{{ vm_repository_hostname }}.{{ vm_net_domain }}"
 vm_yum_repos:
   - reponame: "local_fast_datapath"
-    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-fast-datapath-rpms"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/rhel-7-fast-datapath-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Fast Datapath Repository"
   - reponame: "local_server_extras"
-    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-extras-rpms"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/rhel-7-server-extras-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Server Extras Repository"
   - reponame: "local_ose_3.9"
-    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-ose-3.9-rpms"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/rhel-7-server-ose-3.9-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 OSE 3.9 Repository"
   - reponame: "local_server"
-    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-rpms"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/rhel-7-server-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Server Repository"
   - reponame: "local_server_ansible"
-    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rhel-7-server-ansible-2.4-rpms"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/rhel-7-server-ansible-2.4-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RHEL 7 Server Ansible Repository"
   - reponame: "local_server_gluster"
-    baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rh-gluster-3-client-for-rhel-7-server-rpms"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/rh-gluster-3-client-for-rhel-7-server-rpms"
     enabled: true
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RH Gluster 3 for RHEL 7 Server"
 
-cloud_init_root_pass: $6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0
+cloud_init_root_pass: "$6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0"
 
-ansible_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIk0aYn5zx2klk/lCEtN383Og5KwLh+SBt0EeUjx3aczWKAI06pcsbfH/Wg00zFQEhtgaUMeCeQG//3Yxp6cDyy9jIhrqNdZ9WcfhElXRx1zK373mhO3uOxl3bzV/GN9IyLWt8maGz3BKLASN4GMMtrq6IG7QfXGc7pphiaKjJlJ9sHBia+6QMkOlir3Mot0/TvpLGKEFRid/WsPK34vMHLfjKTzXR+xLuyNz8g0qxt9UnM/3ygV5o95Gdf7RhyukmOfcOiW2OYGSec2gy5qEjpvRAu1x/+Yc5hGfG+emQXJVCk55UuuJElzJXT0pp+3rdZuK3dkUyAkENCtWtkT/7
+ansible_ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIk0aYn5zx2klk/lCEtN383Og5KwLh+SBt0EeUjx3aczWKAI06pcsbfH/Wg00zFQEhtgaUMeCeQG//3Yxp6cDyy9jIhrqNdZ9WcfhElXRx1zK373mhO3uOxl3bzV/GN9IyLWt8maGz3BKLASN4GMMtrq6IG7QfXGc7pphiaKjJlJ9sHBia+6QMkOlir3Mot0/TvpLGKEFRid/WsPK34vMHLfjKTzXR+xLuyNz8g0qxt9UnM/3ygV5o95Gdf7RhyukmOfcOiW2OYGSec2gy5qEjpvRAu1x/+Yc5hGfG+emQXJVCk55UuuJElzJXT0pp+3rdZuK3dkUyAkENCtWtkT/7"
 ansible_ssh_private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           36386632396663653163316162356638636132613962666462363132363134336664656639336535
