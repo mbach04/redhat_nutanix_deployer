@@ -1,73 +1,16 @@
 ---
-- name: install requisite packages
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-  - "{{ packages }}"
+- name: subcribe machine and ensure proper repos are attached
+  include_tasks: sub_manager.yml
+  when: configure_subscription_manager == 'True'
 
-- name: add insecure registry option to docker
-  template:
-    src: "{{ daemonjsonj2 }}"
-    dest:  "{{ dockerconfigpath }}"
+- name: configure docker launch docker registry container pull OCP images from Red Hat push OCP images to docker registry container
+  include_tasks: docker_registry_container.yml
+  when: configure_deploy_docker_registry == 'True'
 
-- name: start firewalld 
-  systemd:
-    name: firewalld
-    state: started
-    enabled: true
+- name: archive images to local tarball
+  include_tasks: archive_docker_images.yml
+  when: archive_docker_images == 'True'
 
-- name: add ports to firewalld
-  firewalld:
-    port: "{{ item }}/tcp"
-    permanent: true
-    state: enabled
-  with_items:
-  - "{{ ports }}"
-
-- name: start and enable docker
-  systemd:
-    name: docker
-    state: started
-    daemon-reload: yes
-    enabled: yes
-
-- name: unpack python-py if not already installed
-  unarchive:
-    src: "files/{{ dockerpytar }}"
-    dest: /tmp/docker-py
-
-- name: use pip to install docker-py
-  shell: "pip install -e {{ dockerpyinstalldir }}"
-  register: dockerpy
-
-- name: create volume on the filesystem for image storage
-  file:
-    path: "{{ ocpimagepath }}"
-    state: directory
-    mode: 777
-    setype: svirt_sandbox_file_t
-
-- name: pull docker-registry image
-  docker_image: 
-    name: "{{ dockerregistryimage }}" 
-
-- name: start registry container
-  docker_container:
-    name: ocp-local-registry
-    image: "{{ dockerregistryimage }}"
-    ports:
-    - "5000:5000"
-    volumes:
-    - "/tmp/ocp_images:/var/lib/registry"
-
-## testing of pull, tag, push pipeline
-- name: pull centos7-ansible
-  docker_image:
-    name: docker.io/ansible/centos7-ansible
-
-- name: tag and push to local docker repo
-  docker_image:
-    name: docker.io/ansible/centos7-ansible
-    repository: "{{ inventory_hostname }}:5000/ky13-centos7-ansible"
-    push: yes
+- name: reposync and create offline repos
+  include_tasks: repo_create_sync.yml
+  when: repo_create_sync == 'True'

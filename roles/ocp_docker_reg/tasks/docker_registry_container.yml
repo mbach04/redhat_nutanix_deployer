@@ -1,0 +1,109 @@
+- name: install requisite packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - "{{ packages }}"
+
+- name: add insecure registry option to docker
+  template:
+    src: "{{ daemonjsonj2 }}"
+    dest:  "{{ dockerconfigpath }}"
+
+- name: start firewalld
+  systemd:
+    name: firewalld
+    state: started
+    enabled: true
+    daemon_reload: yes
+
+- name: add ports to firewalld
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    state: enabled
+  with_items:
+  - "{{ ports }}"
+
+- name: start and enable docker
+  systemd:
+    name: docker
+    state: started
+    daemon-reload: yes
+    enabled: yes
+
+- name: create dir for docker-py
+  file:
+    state: directory
+    path: /tmp/docker-py
+    mode: 777
+
+- name: unpack docker-py if not already installed
+  unarchive:
+    src: "files/{{ dockerpytar }}"
+    dest: /tmp/docker-py
+
+- name: use pip to install docker-py
+  shell: "pip install -e {{ dockerpyinstalldir }}"
+  register: dockerpy
+
+- name: create volume on the filesystem for image storage
+  file:
+    path: "{{ ocpimagepath }}"
+    state: directory
+    mode: 777
+    setype: svirt_sandbox_file_t
+
+- name: pull docker-registry image
+  docker_image:
+    name: "{{ dockerregistryimage }}"
+
+- name: is the registry already up and running?
+  shell: docker ps | grep ocp-local-registry
+  register: dockerregstatus
+  failed_when: "'ERROR' in dockerregstatus.stderr"
+
+- name: start docker registry container if it's not already running
+  shell: "docker run -dit -v /tmp/ocp_images:/var/lib/registry -p 5000:5000 --name ocp-local-registry {{ dockerregistryimage }}"
+  when: dockerregstatus.stdout == ""
+
+## worked on centos7 but not rhel7; need to investigate; the code block immediately preceeding is a functional equivalent
+#- name: start registry container
+#  docker_container:
+#    name: ocp-local-registry
+#    image: "{{ dockerregistryimage }}"
+#    ports:
+#    - "5000:5000"
+#    volumes:
+#    - "/tmp/ocp_images:/var/lib/registry"
+
+- name: authenticate to registry.access.redhat.com
+  shell: "docker login registry.access.redhat.com -u {{ rhn_user }} -p {{ rhn_password }}"
+
+- name: pull openshift images from red hat and push to local docker registry container
+  docker_image:
+    name: "registry.access.redhat.com/{{ item }}"
+    repository:  "{{ inventory_hostname }}:5000/{{ item }}"
+    push: yes
+  with_items:
+  - "{{ openshift_images }}"
+
+## requires proper authentication; was unable to test because my rhn account only works with access not connect
+#- name: authenticate to registry.connect.redhat.com
+#  shell: "docker login registry.connect.redhat.com -u {{ rhn_user }} -p {{ rhn_password }}"
+
+#- name: pull nexus images from red hat and push to local docker registry container
+#  docker_image:
+#    name: "registry.connect.redhat.com/{{ item }}"
+#    repository:  "{{ inventory_hostname }}:5000/{{ item }}"
+#    push: yes
+#  with_items:
+#  - "{{ nexus_images }}"
+
+- name: pull quay and coreos images from docker and push to local docker registry container
+  docker_image:
+    name: "{{ item }}"
+    repository:  "{{ inventory_hostname }}:5000/{{ item }}"
+    push: yes
+  with_items:
+  - "{{ quay_coreos_images }}"

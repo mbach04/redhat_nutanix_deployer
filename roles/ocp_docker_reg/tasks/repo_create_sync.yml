@@ -1,0 +1,14 @@
+- name: ensure the directory structure for repos exists
+  file:
+    state: directory
+    path: "{{ repo_storage_path }}"
+
+- name: reposync for each repo required for OCP
+  shell: "reposync --gpgcheck -1m --repoid={{ item }} --download_path={{ repo_storage_path }}"
+  with_items:
+  - "{{ ocp_repos }}"
+
+- name: createrepo for each repo required for OCP
+  shell: "createrepo -v {{ repo_storage_path }}/{{ item }} -o {{ repo_storage_path }}/{{ item }}
+  with_items:
+  - "{{ ocp_repos }}"

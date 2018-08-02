@@ -1,0 +1,1 @@
+This code registers the machine to Red Hat using subscription-manager, enables the proper repos for OpenShift, creates a local, filesystem backed docker container, pulls images from Red Hat for OCP, Nexus, Quay, and Coreos, and pushes them into the local docker registry container; optionally archiving the images on the filesystem if the 'archive' variable is set to True.

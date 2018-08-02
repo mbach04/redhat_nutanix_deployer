@@ -1,7 +1,38 @@
 ---
-packages: ['docker', 'python2-pip']
-ports: ['5000']
+## conditionally include the following as required
+configure_subscription_manager: 'True'
+configure_deploy_docker_registry: 'True'
+archive_docker_images: 'False'
+repo_create_sync: 'False'
+
+## OCP requisite repos
+ocp_repos: ['rhel-7-server-rpms', 'rhel-7-server-extras-rpms', 'rhel-7-fast-datapath-rpms', 'rhel-7-server-ansible-2.4-rpms', 'rhel-7-server-ose-3.9-rpms']
+
+## change to a location with at least 130G 
+repo_storage_path: '/tmp/repo_files'
+
+## packages for docker, repo creation, and mounting of ntfs share
+packages: ['docker', 'python2-pip', 'yum-utils', 'createrepo', 'docker', 'git', 'wget', 'ntfs-3g']
+epel_rpm: "epel-release-latest-7.noarch.rpm"
+epel_rpm_path: "/tmp/{{ epel_rpm }}"
+
+## OCP container images
+# uncomment the following once you get proper creds for coreos/quay repo; quay/redis does not require creds to pull images
+# quay_coreos_images: ['quay.io/quay/redis:latest', 'quay.io/coreos/quay:v2.9.1']
+# comment out the following once you uncomment the previous key/value pair
+quay_coreos_images: ['quay.io/quay/redis:latest']
+openshift_images: ['openshift3/ose-ansible:v3.9', 'openshift3/ose-cluster-capacity:v3.9', 'openshift3/ose-deployer:v3.9', 'openshift3/ose-docker-builder:v3.9', 'openshift3/ose-docker-registry:v3.9', 'openshift3/ose-egress-http-proxy:v3.9', 'openshift3/ose-egress-router:v3.9', 'openshift3/ose-f5-router:v3.9', 'openshift3/ose-haproxy-router:v3.9', 'openshift3/ose-keepalived-ipfailover:v3.9', 'openshift3/ose-pod:v3.9', 'openshift3/ose-sti-builder:v3.9', 'openshift3/ose:v3.9', 'openshift3/container-engine:v3.9', 'openshift3/node:v3.9', 'openshift3/openvswitch:v3.9', 'rhel7/etcd', 'openshift3/ose-recycler', 'openshift3/logging-curator:v3.9', 'openshift3/logging-auth-proxy:v3.9', 'openshift3/logging-elasticsearch:v3.9', 'openshift3/logging-fluentd:v3.9', 'openshift3/logging-kibana:v3.9', 'openshift3/metrics-cassandra:v3.9', 'openshift3/metrics-hawkular-metrics:v3.9', 'openshift3/metrics-hawkular-openshift-agent:v3.9', 'openshift3/metrics-heapster:v3.9', 'openshift3/prometheus:v3.9', 'openshift3/prometheus-alert-buffer:v3.9', 'openshift3/prometheus-alertmanager:v3.9', 'openshift3/prometheus-node-exporter:v3.9', 'cloudforms46/cfme-openshift-postgresql:latest', 'cloudforms46/cfme-openshift-memcached:latest', 'cloudforms46/cfme-openshift-app-ui:latest', 'cloudforms46/cfme-openshift-app:latest', 'cloudforms46/cfme-openshift-embedded-ansible:latest', 'cloudforms46/cfme-openshift-httpd:latest', 'cloudforms46/cfme-httpd-configmap-generator:latest', 'rhgs3/rhgs-server-rhel7:v3.9', 'rhgs3/rhgs-volmanager-rhel7:v3.9', 'rhgs3/rhgs-gluster-block-prov-rhel7:v3.9', 'rhgs3/rhgs-s3-server-rhel7:v3.9', 'openshift3/ose-service-catalog:v3.9', 'openshift3/ose-ansible-service-broker:v3.9', 'openshift3/mediawiki-apb:v3.9', 'openshift3/postgresql-apb:v3.9', 'rhscl/nodejs-4-rhel7', 'rhscl/nodejs-6-rhel7', 'rhscl/ruby-22-rhel7', 'rhscl/ruby-23-rhel7', 'rhscl/perl-520-rhel7', 'rhscl/perl-524-rhel7', 'rhscl/php-56-rhel7', 'rhscl/python-27-rhel7', 'rhscl/python-34-rhel7', 'dotnet/dotnetcore-10-rhel7', 'dotnet/dotnetcore-11-rhel7', 'dotnet/dotnet-20-rhel7', 'rhscl/httpd-24-rhel7', 'rhscl/mysql-56-rhel7', 'rhscl/mysql-57-rhel7', 'rhscl/mariadb-100-rhel7', 'rhscl/mariadb-101-rhel7', 'rhscl/postgresql-94-rhel7', 'rhscl/postgresql-95-rhel7', 'rhscl/mongodb-26-rhel7', 'rhscl/mongodb-32-rhel7', 'rhscl/redis-32-rhel7', 'jboss-eap-6/eap64-openshift', 'jboss-eap-7/eap70-openshift', 'jboss-eap-7/eap71-openshift', 'jboss-webserver-3/webserver30-tomcat8-openshift', 'jboss-webserver-3/webserver31-tomcat8-openshift', 'jboss-amq-6/amq62-openshift', 'jboss-amq-6/amq63-openshift', 'redhat-openjdk-18/openjdk18-openshift', 'redhat-sso-7/sso71-openshift', 'redhat-sso-7/sso72-openshift', 'openshift3/registry-console:v3.9', 'openshift3/jenkins-1-rhel7:v3.9', 'openshift3/jenkins-2-rhel7:v3.9', 'openshift3/jenkins-slave-base-rhel7:v3.9', 'openshift3/jenkins-slave-maven-rhel7:v3.9', 'openshift3/jenkins-slave-nodejs-rhel7:v3.9', 'rhscl/postgresql-96-rhel7:latest', 'openshift3/oauth-proxy:latest', 'openshift3/ose-keepalived-ipfailover:v3.9.14']
+nexus_images: ['sonatype/nexus-repository-manager']
 dockerregistryimage: "registry"
+
+## rhn credentials
+rhn_user: ""
+rhn_password: ""
+
+## firewall port(s)
+ports: ['5000']
+
+## docker and docker registry variables
 daemonjsonj2: "daemon.json.j2"
 dockerconfigpath: "/etc/docker/daemon.json"
 dockerpyinstalldir: "/tmp/docker-py/"
