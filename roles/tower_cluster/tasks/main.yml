@@ -1,0 +1,91 @@
+---
+- name: install prerequisite packages to nodes
+  become: yes
+  yum:
+    name: "{{ tower_packages }}"
+    state: present
+
+- name: Download tarball to first tower node
+  get_url:
+    url: "{{ tower_binary_url }}"
+    dest: "{{ tower_binary_dir }}/{{ tower_binary_name }}"
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: unpack tower tarball
+  unarchive:
+    src: "{{ tower_binary_dir }}/{{ tower_binary_name }}"
+    dest: "{{ tower_binary_dir }}"
+    remote_src: yes 
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+- name: copy custom inventory to tower installer directory
+  template:
+    src: "inventory_cluster.j2"
+    dest: "{{ tower_binary_folder }}/inventory_custom"
+    owner: "{{ tower_install_user }}"
+    group: "{{ tower_install_user }}"
+    force: yes
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+#Need retries here. Usually errors out on first attempt and works on second.
+#Retries is the easy solution, but may need further investigation in the future
+- name: install tower 
+  shell: 'ansible-playbook -i inventory_custom -e "bundle_install=true upgrade_ansible_with_tower=true" install.yml'
+  args:
+    chdir: "{{ tower_binary_folder }}"
+  environment:
+    - ANSIBLE_BECOME_METHOD: sudo
+    - ANSIBLE_BECOME: true
+    - ANSIBLE_HOST_KEY_CHECKING: false
+  register: install_tower_results
+  retries: 5
+  until: install_tower_results.rc == 0 
+  ignore_errors: yes
+  when: inventory_hostname in groups['tower_nodes'] | first
+  tags:
+    - install
+
+- name: wait for tower API to come up
+  uri:
+    url: "https://{{ inventory_hostname }}"
+    validate_certs: false
+  register: api_result
+  until: api_result.status == 200
+  retries: 300
+  delay: 1
+  when: inventory_hostname in groups['tower_nodes'] 
+
+- name: post the tower license to the api
+  uri:
+    url: "https://{{ inventory_hostname }}/api/v2/config/"
+    method: POST
+    user: "{{ tower_admin_user }}"
+    password: "{{ tower_admin_password }}"
+    body: "{{ lookup('template', 'license.json.j2') }}"
+    force_basic_auth: yes
+    status_code: 200
+    body_format: json
+    validate_certs: false
+  when: inventory_hostname in groups['tower_nodes'] | first
+
+
+#- name: is the tower-cli already installed?
+#  become: true
+#  become_user: root
+#  shell: tower-cli --version
+#  ignore_errors: true
+#  register: towerclistatus
+#
+#- name: unpack the tower-cli code if not already installed
+#  become: true
+#  become_user: root
+#  unarchive:
+#    src: "files/{{ towerCliTar }}"
+#    dest: /tmp
+#  when: towerclistatus.stderr.find('command not found') != -1
+#
+#- name: use pip to install tower-cli offline
+#  become: true
+#  become_user: root
+#  shell: "pip install -e {{ towerCliDir }}"
+#  when: towerclistatus.stderr.find('command not found') != -1

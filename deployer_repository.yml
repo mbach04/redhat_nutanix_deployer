@@ -189,7 +189,7 @@
       get_url:
         url: "{{ item }}"
         dest: "{{ binaries_repo_dir }}/"      
-      loop: "{{ binaries_download_list  }}"
+      loop: "{{ binaries_download_list }}"
       tags:
         - bin
 

@@ -8,9 +8,13 @@ repository.ocp.dell.local
 ansible-bastion.ocp.dell.local
 
 [tower_nodes]
-ansible-tower-01
-ansible-tower-02
-ansible-tower-03
+ansible-tower-01.ocp.dell.local
+ansible-tower-02.ocp.dell.local
+ansible-tower-03.ocp.dell.local
 
-[db_nodes]
-ansible-tower-db
+[tower_db_nodes]
+ansible-tower-db.ocp.dell.local
+
+[tower:children]
+tower_nodes
+tower_db_nodes
