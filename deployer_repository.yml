@@ -41,11 +41,11 @@
       prompt: "RHSM Password"
   vars:
     repo_list:
-      - "rhel-7-server-rpms"                                                                                     
+      - "rhel-7-server-rpms"
       - "rhel-7-server-extras-rpms"
       - "rhel-7-server-ose-3.9-rpms" 
       - "rhel-7-fast-datapath-rpms"
-      - "rhel-7-server-ansible-2.4-rpms"
+      - "rhel-7-server-ansible-2.5-rpms"
       - "rh-gluster-3-client-for-rhel-7-server-rpms"
     repo_disk_dev: "/dev/sdb"
     repo_partition_num: 1
@@ -53,6 +53,8 @@
     repo_dir: "/repos"
     yum_repo_dir: "{{ repo_dir }}/yum"
     docker_repo_dir: "{{ repo_dir }}/docker"
+    binaries_repo_dir: "{{ repo_dir }}/binaries"
+
     base_packages:
       - yum-utils
       - createrepo
@@ -61,6 +63,9 @@
       - httpd
       - ansible
 
+    binaries_download_list:
+      - "https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-3.2.5-1.el7.tar.gz"
+
   tasks:
     - name: Remove self-referencing yum repos defined from cloud-init
       yum_repository:
@@ -68,22 +73,30 @@
         state: absent
         enabled: no
       loop: "{{ vm_yum_repos | map(attribute='reponame') | list }}"
+      tags:
+        - config
 
     - name: Define partition for repository storage
       parted:
         device: "{{ repo_disk_dev}}"
         number: "{{repo_partition_num }}"
         state: present
-    
+      tags:
+        - config
+
     - name: Define filesystem on partition for repository storage
       filesystem:
         fstype: "{{ repo_fstype }}"
         dev: "{{ repo_disk_dev }}{{ repo_partition_num }}"
+      tags:
+        - config
 
     - name: Create directory for repository storage
       file:
         path: "{{ repo_dir }}"
         state: directory
+      tags:
+        - config
 
     - name: Mount repository filesystem
       mount:
@@ -91,19 +104,27 @@
         src: "{{ repo_disk_dev }}{{ repo_partition_num }}"
         fstype: "{{ repo_fstype }}"
         state: mounted
+      tags:
+        - config
 
-    - name: Create directories for yum and docker storage
+    - name: Create directories for yum/docker/binaries storage
       file:
         path: "{{ item }}"
         state: directory
       loop:
         - "{{ yum_repo_dir }}"
         - "{{ docker_repo_dir }}"
+        - "{{ binaries_repo_dir }}"
+      tags:
+        - config
+        - bin
 
     - name: Import GPG Key
       shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
       args:
         warn: no
+      tags:
+        - config
 
     - name: Register with subscription-manager
       redhat_subscription:
@@ -111,23 +132,33 @@
         username: "{{ rhsm_username }}"
         password: "{{ rhsm_password }}"
         autosubscribe: yes
+      tags:
+        - config
 
     - name: Disable all repositories
       shell: "subscription-manager repos --disable='*'"                                                                                                   
+      tags:
+        - config
       
     - name: Enable repositories needed by OCP
       shell: "subscription-manager repos --enable={{ item }}"
       loop: "{{ repo_list }}"
+      tags:
+        - config
 
     - name: Get latest YUM updates
       yum:
         name: '*'
         state: latest
+      tags:
+        - config
 
     - name: Install Packages for repository creation
       yum:
         name: "{{ base_packages }}"
         state: installed     
+      tags:
+        - config
 
     - name: Async Download of repositories
       shell: "reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ yum_repo_dir }}"
@@ -135,6 +166,8 @@
       poll: 5
       register: "async_repo_download"
       loop: "{{ repo_list }}"
+      tags:
+        - download
 
     - name: Check Download status
       async_status:
@@ -143,28 +176,50 @@
       register: async_poll_results
       until: async_poll_results.finished
       retries: 30
-
+      tags:
+        - download
 
     - name: Create YUM repositories
       shell: "createrepo -v {{ yum_repo_dir }}/{{ item }} -o {{ yum_repo_dir }}/{{ item }}"
       loop: "{{ repo_list }}"
+      tags:
+        - config
+
+    - name: Download other binaries needed
+      get_url:
+        url: "{{ item }}"
+        dest: "{{ binaries_repo_dir }}/"      
+      loop: "{{ binaries_download_list  }}"
+      tags:
+        - bin
 
     - name: Set SELinux context rule for repository directory
       sefcontext:
         target: "{{ repo_dir }}(/.*)?"
         setype: httpd_sys_content_t
         state: present
+      tags:
+        - config
+        - bin
     
     - name: Set context rule on directory
       shell: "restorecon -R {{ repo_dir }}"
+      tags:
+        - config
+        - bin
 
     - name: Create softlink from repo dir to web dir
       file:
         src: "{{ repo_dir }}"
         dest: "/var/www/html/repos"
         state: link
+      tags:
+        - config
 
     - name: Start httpd server
       service:
         name: httpd
         state: started
+      tags:
+        - config
+
