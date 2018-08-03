@@ -2,7 +2,7 @@
 # NOTE, some IP addresses in this file need to align with those in group_vars/all.yml for each environment
 
 [repository]
-repository.ocp.dell.local
+repository-old.ocp.dell.local
 
 [masters]
 ocp-master-[01:03].ocp.dell.local
