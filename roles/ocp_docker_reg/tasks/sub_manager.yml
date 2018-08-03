@@ -1,0 +1,45 @@
+- name: copy epel.rpm to host
+  copy:
+    src: "files/{{ epel_rpm }}"
+    dest: "{{ epel_rpm_path }}"
+
+- name: yum install epel release repo
+  yum:
+    state: present
+    name: "{{ epel_rpm_path }}"
+
+- name: register using subscription-manager
+  redhat_subscription:
+    state: present
+    username: "{{ rhn_user }}"
+    password: "{{ rhn_password }}"
+
+- name: get the proper ocp pool id
+  shell: /usr/bin/subscription-manager list --all --available --matches="*OpenShift Container*" | awk '/Pool ID/ {print $3}' | head -1
+  register: ocppool
+
+- name: has the ocp pool id already been attached?
+  shell: /usr/bin/subscription-manager list --installed
+  register: ocppoolinstalled
+
+- name: register using subscription-manager with ocp pool id
+  redhat_subscription:
+    state: present
+    username: "{{ rhn_user }}"
+    password: "{{ rhn_password }}"
+    pool: "{{ ocppool.stdout }}"
+  when: ocppoolinstalled.stdout.find('Not Subscribed') != -1
+
+- name: does the system have the proper repos enabled?
+  shell: subscription-manager repos --list-enabled
+  register: ocprepostatus
+
+- name: disable all repos if this is a first run
+  shell: subscription-manager repos --disable='*'
+  when: ocprepostatus.stdout.find('There were no available repositories matching the specified criteria') != -1
+
+- name: attach proper repos
+  shell: "subscription-manager repos --enable={{ item }}"
+  with_items:
+  - "{{ ocp_repos }}"
+  when: ocprepostatus.stdout.find('There were no available repositories matching the specified criteria') != -1
