@@ -30,6 +30,8 @@ repo_enabled_repositories:
   - rhel-7-fast-datapath-rpms
   - rhel-7-server-ansible-2.5-rpms
   - rhel-7-server-ose-3.9-rpms
+
+repo_enabled_repositories_nonrhel:
   - epel
 
 repo_packages:

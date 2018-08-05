@@ -1,13 +1,3 @@
-#- name: copy epel.rpm to host
-#  copy:
-#    src: "files/{{ epel_rpm }}"
-#    dest: "{{ epel_rpm_path }}"
-
-#- name: yum install epel release repo
-#  yum:
-#    state: present
-#    name: "{{ epel_rpm_path }}"
-
 - name: register using subscription-manager
   redhat_subscription:
     state: present
@@ -17,10 +7,6 @@
 - name: get the proper ocp pool id
   shell: /usr/bin/subscription-manager list --all --available --matches="*OpenShift Container*" | awk '/Pool ID/ {print $3}' | head -1
   register: ocppool
-
-- name: Debug ocppoolinstalled
-  debug:
-    var: ocppool
 
 - name: has the ocp pool id already been attached?
   shell: /usr/bin/subscription-manager list --installed
