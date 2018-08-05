@@ -29,7 +29,7 @@ image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
 
 vm_defs_repo:
   # RPM Repository
-  -  {vm_name: "{{ vm_repository_hostname }}", vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 153600]}
+  -  {vm_name: "{{ vm_repository_hostname }}", vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 256000]}
 
 
 vm_defs_tower:
@@ -124,6 +124,12 @@ vm_yum_repos:
     failovermethod: priority
     gpgcheck: false
     name: "{{ cluster_name }} RH Gluster 3 for RHEL 7 Server"
+  - reponame: "local_server_epel"
+    baseurl: "http://{{ vm_repository_fqdn }}/repos/yum/epel"
+    enabled: false
+    failovermethod: priority
+    gpgcheck: false
+    name: "{{ cluster_name }} EPEL for RHEL 7 Server"
 
 cloud_init_root_pass: "$6$AodRG0tDjFaSk8v.$cyGXYtf8ZCUrVRqNLrWhSJh9PS7G9tsnxjff26mlyuXMAP/.u8PFqgp6Cw579ny4HO8Bh7WTfwaIw/4Ph9CKc0"
 

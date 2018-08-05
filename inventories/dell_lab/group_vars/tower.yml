@@ -1,5 +1,6 @@
 ---
 #Variables to configure Ansible Tower deployment
+tower_binary_remote_site: "http://repository.ocp.dell.local/repos/binaries"
 
 tower_license_eula: "true"
 tower_license_company_name: "Spathe Systems (SOCOM J6)"

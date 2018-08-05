@@ -1,0 +1,16 @@
+- name: ensure the directory structure for repos exists
+  file:
+    state: directory
+    path: "{{ repo_dir_yum }}"
+
+- name: reposync for each repo 
+  shell: "reposync --gpgcheck -lm --repoid={{ item }} --download_path={{ repo_dir_yum }}"
+  async: 43200
+  poll: 10
+  with_items:
+  - "{{ repo_enabled_repositories }}"
+
+- name: createrepo for each repo required for OCP
+  shell: "createrepo -v {{ repo_dir_yum }}/{{ item }} -o {{ repo_dir_yum }}/{{ item }}"
+  with_items:
+  - "{{ repo_enabled_repositories }}"

@@ -27,8 +27,11 @@ tower_binary_folder: "ansible-tower-setup-bundle-{{ tower_binary_version }}.el7"
 #File name of the ansible tower tarball
 tower_binary_name: "{{ tower_binary_folder }}.tar.gz"
 
-#Remote location from which to download ansible tower tarball
-tower_binary_url: "https://releases.ansible.com/ansible-tower/setup-bundle/{{ tower_binary_name }}"
+#Remote site to pull binaries from
+tower_binary_remote_site: "https://releases.ansible.com/ansible-tower/setup-bundle"
+
+#Full Remote location from which to download ansible tower tarball
+tower_binary_url: "{{ tower_binary_remote_site }}/{{ tower_binary_name }}"
 
 #Folder to download tarball, extract, and perform installation
 tower_binary_dir: "/home/{{ tower_install_user }}"

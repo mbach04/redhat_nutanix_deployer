@@ -1,0 +1,27 @@
+---
+- name: Set SELinux context rule for repository directory
+  sefcontext:
+    target: "{{ item }}(/.*)?"
+    setype: httpd_sys_content_t
+    state: present
+  with_items:
+    - "{{ repo_dir_yum }}"
+    - "{{ repo_dir_binaries }}"
+
+- name: Set context rule on directory
+  shell: "restorecon -R {{ item }}"
+  with_items:
+    - "{{ repo_dir_yum }}"
+    - "{{ repo_dir_binaries }}"
+  
+- name: Create softlink from repo dir to web dir
+  file:
+    src: "{{ repo_dir_base }}"
+    dest: "/var/www/html/repos"
+    state: link
+
+- name: Start httpd server
+  service:
+    name: httpd
+    state: started
+

@@ -1,20 +1,20 @@
 - name: archive openshift images from registry container
   docker_image:
     name:  "{{ inventory_hostname }}:5000/{{ item }}"
-    archive_path: "/tmp/{{ item }}.tar"
+    archive_path: "{{ repo_dir_docker }}/{{ item | basename }}.tar"
   with_items:
-  - "{{ openshift_images }}"
+  - "{{ repo_openshift_images }}"
 
 - name: archive nexus images from registry container
   docker_image:
     name:  "{{ inventory_hostname }}:5000/{{ item }}"
-    archive_path: "/tmp/{{ item }}.tar"
+    archive_path: "{{ repo_dir_docker }}/{{ item | basename }}.tar"
   with_items:
-  - "{{ nexus_images }}"
+  - "{{ repo_nexus_images }}"
 
 - name: archive quay and coreos images from registry container
   docker_image:
     name:  "{{ inventory_hostname }}:5000/{{ item }}"
-    archive_path: "/tmp/{{ item }}.tar"
+    archive_path: "{{ repo_dir_docker }}/{{ item | basename }}.tar"
   with_items:
-  - "{{ quay_coreos_images }}"
+  - "{{ repo_quay_coreos_images }}"
