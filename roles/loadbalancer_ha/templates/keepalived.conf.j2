@@ -1,0 +1,7 @@
+vrrp_script chk_haproxy {
+  script "killall -0 haproxy"
+  interval 2
+  weight 2
+}
+
+include {{ lb_keepalived_confd }}/*.conf

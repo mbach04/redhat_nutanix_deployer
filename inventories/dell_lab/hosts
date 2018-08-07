@@ -18,3 +18,16 @@ ansible-tower-db.ocp.dell.local
 [tower:children]
 tower_nodes
 tower_db_nodes
+
+[ocp_master_lb]
+ocp-lb-01.ocp.dell.local
+ocp-lb-02.ocp.dell.local
+
+[ocp_router_lb]
+ocp-lb-03.ocp.dell.local
+ocp-lb-04.ocp.dell.local
+
+[loadbalancers:children]
+ocp_master_lb
+ocp_router_lb
+

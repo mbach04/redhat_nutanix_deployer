@@ -26,8 +26,21 @@ Connection to Dell VPN and can access Nutanix cluster WebUI
 
 - TODO
 
+### Provision and Deploy Repository Server
+This server acts as a centralized repository for RPMs, extra binaries, and Docker Images.
+See the `deploy_repository.yml` playbook and the README in the `repository` role for more
+details.
+
+```bash
+ansible-playbook -i inventories/dell_lab/ deployer_repository.yml
+```
 
 ### Provision and Deploy Ansible Tower Servers
+Provisions a HA Ansible Tower cluster of 3 tower nodes and a database node.
+
+```bash
+ansible-playbook -i inventories/dell_lab/ deployer_tower.yml
+```
 
 ### Provision all OCP instances 
 

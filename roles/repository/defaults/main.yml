@@ -30,6 +30,7 @@ repo_enabled_repositories:
   - rhel-7-fast-datapath-rpms
   - rhel-7-server-ansible-2.5-rpms
   - rhel-7-server-ose-3.9-rpms
+  - rh-gluster-3-client-for-rhel-7-server-rpms
 
 repo_enabled_repositories_nonrhel:
   - epel

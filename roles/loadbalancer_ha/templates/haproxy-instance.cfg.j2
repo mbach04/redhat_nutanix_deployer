@@ -1,0 +1,25 @@
+{% for name, instance in lb_haproxy_frontend_instances.items() %}
+frontend {{ name }}
+  bind *:{{ instance.bind_port }} 
+  mode {{ instance.mode }} 
+  option {{ instance.option }}
+{% if instance.redirect is defined %}
+  redirect {{ instance.redirect }} 
+{% endif %}
+  default_backend {{ instance.default_backend }}
+
+{% endfor %}
+
+{% for name, instance in lb_haproxy_backend_instances.items() %}
+backend {{ name }}
+  balance {{ instance.balance }}
+  mode {{ instance.mode }}
+  option {{ instance.option }}
+{% if instance.http_check is defined %}
+  http-check {{ instance.http_check }} 
+{% endif %}
+{% for server in instance.servers %}
+  server {{ server }}
+{% endfor %}
+
+{% endfor %}

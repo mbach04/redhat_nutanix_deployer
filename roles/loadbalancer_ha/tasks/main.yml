@@ -1,0 +1,8 @@
+---
+# tasks file for loadbalancer_ha
+
+- import_tasks: prerequisites.yml
+- import_tasks: install_keepalived.yml
+- import_tasks: install_haproxy.yml
+- import_tasks: configure.yml
+
