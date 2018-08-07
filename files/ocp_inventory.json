@@ -1,0 +1,188 @@
+[
+  {
+    "description": "OpenShift Inventory Hosts", 
+    "variables": "---", 
+    "asset_type": "inventory", 
+    "organization": "Default", 
+    "asset_relation": {
+      "inventory_source": [], 
+      "host": [
+        {
+          "variables": "---\nopenshift_schedulable: True", 
+          "name": "ocp-cns-01.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_schedulable: True", 
+          "name": "ocp-cns-02.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_schedulable: True", 
+          "name": "ocp-cns-03.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'infra', 'zone': 'default'}\"", 
+          "name": "ocp-infra-01.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'infra', 'zone': 'default'}\"", 
+          "name": "ocp-infra-02.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'infra', 'zone': 'default'}\"", 
+          "name": "ocp-infra-03.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-lb-01.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-lb-02.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-lb-03.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-lb-04.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-master-01.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-master-02.ocp.dell.local"
+        }, 
+        {
+          "name": "ocp-master-03.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'primary', 'zone': 'default'}\"", 
+          "name": "ocp-node-01.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'primary', 'zone': 'default'}\"", 
+          "name": "ocp-node-02.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'primary', 'zone': 'default'}\"", 
+          "name": "ocp-node-03.ocp.dell.local"
+        }, 
+        {
+          "variables": "---\nopenshift_node_labels: \"{'region': 'primary', 'zone': 'default'}\"", 
+          "name": "ocp-node-04.ocp.dell.local"
+        }, 
+        {
+          "name": "repository.ocp.dell.local"
+        }
+      ], 
+      "group": [
+        {
+          "variables": "---\nopenshift_release: \"3.9\"\nopenshift_deployment_type: \"openshift-enterprise\"\nansible_become: true\nopenshift_master_identity_providers: [{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]\nopenshift_master_dynamic_provisioning_enabled: True\nopenshift_storage_glusterfs_namespace: \"app-storage\"\nopenshift_storage_glusterfs_block_deploy: false\nopenshift_metrics_install_metrics: false\nopenshift_metrics_hawkular_nodeselector: {\"role\":\"infra\"}\nopenshift_metrics_cassandra_nodeselector: {\"role\":\"infra\"}\nopenshift_metrics_heapster_nodeselector: {\"role\":\"infra\"}\nopenshift_metrics_cassandra_pvc_size: \"25Gi\"\nopenshift_metrics_storage_kind: \"dynamic\"\nopenshift_logging_install_logging: false            \nopenshift_logging_es_cluster_size: \"3\"\nopenshift_logging_es_nodeselector: {\"role\":\"infra\"}\nopenshift_logging_kibana_nodeselector: {\"role\":\"infra\"}\nopenshift_logging_curator_nodeselector: {\"role\":\"infra\"}\nopenshift_logging_es_pvc_size: \"50Gi\"\nopenshift_logging_storage_kind: \"dynamic\"\nosn_storage_plugin_deps: ['ceph','glusterfs','iscsi']\nopenshift_master_cluster_hostname: \"masters-internal.ocp.dell.local\"\nopenshift_master_cluster_public_hostname: \"masters.ocp.dell.local\"\nopenshift_master_default_subdomain: \"apps.ocp.dell.local\"\nlb_masters_vip: '172.29.171.109'\nlb_routers_vip: '172.29.171.110'\nopenshift_hosted_router_selector: 'region=infra'", 
+          "sub_groups": [
+            {
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-master-01.ocp.dell.local", 
+                "ocp-master-02.ocp.dell.local", 
+                "ocp-master-03.ocp.dell.local"
+              ], 
+              "name": "etcd"
+            }, 
+            {
+              "variables": "---\nglusterfs_devices: '[\"/dev/sdc\"]'", 
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-cns-01.ocp.dell.local", 
+                "ocp-cns-02.ocp.dell.local", 
+                "ocp-cns-03.ocp.dell.local"
+              ], 
+              "name": "glusterfs"
+            }, 
+            {
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-infra-01.ocp.dell.local", 
+                "ocp-infra-02.ocp.dell.local", 
+                "ocp-infra-03.ocp.dell.local"
+              ], 
+              "name": "infranodes"
+            }, 
+            {
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-master-01.ocp.dell.local", 
+                "ocp-master-02.ocp.dell.local", 
+                "ocp-master-03.ocp.dell.local"
+              ], 
+              "name": "masters"
+            }, 
+            {
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-lb-01.ocp.dell.local", 
+                "ocp-lb-02.ocp.dell.local"
+              ], 
+              "name": "masters-lbs"
+            }, 
+            {
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-infra-01.ocp.dell.local", 
+                "ocp-infra-02.ocp.dell.local", 
+                "ocp-infra-03.ocp.dell.local", 
+                "ocp-master-01.ocp.dell.local", 
+                "ocp-master-02.ocp.dell.local", 
+                "ocp-master-03.ocp.dell.local", 
+                "ocp-node-01.ocp.dell.local", 
+                "ocp-node-02.ocp.dell.local", 
+                "ocp-node-03.ocp.dell.local", 
+                "ocp-node-04.ocp.dell.local"
+              ], 
+              "name": "nodes"
+            }, 
+            {
+              "sub_groups": [], 
+              "hosts": [
+                "ocp-lb-03.ocp.dell.local", 
+                "ocp-lb-04.ocp.dell.local"
+              ], 
+              "name": "routers-lbs"
+            }
+          ], 
+          "hosts": [], 
+          "name": "OSEv3"
+        }, 
+        {
+          "sub_groups": [], 
+          "hosts": [], 
+          "name": "repository"
+        }
+      ], 
+      "roles": [
+        {
+          "team": [], 
+          "name": "Ad Hoc", 
+          "user": []
+        }, 
+        {
+          "team": [], 
+          "name": "Admin", 
+          "user": []
+        }, 
+        {
+          "team": [], 
+          "name": "Read", 
+          "user": []
+        }, 
+        {
+          "team": [], 
+          "name": "Use", 
+          "user": []
+        }, 
+        {
+          "team": [], 
+          "name": "Update", 
+          "user": []
+        }
+      ]
+    }, 
+    "name": "OpenShift"
+  }
+]
