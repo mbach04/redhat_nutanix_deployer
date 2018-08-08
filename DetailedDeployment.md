@@ -43,12 +43,38 @@ ansible-playbook -i inventories/dell_lab/ deployer_tower.yml
 ```
 
 ### Provision all OCP instances 
+Automated path:
+
+Prerequisites: 
+Ensure the following files are presentin the root directory of the Ansible playbooks:
+  .vaultpass - This file contains the password to unlock the Ansible vault
+  .keyfile - This file contains the private SSH key used by the 'ansible' user to log into the created nodes
+Ensure the following packages on the node that will run the installations:
+  -dnspython
+    `pip install dnspython`
+  -libselinux-python
+    `yum install libselinux-python`
+
+Provision OCP instances:
+
+``` bash ansible-playbook -i inventories/dell_lab/ deployer_ocp.yml```
+
 
 ### Provision and Deploy all 4 Load Balancers (OCP Master/OCP Application)
+The loadbalancers are provisioned as part of the `deployer_ocp` playbook run in the previous step.
 
 ### Provision and  Deploy Quay
+TODO Quay deployer in progress
+
+Automated path:
+
+```bash ansible-playbook -i inventories/dell_lab/ deployer_quay.yml```
 
 ### Deploy OpenShift with CNS
+Automated path:
+
+```bash ansible-playbook -i ocp-hosts /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml```
+```bash ansible-playbook -i ocp-hosts /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml```
 
 ### Run integration code to configure Quay with OCP deployment
 
