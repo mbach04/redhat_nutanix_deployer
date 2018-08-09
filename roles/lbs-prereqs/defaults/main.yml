@@ -11,6 +11,7 @@ lbs_packages:
   - psacct
   - tmux
   - python-firewall
+  - python-dns
   - firewalld
   - haproxy
   - keepalived
