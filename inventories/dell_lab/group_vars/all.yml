@@ -29,7 +29,7 @@ image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
 
 vm_defs_repo:
   # RPM Repository
-  -  {vm_name: "{{ vm_repository_hostname }}", vm_ip: '172.29.171.100', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 256000]}
+  -  {vm_name: "{{ vm_repository_hostname }}", vm_ip: '172.29.171.200', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 256000]}
 
 
 vm_defs_tower:
@@ -84,8 +84,8 @@ vm_net_dns:
   - 172.29.170.51
 vm_net_cidr: "24"
 vm_net_gateway: "172.29.171.1"
-vm_net_domain: "ocp.dell.local"
-vm_repository_hostname: "repository"
+vm_net_domain: "ocplabs.dell.local"
+vm_repository_hostname: "repo_labs"
 vm_repository_fqdn: "{{ vm_repository_hostname }}.{{ vm_net_domain }}"
 vm_yum_repos:
   - reponame: "local_fast_datapath"
