@@ -4,8 +4,15 @@
   set_fact:
     tmp_setup_file_location: /tmp/quay
 
-- name: Flush Handlers
-  meta: flush_handlers
+#- name: Flush Handlers
+#  meta: flush_handlers
+
+- name: Start quay
+  systemd:
+    name: "{{ quay_name }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
 
 - name: Hit Quay Setup Endpoint
   uri:
@@ -36,6 +43,9 @@
       password: "{{ quay_superuser_password }}"
     headers:
       Cookie: "{{ uri_setup.set_cookie }}"
+  #register: result
+  #until: result.status == "200"
+  #retries: 100
 
 - name: Delete Temporary Setup File
   file:

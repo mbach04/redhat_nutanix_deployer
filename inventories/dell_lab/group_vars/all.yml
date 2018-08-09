@@ -41,6 +41,9 @@ postgresql_port: 5432
 redis_port: 6379
 quay_http_port: 8081
 quay_https_port: 8444
+quay_superuser_username: quayadmin
+quay_superuser_password: quayquay
+quay_superuser_email: cthiel@redhat.com
 
 
 # VM Specs

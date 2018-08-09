@@ -133,3 +133,19 @@
       tags:
         - never
         - lbs
+
+    - name: Delete Quay VMs
+      uri:
+        url: "{{ api_url_v3 }}/vms/{{ item.uuid }}"
+        method: DELETE
+        validate_certs: no
+        status_code: 202
+        headers: 
+          Cookie: "{{ session_cookie }}"
+      register: vm_delete_result
+      ignore_errors: yes
+      when: "item.name in vm_defs_quay|map(attribute='vm_name')|list"
+      loop: "{{ vm_uuids }}"
+      tags:
+        - never
+        - quay
