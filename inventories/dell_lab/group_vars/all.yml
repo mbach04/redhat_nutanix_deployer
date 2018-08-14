@@ -31,7 +31,7 @@ quay_registry_auth: Y29yZW9zK3RlYzJfaWZidWdsa2VoZTNka25ieWd1NHMycnJ4aTpBMTBFVjZG
 database_type: postgresql
 docker_install: true
 quay_hostname: quay.ocp.dell.local
-database_type: postgresql
+quay_database_type: postgresql
 database_name: quay
 database_username: quay
 database_password: quay
@@ -44,6 +44,7 @@ quay_https_port: 8444
 quay_superuser_username: quayadmin
 quay_superuser_password: quayquay
 quay_superuser_email: cthiel@redhat.com
+quay_ssl_local_tmp_dir: /tmp/local
 
 
 # VM Specs
