@@ -2,7 +2,7 @@
 # NOTE, some IP addresses in this file need to align with those in group_vars/all.yml for each environment
 
 [repository]
-repository.ocp.dell.local
+repo-labs.ocplabs.dell.local
 
 [bastion]
 ansible-bastion.ocp.dell.local

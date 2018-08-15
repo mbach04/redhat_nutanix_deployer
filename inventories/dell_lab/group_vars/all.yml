@@ -85,7 +85,7 @@ vm_net_dns:
 vm_net_cidr: "24"
 vm_net_gateway: "172.29.171.1"
 vm_net_domain: "ocplabs.dell.local"
-vm_repository_hostname: "repo_labs"
+vm_repository_hostname: "repo-labs"
 vm_repository_fqdn: "{{ vm_repository_hostname }}.{{ vm_net_domain }}"
 vm_yum_repos:
   - reponame: "local_fast_datapath"
