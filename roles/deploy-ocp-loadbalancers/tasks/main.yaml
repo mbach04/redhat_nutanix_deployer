@@ -1,4 +1,0 @@
----
-# - import_tasks: debugger.yml
-- import_tasks: install-keepalived.yaml
-- import_tasks: install-haproxy.yaml
