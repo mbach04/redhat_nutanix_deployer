@@ -29,9 +29,9 @@ ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
 ocp-infra-[01:03].ocp.dell.local
 
 [glusterfs]
-ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdb"]'
-ocp-cns-02.ocp.dell.local glusterfs_devices='["/dev/sdb"]'
-ocp-cns-03.ocp.dell.local glusterfs_devices='["/dev/sdb"]'
+ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+ocp-cns-02.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+ocp-cns-03.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
