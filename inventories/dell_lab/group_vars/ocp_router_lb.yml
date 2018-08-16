@@ -7,7 +7,7 @@ lb_keepalived_instances:
     virtual_router_id: 51
     priority: "{{ (groups['ocp_router_lb']| length - groups['ocp_router_lb'].index(inventory_hostname)) * 250 // (groups['ocp_router_lb']|length) }}" 
     vips:
-      - "172.29.171.110/24"
+      - "172.29.171.206/24"
     unicast_peers: "{{ (groups['ocp_router_lb'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list | difference( [ansible_default_ipv4.address] )) }}"
     track_scripts:
       - "chk_haproxy"
@@ -23,7 +23,7 @@ lb_haproxy_frontend_instances:
     bind_port: 443
     mode: "tcp"
     option: "tcplog"
-    default_backend: "router_ocp_backend_80"
+    default_backend: "router_ocp_backend_443"
 
 lb_haproxy_backend_instances:
   router_ocp_backend_80:
@@ -32,15 +32,15 @@ lb_haproxy_backend_instances:
     option: "httpchk GET /healthz"
     http_check: "expect status 200"
     servers:
-      - "ocp-infra-01.ocp.dell.local 172.29.171.104:80"
-      - "ocp-infra-02.ocp.dell.local 172.29.171.105:80"
-      - "ocp-infra-03.ocp.dell.local 172.29.171.106:80" 
+      - "labs-ocp-infra-01.{{ vm_net_domain }} 172.29.171.213:80"
+      - "labs-ocp-infra-02.{{ vm_net_domain }} 172.29.171.214:80"
+      - "labs-ocp-infra-03.{{ vm_net_domain }} 172.29.171.215:80" 
   router_ocp_backend_443:
     balance: "roundrobin"
     mode: "tcp"
     option: "httpchk GET /healthz"
     http_check: "expect status 200"
     servers:
-      - "ocp-infra-01.ocp.dell.local 172.29.171.104:443"
-      - "ocp-infra-02.ocp.dell.local 172.29.171.105:443"
-      - "ocp-infra-03.ocp.dell.local 172.29.171.106:443" 
+      - "labs-ocp-infra-01.{{ vm_net_domain }} 172.29.171.213:443"
+      - "labs-ocp-infra-02.{{ vm_net_domain }} 172.29.171.214:443"
+      - "labs-ocp-infra-03.{{ vm_net_domain }} 172.29.171.215:443" 
