@@ -1,0 +1,46 @@
+---
+# defaults file for loadbalancer_ha
+
+lb_packages:
+  - wget
+  - git
+  - net-tools
+  - bind-utils
+  - yum-utils
+  - bridge-utils
+  - bash-completion
+  - kexec-tools
+  - sos
+  - psacct
+  - python-firewall
+  - python-dns
+  - firewalld
+  - haproxy
+  - keepalived
+
+lb_keepalived_confd: "/etc/keepalived/conf.d"
+lb_keepalived_conf_name: "01-test.conf"
+
+lb_haproxy_confd: "/etc/haproxy/conf.d"
+lb_haproxy_conf_name: "01-test.conf"
+
+lb_haproxy_ports:
+  - '8443/tcp'
+  - '80/tcp'
+  - '9000/tcp'
+  - '443/tcp'
+
+lb_keepalived_instances: []
+#  master_ocp:
+#    interface: "eth0"
+#    state: "{{ groups['loadbalancers'].index(inventory_hostname) == 0 | ternary('MASTER','BACKUP') }}"
+#    virtual_router_id: 51
+#    priority: 100
+#    vips:
+#      - "172.29.171.109/24"
+#    unicast_peers:
+#      - "172.29.171.108"
+#    track_scripts:
+#      - "chk_haproxy"
+
+lb_haproxy_instances: []

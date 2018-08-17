@@ -1,0 +1,49 @@
+---
+- name: enable and start firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: open VRRP port
+  firewalld:
+    rich_rule: 'rule protocol value="vrrp" accept'
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Allow bind to VIPs
+  lineinfile:
+    path: '/etc/sysctl.d/50-keepalived.conf'
+    regexp: '^net.ipv4.ip_nonlocal_bind.*'
+    line: 'net.ipv4.ip_nonlocal_bind=1'
+    create: yes
+    state: present
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload_sysctl
+
+- name: create additional config folder
+  file:
+    path: "{{ lb_keepalived_confd }}"
+    state: directory
+  
+- name: create dummy config to trick keepalived into starting
+  copy:
+    content: ""
+    dest: "{{ lb_keepalived_confd }}/dummy.conf"
+    force: no
+
+- name: deploy general keepalived config file
+  template: 
+    src: "keepalived.conf.j2"
+    dest: "/etc/keepalived/keepalived.conf"
+  notify: restart_keepalived
+
+- name: Start keepalived service
+  service:
+    name: keepalived
+    state: started
+    enabled: yes
+

@@ -1,13 +1,13 @@
 ---
-- name: YUM Nutanix Deployer
+- name: LBs VMs Provisioner
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Provision Ansible Tower on Nutanix
+    - name: Provision LBs VMs on Nutanix
       include_role:
         name: nutanix_provisioner
       vars:
-        vm_defs: "{{ vm_defs_tower }}"
+        vm_defs: "{{ vm_defs_lbs }}"
       tags:
         - provision
 
@@ -15,8 +15,8 @@
       meta: refresh_inventory
 
 # Deploy ansible private key to VM
-- name: Ansible private key 
-  hosts: tower 
+- name: Ansible private key
+  hosts: loadbalancers
   remote_user: ansible
   become: yes
   tasks:
@@ -27,13 +27,13 @@
         owner: ansible
         group: ansible
         mode: 0600
- 
-#Deploy and Configure Tower
-- name: Deploy Ansible Tower
-  hosts: tower
-  remote_user: ansible
-  become: no
+
+- name: Configure OCP Master Loadbalancer servers
+  hosts: loadbalancers
+  gather_facts: true
+  become: yes
   tasks:
-    - name: Use role to deploy/config ansible tower cluster
+    - name: Handle Load Balancer Prereqs
       include_role:
-        name: tower_cluster
+        name: loadbalancer_ha
+

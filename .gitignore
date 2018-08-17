@@ -1,4 +1,5 @@
 *.retry
+*.swp
 .vaultpass
 .keyfile
 .notes

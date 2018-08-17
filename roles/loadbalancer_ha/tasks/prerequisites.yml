@@ -1,0 +1,4 @@
+- name: Install packages for loadbalancers
+  yum:
+    name: "{{ lb_packages }}"
+    state: latest

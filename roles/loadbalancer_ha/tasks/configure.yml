@@ -1,0 +1,13 @@
+---
+
+- name: deploy keepalived configuration file
+  template:
+    src: "keepalived-instance.conf.j2"
+    dest: "{{ lb_keepalived_confd }}/{{ lb_keepalived_conf_name }}"
+  notify: restart_keepalived
+
+- name: deploy haproxy configuration
+  template:
+    src: "haproxy-instance.cfg.j2"
+    dest: "{{ lb_haproxy_confd }}/{{ lb_haproxy_conf_name }}"
+  notify: restart_haproxy

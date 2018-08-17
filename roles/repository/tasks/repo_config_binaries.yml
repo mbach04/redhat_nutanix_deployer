@@ -1,0 +1,7 @@
+---
+- name: Download other binaries needed
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ repo_dir_binaries }}"
+  loop: "{{ repo_binaries_download_list }}"
+

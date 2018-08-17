@@ -1,0 +1,114 @@
+# OpenShift Hosts file
+# NOTE, some IP addresses in this file need to align with those in group_vars/all.yml for each environment
+
+[repository]
+repository.ocp.dell.local
+
+[masters]
+ocp-master-[01:03].ocp.dell.local
+
+[etcd]
+ocp-master-[01:03].ocp.dell.local
+
+[masters-lbs]
+ocp-lb-01.ocp.dell.local
+ocp-lb-02.ocp.dell.local
+
+[routers-lbs]
+ocp-lb-03.ocp.dell.local
+ocp-lb-04.ocp.dell.local
+
+[nodes]
+ocp-master-[01:03].ocp.dell.local
+ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+# Gluster nodes
+ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
+
+[infranodes]
+ocp-infra-[01:03].ocp.dell.local
+
+[glusterfs]
+ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+ocp-cns-02.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+ocp-cns-03.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+
+
+# Create an OSEv3 group that contains the masters and nodes groups
+[OSEv3:children]
+masters
+nodes
+etcd
+masters-lbs
+routers-lbs
+glusterfs
+
+
+[OSEv3:vars]
+openshift_release="3.9"
+openshift_deployment_type=openshift-enterprise
+ansible_become=true
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+openshift_master_dynamic_provisioning_enabled=True
+
+
+# CNS storage for applications
+openshift_storage_glusterfs_namespace=app-storage
+openshift_storage_glusterfs_block_deploy=false
+
+
+# metrics
+openshift_metrics_install_metrics=false
+openshift_metrics_hawkular_nodeselector={"role":"infra"}
+openshift_metrics_cassandra_nodeselector={"role":"infra"}
+openshift_metrics_heapster_nodeselector={"role":"infra"}
+openshift_metrics_cassandra_pvc_size=25Gi
+openshift_metrics_storage_kind=dynamic
+
+# logging
+openshift_logging_install_logging=false            
+openshift_logging_es_cluster_size=3
+openshift_logging_es_nodeselector={"role":"infra"}
+openshift_logging_kibana_nodeselector={"role":"infra"}
+openshift_logging_curator_nodeselector={"role":"infra"}
+openshift_logging_es_pvc_size=50Gi
+openshift_logging_storage_kind=dynamic
+
+
+
+# other vars
+#----------------------------------------------------
+osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others are installed by default
+
+#glusterfs_storageclass_default=true #testing showed this doesn't work
+
+
+#openshift_metrics_storage_kind=dynamic
+#openshift_metrics_cassanda_pvc_storage_class_name="glusterfs-registry-block"
+
+# Configure master API and console ports.
+#openshift_master_api_port=8443
+#openshift_master_console_port=8443
+
+#lb_masters_vip
+openshift_master_cluster_hostname=masters-internal.ocp.dell.local
+#lb_masters_vip
+openshift_master_cluster_public_hostname=masters.ocp.dell.local
+openshift_master_default_subdomain=apps.ocp.dell.local
+
+
+#NOTE: These need to match the inventory in group_vars
+lb_masters_vip='172.29.171.109'
+lb_routers_vip='172.29.171.110'
+openshift_hosted_router_selector='region=infra'
+#openshift_node_open_ports=[{'service': 'router stats port', 'port': '1936/tcp'}]#This might not be required now that we're using actual Loadbalancer VMs
+
+
+## NFS Share backer vars for registry (CNS requirement)
+#openshift_hosted_registry_storage_kind=nfs
+#openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+#openshift_hosted_registry_storage_host=nfs.example.com
+#openshift_hosted_registry_storage_nfs_directory=/exports
+#openshift_hosted_registry_storage_volume_name=registry
+#openshift_hosted_registry_storage_volume_size=50Gi

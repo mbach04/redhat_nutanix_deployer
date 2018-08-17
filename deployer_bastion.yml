@@ -1,0 +1,103 @@
+---
+# Deploy the VM
+- name: YUM Nutanix Deployer
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Provision YUM Repository on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_bastion }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+
+# Deploy ansible private key to VM
+- name: Ansible private key
+  hosts: bastion 
+  remote_user: ansible
+  become: yes
+  tasks:
+    - name: Deploy private key to server
+      copy:
+        content: "{{ ansible_ssh_private_key }}"
+        dest: /home/ansible/.ssh/id_rsa
+        owner: ansible
+        group: ansible
+        mode: 0600
+    
+# Configure the VM
+- name: YUM Nutanix Configuration
+  hosts: bastion 
+  remote_user: ansible
+  become: yes
+  vars_prompt:
+    - name: "rhsm_username"
+      prompt: "RHSM Username"
+    - name: "rhsm_password"
+      prompt: "RHSM Password"
+  vars:
+    repo_list:
+      - "rhel-7-server-rpms"
+      - "rhel-7-server-ose-3.9-rpms" 
+      - "rhel-7-fast-datapath-rpms"
+      - "rhel-7-server-ansible-2.5-rpms"
+      - "rh-gluster-3-client-for-rhel-7-server-rpms"
+
+    base_packages:
+      - yum-utils
+      - git
+      - ansible
+
+    git_repo_remote: "https://github.com/mbach04/nutanix_automation_testing.git"
+    git_repo_local: "/home/ansible/nutanix_automation"
+    git_repo_version: "integration"
+
+  tasks:
+    - name: Remove self-referencing yum repos defined from cloud-init
+      yum_repository:
+        name: "{{ item }}"
+        state: absent
+        enabled: no
+      loop: "{{ vm_yum_repos | map(attribute='reponame') | list }}"
+
+    - name: Import GPG Key
+      shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+      args:
+        warn: no
+
+    - name: Register with subscription-manager
+      redhat_subscription:
+        state: present
+        username: "{{ rhsm_username }}"
+        password: "{{ rhsm_password }}"
+        autosubscribe: yes
+
+    - name: Disable all repositories
+      shell: "subscription-manager repos --disable='*'"                                                                                                   
+      
+    - name: Enable repositories 
+      shell: "subscription-manager repos --enable={{ item }}"
+      loop: "{{ repo_list }}"
+
+    - name: Get latest YUM updates
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install Packages 
+      yum:
+        name: "{{ base_packages }}"
+        state: installed     
+
+    - name: Pull Git repository
+      git:
+        repo: "{{ git_repo_remote }}"
+        dest: "{{ git_repo_local }}"
+        version: "{{ git_repo_version }}"
+      become: no
+      tags:
+        - git
