@@ -2,33 +2,33 @@
 # NOTE, some IP addresses in this file need to align with those in group_vars/all.yml for each environment
 
 [masters]
-labs-ocp-master-[01:03].ocp.dell.local
+labs-ocp-master-[01:03].ocplabs.dell.local
 
 [etcd]
-labs-ocp-master-[01:03].ocp.dell.local
+labs-ocp-master-[01:03].ocplabs.dell.local
 
 [masters-lbs]
-labs-ocp-lb-01.ocp.dell.local
-labs-ocp-lb-02.ocp.dell.local
+labs-ocp-lb-01.ocplabs.dell.local
+labs-ocp-lb-02.ocplabs.dell.local
 
 [routers-lbs]
-labs-ocp-lb-03.ocp.dell.local
-labs-ocp-lb-04.ocp.dell.local
+labs-ocp-lb-03.ocplabs.dell.local
+labs-ocp-lb-04.ocplabs.dell.local
 
 [nodes]
-labs-ocp-master-[01:03].ocp.dell.local
-labs-ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-labs-ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+labs-ocp-master-[01:03].ocplabs.dell.local
+labs-ocp-infra-[01:02].ocplabs.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+labs-ocp-node-[01:03].ocplabs.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
-labs-ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
+labs-ocp-cns-[01:03].ocplabs.dell.local openshift_schedulable=True
 
 [infranodes]
-labs-ocp-infra-[01:03].ocp.dell.local
+labs-ocp-infra-[01:02].ocplabs.dell.local
 
 [glusterfs]
-labs-ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
-labs-ocp-cns-02.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
-labs-ocp-cns-03.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+labs-ocp-cns-01.ocplabs.dell.local glusterfs_devices='["/dev/sdc"]'
+labs-ocp-cns-02.ocplabs.dell.local glusterfs_devices='["/dev/sdc"]'
+labs-ocp-cns-03.ocplabs.dell.local glusterfs_devices='["/dev/sdc"]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
