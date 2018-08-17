@@ -89,10 +89,10 @@ osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others 
 #openshift_master_console_port=8443
 
 #lb_masters_vip
-openshift_master_cluster_hostname=masters-internal.ocp.dell.local
+openshift_master_cluster_hostname=labs-masters-internal.ocplabs.dell.local
 #lb_masters_vip
-openshift_master_cluster_public_hostname=masters.ocp.dell.local
-openshift_master_default_subdomain=apps.ocp.dell.local
+openshift_master_cluster_public_hostname=labs-masters.ocplabs.dell.local
+openshift_master_default_subdomain=apps.ocplabs.dell.local
 
 
 #NOTE: These need to match the inventory in group_vars
