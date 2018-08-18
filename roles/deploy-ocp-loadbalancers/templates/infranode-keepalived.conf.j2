@@ -8,7 +8,7 @@ vrrp_instance VI_1 {
   interface {{ ansible_default_ipv4.interface }}
   state {% if ansible_nodename == hostvars[groups['routers-lbs'][0]].ansible_hostname %} MASTER {% else %} BACKUP {% endif %}
   
-  virtual_router_id 52
+  virtual_router_id 62
   priority {% if ansible_nodename == hostvars[groups['routers-lbs'][0]].ansible_hostname %} 101 {% else %} 100 {% endif %}
   
   unicast_peer {

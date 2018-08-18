@@ -4,7 +4,7 @@ lb_keepalived_instances:
   master_ocp:
     interface: "{{ ansible_default_ipv4.interface }}"
     state: "{{ (groups['ocp_master_lb'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
-    virtual_router_id: 51
+    virtual_router_id: 61
     priority: "{{ (groups['ocp_master_lb']| length - groups['ocp_master_lb'].index(inventory_hostname)) * 250 // (groups['ocp_master_lb']|length) }}" 
     vips:
       - "172.29.171.205/24"
