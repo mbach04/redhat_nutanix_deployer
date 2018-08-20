@@ -8,12 +8,12 @@ repo-labs.ocplabs.dell.local
 ansible-bastion.ocp.dell.local
 
 [tower_nodes]
-ansible-tower-01.ocp.dell.local
-ansible-tower-02.ocp.dell.local
-ansible-tower-03.ocp.dell.local
+labs-ansible-tower-01.ocplabs.dell.local
+labs-ansible-tower-02.ocplabs.dell.local
+labs-ansible-tower-03.ocplabs.dell.local
 
 [tower_db_nodes]
-ansible-tower-db.ocp.dell.local
+labs-ansible-tower-db.ocplabs.dell.local
 
 [tower:children]
 tower_nodes
