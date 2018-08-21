@@ -14,66 +14,11 @@
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
 
-- name: LBs VMs Provisioner
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Provision LBs VMs on Nutanix
-      include_role:
-        name: nutanix_provisioner
-      vars:
-        vm_defs: "{{ vm_defs_lbs }}"
-      tags:
-        - provision
-
-    - name: Refresh inventory after provisioning
-      meta: refresh_inventory
-
-- name: LB Hosts, Handle Prereqs
-  hosts:
-    - routers-lbs
-    - masters-lbs
-  gather_facts: true
-  become: yes
-  tasks:
-    - name: Handle Load Balancer Prereqs
-      include_role:
-        name: lbs-prereqs
 
 - hosts: all
   gather_facts: true
 
-- name: Deploy Masters Loadbalancer
-  hosts: masters-lbs
-  gather_facts: true
-  become: yes
-  vars: 
-    ports:
-      - "{{ lb_master_port }}/tcp"
-    lb_type: master
-    haproxy_template: master-haproxy.conf.j2
-    lb_vip: "{{ lb_masters_vip }}" 
-  tasks:
-    - name: Deploy Masters Loadbalancer
-      include_role:
-        name: deploy-ocp-loadbalancers
 
-- name: Deploy Routers Loadbalancer
-  hosts: routers-lbs
-  gather_facts: true
-  become: yes
-  vars: 
-    ports:
-      - 80/tcp
-      - 443/tcp
-      - 9000/tcp
-    lb_type: infranode
-    haproxy_template: infranode-haproxy.conf.j2
-    lb_vip: "{{ lb_routers_vip }}" 
-  tasks:
-    - name: Deploy Routers Loadbalancer
-      include_role: 
-        name: deploy-ocp-loadbalancers
 
 - name: OCP Hosts, Handle Prereqs
   hosts:
