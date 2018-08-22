@@ -20,13 +20,13 @@ ocp-lb-04.ocp.dell.local
 
 [nodes]
 ocp-master-[01:03].ocp.dell.local
-ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+ocp-infra-[01:02].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+ocp-node-[01:02].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
 ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
 
 [infranodes]
-ocp-infra-[01:03].ocp.dell.local
+ocp-infra-[01:02].ocp.dell.local
 
 [glusterfs]
 ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
