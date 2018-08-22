@@ -32,15 +32,15 @@ lb_haproxy_backend_instances:
     option: "httpchk GET /healthz"
     http_check: "expect status 200"
     servers:
-      - "labs-ocp-infra-01.{{ vm_net_domain }} 172.29.171.213:80"
-      - "labs-ocp-infra-02.{{ vm_net_domain }} 172.29.171.214:80"
-      - "labs-ocp-infra-03.{{ vm_net_domain }} 172.29.171.215:80" 
+      - "labs-ocp-infra-01.{{ vm_net_domain }} 172.29.171.220:80"
+      - "labs-ocp-infra-02.{{ vm_net_domain }} 172.29.171.221:80"
+     # - "labs-ocp-infra-03.{{ vm_net_domain }} 172.29.171.222:80" 
   router_ocp_backend_443:
     balance: "roundrobin"
     mode: "tcp"
     option: "httpchk GET /healthz"
     http_check: "expect status 200"
     servers:
-      - "labs-ocp-infra-01.{{ vm_net_domain }} 172.29.171.213:443"
-      - "labs-ocp-infra-02.{{ vm_net_domain }} 172.29.171.214:443"
-      - "labs-ocp-infra-03.{{ vm_net_domain }} 172.29.171.215:443" 
+      - "labs-ocp-infra-01.{{ vm_net_domain }} 172.29.171.220:443"
+      - "labs-ocp-infra-02.{{ vm_net_domain }} 172.29.171.221:443"
+      #- "labs-ocp-infra-03.{{ vm_net_domain }} 172.29.171.222:443" 

@@ -35,9 +35,9 @@ lb_haproxy_backend_instances:
     option: "httpchk GET /healthz"
     http_check: "expect status 200"
     servers:
-      - "labs-ocp-master-01.{{ vm_net_domain }} 172.29.171.207:8443"
-      - "labs-ocp-master-02.{{ vm_net_domain }} 172.29.171.208:8443"
-      - "labs-ocp-master-03.{{ vm_net_domain }} 172.29.171.209:8443" 
+      - "labs-ocp-master-01.{{ vm_net_domain }} 172.29.171.217:8443"
+      - "labs-ocp-master-02.{{ vm_net_domain }} 172.29.171.218:8443"
+      - "labs-ocp-master-03.{{ vm_net_domain }} 172.29.171.219:8443" 
   ansible_tower_backend:
     balance: "source"
     mode: "tcp"
