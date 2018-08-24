@@ -106,7 +106,6 @@
     - { src: "{{ quay_ssl_cert_file }}", dest: "{{ quay_config_dir }}/ssl.cert" }
   when: quay_ssl_enable|bool
 
-
 - name: Check if quay configuration exists
   stat:
     path: "{{ quay_config_dir }}/config.yaml"
