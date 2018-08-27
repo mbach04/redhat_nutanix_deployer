@@ -106,6 +106,24 @@
     - { src: "{{ quay_ssl_cert_file }}", dest: "{{ quay_config_dir }}/ssl.cert" }
   when: quay_ssl_enable|bool
 
+#- name: TESTING | Make extra config directory for certs
+#  file:
+#    name: "{{ quay_config_dir }}/extra_ca_certs"
+#    state: directory
+#  when: quay_ssl_enable|bool
+
+#- name: TESTING | Copy ssl key
+#  copy:
+#    src: "{{ item.src }}"
+#    dest: "{{ item.dest }}"
+#    owner: root
+#    group: root
+#    mode: g+rw
+#  notify: Restart quay service
+#  with_items:
+#    - { src: "{{ quay_ssl_cert_file }}", dest: "{{ quay_config_dir }}/extra_ca_certs/ssl.cert" }
+#  when: quay_ssl_enable|bool
+
 - name: Check if quay configuration exists
   stat:
     path: "{{ quay_config_dir }}/config.yaml"

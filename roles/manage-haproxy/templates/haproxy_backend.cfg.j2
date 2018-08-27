@@ -2,7 +2,7 @@
 
 # Make sure the name matches the frontend name
 backend quay_http
-    balance roundrobin
+    balance source
 
     {% for host in groups.quay_enterprise %}
     server quay_http_{{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:80 check
@@ -11,7 +11,7 @@ backend quay_http
 # Make sure the name matches the frontend name
 backend quay_https
     mode tcp
-    balance roundrobin
+    balance source
     option httpchk GET /health/instance
     http-check expect status 200
 
