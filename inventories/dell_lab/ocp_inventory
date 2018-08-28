@@ -5,33 +5,33 @@
 repository.ocp.dell.local
 
 [masters]
-ocp-master-[01:03].ocp.dell.local
+labs-ocp-master-[01:03].ocplabs.dell.local
 
 [etcd]
-ocp-master-[01:03].ocp.dell.local
+labs-ocp-master-[01:03].ocplabs.dell.local
 
 [masters-lbs]
-ocp-lb-01.ocp.dell.local
-ocp-lb-02.ocp.dell.local
+labs-ocp-lb-01.ocplabs.dell.local
+labs-ocp-lb-02.ocplabs.dell.local
 
 [routers-lbs]
-ocp-lb-03.ocp.dell.local
-ocp-lb-04.ocp.dell.local
+labs-ocp-lb-03.ocplabs.dell.local
+labs-ocp-lb-04.ocplabs.dell.local
 
 [nodes]
-ocp-master-[01:03].ocp.dell.local
-ocp-infra-[01:02].ocp.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ocp-node-[01:02].ocp.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+labs-ocp-master-[01:03].ocplabs.dell.local
+labs-ocp-infra-[01:02].ocplabs.dell.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+labs-ocp-node-[01:03].ocplabs.dell.local openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 # Gluster nodes
-ocp-cns-[01:03].ocp.dell.local openshift_schedulable=True
+labs-ocp-cns-[01:03].ocplabs.dell.local openshift_schedulable=True
 
 [infranodes]
-ocp-infra-[01:02].ocp.dell.local
+labs-ocp-infra-[01:02].ocplabs.dell.local
 
 [glusterfs]
-ocp-cns-01.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
-ocp-cns-02.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
-ocp-cns-03.ocp.dell.local glusterfs_devices='["/dev/sdc"]'
+labs-ocp-cns-01.ocplabs.dell.local glusterfs_devices='["/dev/sdc"]'
+labs-ocp-cns-02.ocplabs.dell.local glusterfs_devices='["/dev/sdc"]'
+labs-ocp-cns-03.ocplabs.dell.local glusterfs_devices='["/dev/sdc"]'
 
 
 # Create an OSEv3 group that contains the masters and nodes groups
@@ -92,15 +92,15 @@ osn_storage_plugin_deps=['ceph','glusterfs','iscsi'] #adding iscsi here, others 
 #openshift_master_console_port=8443
 
 #lb_masters_vip
-openshift_master_cluster_hostname=masters-internal.ocp.dell.local
+openshift_master_cluster_hostname=labs-masters-internal.ocplabs.dell.local
 #lb_masters_vip
-openshift_master_cluster_public_hostname=masters.ocp.dell.local
-openshift_master_default_subdomain=apps.ocp.dell.local
+openshift_master_cluster_public_hostname=labs-masters.ocplabs.dell.local
+openshift_master_default_subdomain=apps.ocplabs.dell.local
 
 
 #NOTE: These need to match the inventory in group_vars
-lb_masters_vip='172.29.171.109'
-lb_routers_vip='172.29.171.110'
+lb_masters_vip='172.29.171.205'
+lb_routers_vip='172.29.171.206'
 openshift_hosted_router_selector='region=infra'
 #openshift_node_open_ports=[{'service': 'router stats port', 'port': '1936/tcp'}]#This might not be required now that we're using actual Loadbalancer VMs
 

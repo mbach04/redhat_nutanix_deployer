@@ -1,6 +1,6 @@
 ---
 - name: Configure default storage class with Gluster CNS
-  hosts: ocp-master-01.ocp.dell.local
+  hosts: labs-ocp-master-01.ocplabs.dell.local
   become: yes
   tasks:
     - name: Patch glusterfs-storage storageclass to default

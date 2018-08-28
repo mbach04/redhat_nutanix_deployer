@@ -14,9 +14,6 @@
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
 
-- hosts: nodes
-  gather_facts: true
-
 - name: OCP Hosts, Handle Prereqs
   hosts:
     - nodes
@@ -33,14 +30,6 @@
   hosts: masters
   gather_facts: true
   tasks:
-#    - name: Enable the gluster repos for all Masters
-#      yum_repository:
-#        name: local_server_gluster
-#        state: present
-#        baseurl: "http://repository.{{ vm_net_domain }}/repos/yum/rh-gluster-3-client-for-rhel-7-server-rpms"
-#        description: local_server_gluster
-#        gpgcheck: no
-
     - name: Install required CNS packages on OCP Masters
       yum:
         name: "{{ item }}"
