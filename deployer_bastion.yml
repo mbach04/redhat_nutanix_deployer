@@ -77,7 +77,7 @@
         autosubscribe: yes
 
     - name: Disable all repositories
-      shell: "subscription-manager repos --disable='*'"                                                                                                   
+      shell: "subscription-manager repos --disable='*'"
       
     - name: Enable repositories 
       shell: "subscription-manager repos --enable={{ item }}"
