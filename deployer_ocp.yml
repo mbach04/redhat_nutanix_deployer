@@ -13,6 +13,37 @@
 
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
+# Deploy ansible private key to VM
+- name: Ansible private key
+  hosts: tower
+  remote_user: ansible
+  become: yes
+  tasks:
+    - name: Deploy private key to server
+      copy:
+        content: "{{ ansible_ssh_private_key }}"
+        dest: /home/ansible/.ssh/id_rsa
+        owner: ansible
+        group: ansible
+        mode: 0600
+    - name: Install ntpd
+      yum:
+        name: "ntp"
+        state: "latest"
+    - name: Configure ntp server
+      template:
+        src:  "ntp.conf.j2"
+        dest: "/etc/ntp.conf"
+    - name: Disable chrony
+      service:
+        name: "chronyd"
+        state: stopped
+        enabled: false
+    - name: Start/enable ntpd
+      service:
+        name: "ntpd"
+        state: started
+        enabled: true
 
 - hosts: nodes
   gather_facts: true
@@ -25,7 +56,7 @@
   tasks:
     - name: Handle OCP Prereqs
       include_role:
-        name: ocp-prereqs
+        name: ocp_prereqs
       tags:
        - install
 
