@@ -72,6 +72,8 @@ infras_lbs_vip: '172.29.171.110'
 # Cloud-init values
 vm_net_dns:
   - 172.29.170.51
+vm_net_ntpservers:
+  - 172.29.170.51
 vm_net_cidr: "24"
 vm_net_gateway: "172.29.171.1"
 vm_net_domain: "ocp.dell.local"

@@ -15,7 +15,7 @@
       meta: refresh_inventory
 # Deploy ansible private key to VM
 - name: Ansible private key
-  hosts: tower
+  hosts: nodes
   remote_user: ansible
   become: yes
   tasks:
