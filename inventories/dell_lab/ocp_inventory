@@ -10,7 +10,7 @@ labs-ocp-master-[01:03].ocplabs.dell.local
 [nodes]
 labs-ocp-master-[01:03].ocplabs.dell.local
 labs-ocp-infra-[01:03].ocplabs.dell.local openshift_node_labels="{'role': 'infra', 'zone': 'default'}"
-labs-ocp-node-[01:03].ocplabs.dell.local openshift_node_labels="{'role': 'app', 'zone': 'default'}"
+labs-ocp-node-[01:04].ocplabs.dell.local openshift_node_labels="{'role': 'app', 'zone': 'default'}"
 
 [infranodes]
 labs-ocp-infra-[01:03].ocplabs.dell.local
@@ -35,6 +35,7 @@ glusterfs_registry
 openshift_release="3.9"
 openshift_deployment_type=openshift-enterprise
 ansible_become=true
+openshift_disable_check=memory_availability
 
 # Configure master API and console ports.
 #openshift_master_api_port=8443
