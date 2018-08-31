@@ -9,11 +9,11 @@ ocp-master-[01:03].ocp.dell.local
 
 [nodes]
 ocp-master-[01:03].ocp.dell.local
-ocp-infra-[01:02].ocp.dell.local openshift_node_labels="{'role': 'infra', 'zone': 'default'}"
+ocp-infra-[01:03].ocp.dell.local openshift_node_labels="{'role': 'infra', 'zone': 'default'}"
 ocp-node-[01:04].ocp.dell.local openshift_node_labels="{'role': 'app', 'zone': 'default'}"
 
 [infranodes]
-ocp-infra-[01:02].ocp.dell.local
+ocp-infra-[01:03].ocp.dell.local
 
 [glusterfs]
 ocp-node-[01:04].ocp.dell.local glusterfs_devices='["/dev/sdc"]'
