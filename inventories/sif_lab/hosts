@@ -1,29 +1,37 @@
-# This is an example of an OpenShift-Ansible host inventory
+# OpenShift Hosts file
+# NOTE, some IP addresses in this file need to align with those in group_vars/all.yml for each environment
 
-[masters]
-#ose3-master[1:3].test.example.com
+[repository]
+repository.soc.sif.mil
 
-[etcd]
-#ose3-master[1:3].test.example.com
+[bastion]
+ansible-bastion.soc.sif.mil
 
-[nodes]
-#ose3-master[1:3].test.example.com
-#ose3-infra[1:2].test.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-#ose3-node[1:2].test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+[tower_nodes]
+ansible-tower-01.soc.sif.mil
+ansible-tower-02.soc.sif.mil
+ansible-tower-03.soc.sif.mil
 
-[nfs]
-#ose3-master1.test.example.com
+[tower_db_nodes]
+ansible-tower-db.soc.sif.mil
 
-[lb]
-ose3-lb.test.example.com
+[tower:children]
+tower_nodes
+tower_db_nodes
 
-# Create an OSEv3 group that contains the masters and nodes groups
-[OSEv3:children]
-masters
-nodes
-etcd
-lb
-nfs
+[ocp_master_lb]
+ocp-lb-01.soc.sif.mil
+ocp-lb-02.soc.sif.mil
 
-[OSEv3:vars]
-#custom vars
+[ocp_router_lb]
+ocp-lb-03.soc.sif.mil
+ocp-lb-04.soc.sif.mil
+
+[loadbalancers:children]
+ocp_master_lb
+ocp_router_lb
+
+[ceph]
+ceph-1.soc.sif.mil
+ceph-2.soc.sif.mil
+ceph-3.soc.sif.mil

@@ -1,0 +1,7 @@
+---
+#Set variables for repository server
+repo_config_subscriptionmanager: true
+repo_config_reposync: true
+repo_config_httpd_setup: true
+repo_config_docker_registry: true
+repo_config_docker_archive: false

@@ -1,0 +1,33 @@
+# OpenShift Hosts file
+# NOTE, some IP addresses in this file need to align with those in group_vars/all.yml for each environment
+
+[repository]
+repo-labs.ocplabs.dell.local
+
+[bastion]
+ansible-bastion.ocp.dell.local
+
+[tower_nodes]
+labs-ansible-tower-01.ocplabs.dell.local
+labs-ansible-tower-02.ocplabs.dell.local
+labs-ansible-tower-03.ocplabs.dell.local
+
+[tower_db_nodes]
+labs-ansible-tower-db.ocplabs.dell.local
+
+[tower:children]
+tower_nodes
+tower_db_nodes
+
+[ocp_master_lb]
+labs-ocp-lb-01.ocplabs.dell.local
+labs-ocp-lb-02.ocplabs.dell.local
+
+[ocp_router_lb]
+labs-ocp-lb-03.ocplabs.dell.local
+labs-ocp-lb-04.ocplabs.dell.local
+
+[loadbalancers:children]
+ocp_master_lb
+ocp_router_lb
+
