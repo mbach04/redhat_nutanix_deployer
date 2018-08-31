@@ -14,8 +14,7 @@
     - name: Refresh inventory after provisioning
       meta: refresh_inventory
 
-# Deploy ansible private key to VM
-- name: Ansible private key
+- name: Post provision configuration
   hosts: loadbalancers
   remote_user: ansible
   become: yes
@@ -27,6 +26,26 @@
         owner: ansible
         group: ansible
         mode: 0600
+    - name: Install ntpd
+      yum:
+        name: "ntp"
+        state: "latest"
+
+    - name: Configure ntp server
+      template:
+        src:  "ntp.conf.j2"
+        dest: "/etc/ntp.conf"
+    - name: Disable chrony
+      service:
+        name: "chronyd"
+        state: stopped
+        enabled: false
+
+    - name: Start/enable ntpd
+      service:
+        name: "ntpd"
+        state: started 
+        enabled: true
 
 - name: Configure OCP Master Loadbalancer servers
   hosts: loadbalancers

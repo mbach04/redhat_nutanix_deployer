@@ -28,6 +28,24 @@
         owner: ansible
         group: ansible
         mode: 0600
+    - name: Install ntpd
+      yum:
+        name: "ntp"
+        state: "latest"
+    - name: Configure ntp server
+      template:
+        src:  "ntp.conf.j2"
+        dest: "/etc/ntp.conf"
+    - name: Disable chrony
+      service:
+        name: "chronyd"
+        state: stopped
+        enabled: false
+    - name: Start/enable ntpd
+      service:
+        name: "ntpd"
+        state: started
+        enabled: true
     
 # Configure the VM
 - name: YUM Nutanix Configuration
