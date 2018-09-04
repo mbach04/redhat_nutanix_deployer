@@ -133,6 +133,7 @@
       tags:
         - never
         - lbs
+        
     - name: Delete CNS VMs
       uri:
         url: "{{ api_url_v3 }}/vms/{{ item.uuid }}"
