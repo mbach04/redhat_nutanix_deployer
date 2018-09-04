@@ -1,0 +1,20 @@
+---
+- name: Create a new OpenShift Developer Account
+  hosts: masters
+  become: yes
+  tasks:
+    - name: Use HTPasswd to create account
+      htpasswd:
+        name: "{{ item  }}"
+        password: "{{ password }}"
+        path: /etc/origin/master/htpasswd
+      with_items: "{{ developers }}"
+   
+- name: Add proper Cluster Roles
+  hosts: masters
+  become: yes
+  tasks:
+    - name: Add ADMIN role
+      command: "oc adm policy add-role-to-user admin {{ item }} -n sge"
+      with_items: "{{ developers }}"
+      run_once: true

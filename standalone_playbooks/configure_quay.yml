@@ -14,11 +14,13 @@
         state: restarted
 
 - name: Set up OCP secret for quay
-  hosts: ocp-master-01.ocp.dell.local
+  hosts: masters
   become: yes
   tasks:
     - name: Create OCP secret for quay
       command: "oc create secret docker-registry quay-pull-secret --docker-server=https://{{ quay_hostname }} --docker-username={{ quay_superuser_username }} --docker-password={{ quay_superuser_password }} --docker-email={{ quay_superuser_email }}"
+      run_once: true
 
     - name: Link OCP secret to permissions
       command: "oc secrets link default quay-pull-secret --for=pull,mount"
+      run_once: true
