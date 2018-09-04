@@ -1,0 +1,38 @@
+---
+
+tower_install_user: "ansible"
+tower_binary_version: "3.2.5-1"
+tower_binary_folder: "ansible-tower-setup-bundle-{{ tower_binary_version }}.el7"
+tower_binary_name: "{{ tower_binary_folder }}.tar.gz"
+tower_binary_remote_site: "https://releases.ansible.com/ansible-tower/setup-bundle"
+tower_binary_url: "{{ tower_binary_remote_site }}/{{ tower_binary_name }}"
+tower_binary_dir: "/home/{{ tower_install_user }}"
+
+tower_license_eula: "true"
+tower_license_company_name: "Spathe Systems (SOCOM J6)"
+tower_license_contact_email: "tling@redhat.com"
+tower_license_contact_name: "Timothy Ling"
+tower_license_instance_count: 100
+tower_license_date: 1538753991
+tower_license_key: "ed5ddda568ed78c9224e98ac91f666e8705b45c789e54d3761e3a68967500bd8"
+tower_license_type: "enterprise"
+tower_license_trial: "true"
+
+tower_admin_user: "admin"
+tower_admin_password: "redhat"
+tower_pg_database: "awx"
+tower_pg_port: "5432"
+tower_pg_user: "awx"
+tower_pg_password: "redhat"
+tower_rabbitmq_user: "tower"
+tower_rabbitmq_password: "redhat"
+tower_rabbitmq_port: '5672'
+tower_rabbitmq_cookie: 'cookiemonster'
+
+tower_packages:
+  - ansible
+#  - python2-pip
+
+## need these regardless of single node/clustered install
+#towerCliTar: "tower-cli_tar.tar.gz"
+#towerCliDir: "/tmp/tower-cli"

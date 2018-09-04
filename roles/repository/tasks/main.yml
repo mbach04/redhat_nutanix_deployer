@@ -1,0 +1,29 @@
+---
+  
+- name: subscribe machine and ensure proper repos are attached
+  include_tasks: sub_manager.yml
+  when: repo_config_subscriptionmanager
+
+- name: configure machine for repositories
+  include_tasks: node_setup.yml
+
+- name: reposync and create offline repos
+  include_tasks: repo_create_sync.yml
+  when: repo_config_reposync
+
+- name: download additional binaries
+  include_tasks: repo_config_binaries.yml
+  when: repo_config_binaries
+
+- name: configure machine for repositories
+  include_tasks: repo_config_httpd.yml
+  when: repo_config_httpd_setup
+
+- name: configure docker launch docker registry container pull OCP images from Red Hat push OCP images to docker registry container
+  include_tasks: docker_registry_container.yml
+  when: repo_config_docker_registry
+
+- name: archive images to local tarball
+  include_tasks: archive_docker_images.yml
+  when: repo_config_docker_archive
+

@@ -1,0 +1,85 @@
+---
+- name: Remove self-referencing yum repos defined from cloud-init
+  yum_repository:
+    name: "{{ item }}"
+    state: absent
+    enabled: no
+  loop: "{{ vm_yum_repos | map(attribute='reponame') | list }}"
+  tags:
+    - config
+
+#Disabled by default to protect against upgrading packages, but
+#defined for use to install specific pacakges
+- name: Add EPEL repository
+  yum_repository:
+    name: epel
+    description: EPEL YUM repository
+    baseurl: "{{ repo_epel_base_url }}/$releasever/$basearch"
+    enabled: no
+
+- name: Update all packages
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install prerequisite packages
+  yum:
+    name: "{{ repo_packages }}"
+    state: installed
+
+- name: Define partition for repository storage
+  parted:
+    device: "{{ repo_disk_dev}}"
+    number: "{{ repo_disk_partition_num }}"
+    state: present
+  tags:
+    - config
+
+- name: Define filesystem on partition for repository storage
+  filesystem:
+    fstype: "{{ repo_disk_fstype }}"
+    dev: "{{ repo_disk_dev }}{{ repo_disk_partition_num }}"
+  tags:
+    - config
+- name: Create directory for repository storage
+  file:
+    path: "{{ repo_dir_base }}"
+    state: directory
+  tags:
+    - config
+
+- name: Mount repository filesystem
+  mount:
+    path: "{{ repo_dir_base }}"
+    src: "{{ repo_disk_dev }}{{ repo_disk_partition_num }}"
+    fstype: "{{ repo_disk_fstype }}"
+    state: mounted
+  tags:
+    - config
+
+- name: Create directories for yum/docker/binaries storage
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ repo_dir_yum }}"
+    - "{{ repo_dir_docker }}"
+    - "{{ repo_dir_binaries }}"
+  tags:
+    - config
+    - bin
+
+- name: Retrive EPEL GPG Keys
+  get_url:
+    url: "{{ repo_epel_base_url }}/{{ item }}"
+    dest: "/etc/pki/rpm-gpg/{{ item }}"
+    mode: 0644
+  with_items:
+    - "RPM-GPG-KEY-EPEL-7"
+
+- name: Import GPG Keys
+  shell: rpm --import /etc/pki/rpm-gpg/*
+  args:
+    warn: no
+  tags:
+    - config

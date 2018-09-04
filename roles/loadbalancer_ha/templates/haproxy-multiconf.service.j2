@@ -1,0 +1,9 @@
+[Unit]
+Description=HAProxy Load Balancer Multiconf
+After=network.target
+Before=haproxy.service
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/haproxy-multiconf
+[Install]
+WantedBy=multi-user.target

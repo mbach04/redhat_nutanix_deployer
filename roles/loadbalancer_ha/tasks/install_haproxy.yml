@@ -1,0 +1,53 @@
+- name: open ports for haproxy
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items: "{{ lb_haproxy_ports }}"
+
+- name: enable syslog logging
+  template:
+    src: "rsyslog_haproxy.conf.j2"
+    dest: "/etc/rsyslog.d/haproxy.conf"
+  notify: restart_rsyslog
+  
+- name: establish haproxy config dir
+  file:
+    path: "/etc/haproxy/conf.d"
+    state: directory
+
+- name: deploy global haproxy config
+  template:
+    src: "haproxy.cfg.j2"
+    dest: "/etc/haproxy/conf.d/00-haproxy.cfg"
+    validate: 'haproxy -c -f %s'
+  notify: restart_haproxy
+
+- name: deploy haproxy mutliconf script
+  template:
+    src: "haproxy-multiconf.j2"
+    dest: "/usr/local/bin/haproxy-multiconf"
+    mode: 0755
+
+- name: setup new systemd unit to create the conf list before launching haproxy
+  template:
+    src: "haproxy-multiconf.service.j2"
+    dest: "/etc/systemd/system/haproxy-multiconf.service"
+
+- name: modify default systemd unit for haproxy
+  template:
+    src: "haproxy.service.j2"
+    dest: "/usr/lib/systemd/system/haproxy.service"
+  notify: restart_haproxy
+
+- name: force systemctl reload
+  systemd:
+    daemon_reload: yes
+
+- name: enable haproxy
+  service:
+    name: haproxy
+    state: started
+    enabled: yes
+  

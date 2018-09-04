@@ -1,0 +1,48 @@
+---
+lb_keepalived_conf_name: "01-master_ocp.conf"
+lb_keepalived_instances:
+  master_ocp:
+    interface: "{{ ansible_default_ipv4.interface }}"
+    state: "{{ (groups['ocp_master_lb'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+    virtual_router_id: 61
+    priority: "{{ (groups['ocp_master_lb']| length - groups['ocp_master_lb'].index(inventory_hostname)) * 250 // (groups['ocp_master_lb']|length) }}" 
+    vips:
+      - "172.29.171.205/24"
+    unicast_peers: "{{ (groups['ocp_master_lb'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list | difference( [ansible_default_ipv4.address] )) }}"
+    track_scripts:
+      - "chk_haproxy"
+
+lb_haproxy_conf_name: "01-master_ocp.cfg"
+
+lb_haproxy_frontend_instances:
+  master_ocp_frontend:
+    bind_port: 8443
+    mode: "tcp"
+    option: "tcplog"
+    redirect: "scheme https if !{ ssl_fc }"
+    default_backend: "master_ocp_backend"
+  ansible_tower_frontend:
+    bind_port: 443
+    mode: "tcp"
+    option: "tcplog"
+    redirect: "scheme https if !{ ssl_fc }"
+    default_backend: "ansible_tower_backend"
+
+lb_haproxy_backend_instances:
+  master_ocp_backend:
+    balance: "source"
+    mode: "tcp"
+    option: "httpchk GET /healthz"
+    http_check: "expect status 200"
+    servers:
+      - "labs-ocp-master-01.{{ vm_net_domain }} 172.29.171.217:8443"
+      - "labs-ocp-master-02.{{ vm_net_domain }} 172.29.171.218:8443"
+      - "labs-ocp-master-03.{{ vm_net_domain }} 172.29.171.219:8443" 
+  ansible_tower_backend:
+    balance: "source"
+    mode: "tcp"
+    option: "httpchk GET /#/login"
+    servers:
+      - "labs-ansible-tower-01.{{ vm_net_domain }} 172.29.171.210:443"
+      - "labs-ansible-tower-02.{{ vm_net_domain }} 172.29.171.211:443"
+      - "labs-ansible-tower-03.{{ vm_net_domain }} 172.29.171.212:443"

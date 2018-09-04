@@ -1,0 +1,23 @@
+- name: testing of tower-cli cred creation
+  hosts: localhost
+  tasks:
+  - name: create an scm cred using tower-cli
+    shell: tower-cli send ocp_cred_scm.json
+    args:
+      chdir: /root/
+
+  - name: create a machine cred using tower-cli
+    shell: tower-cli send ocp_cred_machine.json
+    args:
+      chdir: /root/
+
+  - name: create the OCP project
+    shell: tower-cli project create --name OCP_dynamic_project --organization Default --scm-type git --scm-credential OCP_scm_cred --scm-url git@git.ky13buildbox.com:/var/git/ansible-git.git --scm-clean True --scm-delete-on-update False --scm-update-on-launch True
+    args:
+      chdir: /root/
+
+  - name: create OCP inventory
+    shell: tower-cli send ocp_inventory.json
+    args:
+      chdir: /root/
+

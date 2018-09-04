@@ -1,0 +1,58 @@
+---
+- name: LBs VMs Provisioner
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Provision LBs VMs on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_lbs }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+
+- name: Post provision configuration
+  hosts: loadbalancers
+  remote_user: ansible
+  become: yes
+  tasks:
+    - name: Deploy private key to server
+      copy:
+        content: "{{ ansible_ssh_private_key }}"
+        dest: /home/ansible/.ssh/id_rsa
+        owner: ansible
+        group: ansible
+        mode: 0600
+    - name: Install ntpd
+      yum:
+        name: "ntp"
+        state: "latest"
+
+    - name: Configure ntp server
+      template:
+        src:  "ntp.conf.j2"
+        dest: "/etc/ntp.conf"
+    - name: Disable chrony
+      service:
+        name: "chronyd"
+        state: stopped
+        enabled: false
+
+    - name: Start/enable ntpd
+      service:
+        name: "ntpd"
+        state: started 
+        enabled: true
+
+- name: Configure OCP Master Loadbalancer servers
+  hosts: loadbalancers
+  gather_facts: true
+  become: yes
+  tasks:
+    - name: Handle Load Balancer Prereqs
+      include_role:
+        name: loadbalancer_ha
+

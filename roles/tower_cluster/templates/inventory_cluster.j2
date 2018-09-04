@@ -1,0 +1,35 @@
+[tower]
+{% for host in groups['tower_nodes'] %}
+{{ host }}
+{% endfor %}
+
+[database]
+{% for host in groups['tower_db_nodes'] %}
+{{ host }}
+{% endfor %}
+
+[all:vars]
+admin_password='{{ tower_admin_password }}'
+ansible_ssh_user=ansible
+
+{% for host in groups['tower_db_nodes'] %}
+pg_host='{{ host }}'
+{% endfor %}
+pg_port='{{ tower_pg_port }}'
+
+pg_database='{{ tower_pg_database }}'
+pg_username='{{ tower_pg_user }}'
+pg_password='{{ tower_pg_password }}'
+
+rabbitmq_port={{ tower_rabbitmq_port }}
+rabbitmq_vhost=tower
+rabbitmq_username='{{ tower_rabbitmq_user }}'
+rabbitmq_password='{{ tower_rabbitmq_password }}'
+rabbitmq_cookie={{ tower_rabbitmq_cookie }}
+
+# Needs to be true for fqdns and ip addresses
+rabbitmq_use_long_name=true
+
+# Isolated Tower nodes automatically generate an RSA key for authentication;
+# To disable this behavior, set this value to false
+# isolated_key_generation=true

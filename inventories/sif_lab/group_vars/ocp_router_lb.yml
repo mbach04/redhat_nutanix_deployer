@@ -1,0 +1,46 @@
+---
+lb_keepalived_conf_name: "01-router_ocp.conf"
+lb_keepalived_instances:
+  router_ocp:
+    interface: "{{ ansible_default_ipv4.interface }}"
+    state: "{{ (groups['ocp_router_lb'].index(inventory_hostname) == 0) | ternary('MASTER','BACKUP') }}"
+    virtual_router_id: 52
+    priority: "{{ (groups['ocp_router_lb']| length - groups['ocp_router_lb'].index(inventory_hostname)) * 250 // (groups['ocp_router_lb']|length) }}" 
+    vips:
+      - "172.20.58.115/24"
+    unicast_peers: "{{ (groups['ocp_router_lb'] | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | list | difference( [ansible_default_ipv4.address] )) }}"
+    track_scripts:
+      - "chk_haproxy"
+
+lb_haproxy_conf_name: "01-router_ocp.cfg"
+lb_haproxy_frontend_instances:
+  router_ocp_frontend_80:
+    bind_port: 80
+    mode: "tcp"
+    option: "tcplog"
+    default_backend: "router_ocp_backend_80"
+  router_ocp_frontend_443:
+    bind_port: 443
+    mode: "tcp"
+    option: "tcplog"
+    default_backend: "router_ocp_backend_443"
+
+lb_haproxy_backend_instances:
+  router_ocp_backend_80:
+    balance: "roundrobin"
+    mode: "tcp"
+    option: "httpchk GET /healthz"
+    http_check: "expect status 200"
+    servers:
+      - "ocp-infra-01.soc.sif.mil 172.20.58.124:80"
+      - "ocp-infra-02.soc.sif.mil 172.20.58.125:80"
+      - "ocp-infra-03.soc.sif.mil 172.20.58.126:80" 
+  router_ocp_backend_443:
+    balance: "roundrobin"
+    mode: "tcp"
+    option: "httpchk GET /healthz"
+    http_check: "expect status 200"
+    servers:
+      - "ocp-infra-01.soc.sif.mil 172.20.58.124:443"
+      - "ocp-infra-02.soc.sif.mil 172.20.58.125:443"
+      - "ocp-infra-03.soc.sif.mil 172.20.58.126:443" 

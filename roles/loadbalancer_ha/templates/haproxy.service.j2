@@ -1,0 +1,13 @@
+[Unit]
+Description=HAProxy Load Balancer
+After=syslog.target network.target
+Requires=haproxy-multiconf.service
+[Service]
+EnvironmentFile=/etc/haproxy/haproxy-multiconf.lst
+ExecStartPre=/usr/sbin/haproxy -c -q $CONF
+ExecStart=/usr/sbin/haproxy-systemd-wrapper -p /run/haproxy.pid $CONF
+ExecReload=/bin/kill -USR2 $MAINPID
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,141 @@
+---
+
+repo_config_subscriptionmanager: true
+repo_config_reposync: true
+repo_config_binaries: true
+repo_config_httpd_setup: true
+repo_config_docker_registry: true
+repo_config_docker_archive: true
+
+repo_disk_dev: "/dev/sdb"
+repo_disk_partition_num: 1
+repo_disk_fstype: "xfs"
+
+repo_dir_base: "/repos"
+repo_dir_yum: "{{ repo_dir_base }}/yum"
+repo_dir_docker: "{{ repo_dir_base }}/docker"
+repo_dir_binaries: "{{ repo_dir_base }}/binaries"
+
+repo_epel_base_url: "https://dl.fedoraproject.org/pub/epel"
+repo_rhsm_user: ""
+repo_rhsm_password: ""
+
+repo_binaries_download_list:
+  - "https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-3.2.5-1.el7.tar.gz"
+
+
+repo_enabled_repositories:
+  - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-fast-datapath-rpms
+  - rhel-7-server-ansible-2.5-rpms
+  - rhel-7-server-ose-3.9-rpms
+  - rh-gluster-3-client-for-rhel-7-server-rpms
+
+repo_enabled_repositories_nonrhel:
+  - epel
+
+repo_packages:
+  - docker
+  - yum-utils
+  - createrepo
+  - git
+  - ansible
+  - httpd
+
+repo_docker_config_path: "/etc/docker/daemon.json"
+repo_openshift_images:
+  - 'openshift3/ose-ansible:v3.9'
+  - 'openshift3/ose-cluster-capacity:v3.9'
+  - 'openshift3/ose-deployer:v3.9'
+  - 'openshift3/ose-docker-builder:v3.9'
+  - 'openshift3/ose-docker-registry:v3.9'
+  - 'openshift3/ose-egress-http-proxy:v3.9'
+  - 'openshift3/ose-egress-router:v3.9'
+  - 'openshift3/ose-f5-router:v3.9'
+  - 'openshift3/ose-haproxy-router:v3.9'
+  - 'openshift3/ose-keepalived-ipfailover:v3.9'
+  - 'openshift3/ose-pod:v3.9'
+  - 'openshift3/ose-sti-builder:v3.9'
+  - 'openshift3/ose:v3.9'
+  - 'openshift3/container-engine:v3.9'
+  - 'openshift3/node:v3.9'
+  - 'openshift3/openvswitch:v3.9' 
+  - 'rhel7/etcd'
+  - 'openshift3/ose-recycler'
+  - 'openshift3/logging-curator:v3.9'
+  - 'openshift3/logging-auth-proxy:v3.9'
+  - 'openshift3/logging-elasticsearch:v3.9'
+  - 'openshift3/logging-fluentd:v3.9'
+  - 'openshift3/logging-kibana:v3.9'
+  - 'openshift3/metrics-cassandra:v3.9'
+  - 'openshift3/metrics-hawkular-metrics:v3.9'
+  - 'openshift3/metrics-hawkular-openshift-agent:v3.9'
+  - 'openshift3/metrics-heapster:v3.9'
+  - 'openshift3/prometheus:v3.9'
+  - 'openshift3/prometheus-alert-buffer:v3.9'
+  - 'openshift3/prometheus-alertmanager:v3.9'
+  - 'openshift3/prometheus-node-exporter:v3.9'
+  - 'cloudforms46/cfme-openshift-postgresql:latest'
+  - 'cloudforms46/cfme-openshift-memcached:latest'
+  - 'cloudforms46/cfme-openshift-app-ui:latest'
+  - 'cloudforms46/cfme-openshift-app:latest'
+  - 'cloudforms46/cfme-openshift-embedded-ansible:latest'
+  - 'cloudforms46/cfme-openshift-httpd:latest'
+  - 'cloudforms46/cfme-httpd-configmap-generator:latest'
+  - 'rhgs3/rhgs-server-rhel7:v3.9'
+  - 'rhgs3/rhgs-volmanager-rhel7:v3.9'
+  - 'rhgs3/rhgs-gluster-block-prov-rhel7:v3.9'
+  - 'rhgs3/rhgs-s3-server-rhel7:v3.9'
+  - 'openshift3/ose-service-catalog:v3.9'
+  - 'openshift3/ose-ansible-service-broker:v3.9'
+  - 'openshift3/mediawiki-apb:v3.9'
+  - 'openshift3/postgresql-apb:v3.9'
+  - 'rhscl/nodejs-4-rhel7'
+  - 'rhscl/nodejs-6-rhel7'
+  - 'rhscl/ruby-22-rhel7'
+  - 'rhscl/ruby-23-rhel7'
+  - 'rhscl/perl-520-rhel7'
+  - 'rhscl/perl-524-rhel7'
+  - 'rhscl/php-56-rhel7'
+  - 'rhscl/python-27-rhel7'
+  - 'rhscl/python-34-rhel7'
+  - 'dotnet/dotnetcore-10-rhel7'
+  - 'dotnet/dotnetcore-11-rhel7'
+  - 'dotnet/dotnet-20-rhel7'
+  - 'rhscl/httpd-24-rhel7'
+  - 'rhscl/mysql-56-rhel7'
+  - 'rhscl/mysql-57-rhel7'
+  - 'rhscl/mariadb-100-rhel7'
+  - 'rhscl/mariadb-101-rhel7'
+  - 'rhscl/postgresql-94-rhel7'
+  - 'rhscl/postgresql-95-rhel7'
+  - 'rhscl/mongodb-26-rhel7'
+  - 'rhscl/mongodb-32-rhel7'
+  - 'rhscl/redis-32-rhel7'
+  - 'jboss-eap-6/eap64-openshift'
+  - 'jboss-eap-7/eap70-openshift'
+  - 'jboss-eap-7/eap71-openshift'
+  - 'jboss-webserver-3/webserver30-tomcat8-openshift'
+  - 'jboss-webserver-3/webserver31-tomcat8-openshift'
+  - 'jboss-amq-6/amq62-openshift'
+  - 'jboss-amq-6/amq63-openshift'
+  - 'redhat-openjdk-18/openjdk18-openshift'
+  - 'redhat-sso-7/sso71-openshift'
+  - 'redhat-sso-7/sso72-openshift'
+  - 'openshift3/registry-console:v3.9'
+  - 'openshift3/jenkins-1-rhel7:v3.9'
+  - 'openshift3/jenkins-2-rhel7:v3.9'
+  - 'openshift3/jenkins-slave-base-rhel7:v3.9'
+  - 'openshift3/jenkins-slave-maven-rhel7:v3.9'
+  - 'openshift3/jenkins-slave-nodejs-rhel7:v3.9'
+  - 'rhscl/postgresql-96-rhel7:latest'
+  - 'openshift3/oauth-proxy:latest'
+  - 'openshift3/ose-keepalived-ipfailover:v3.9.14'
+repo_quay_coreos_images:
+  - 'quay.io/quay/redis:latest'
+  #- 'quay.io/coreos/quay:v2.9.1'
+
+repo_nexus_images:
+  - 'sonatype/nexus-repository-manager'
+

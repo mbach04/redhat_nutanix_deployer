@@ -1,0 +1,34 @@
+[
+  {
+    "inputs": {
+      "username": "git", 
+      "password": "redhat",
+      "ssh_key_data": "yourPrivateKeyLineDelimited with \n"
+
+    }, 
+    "name": "OCP_scm_cred", 
+    "asset_type": "credential", 
+    "credential_type": "Source Control", 
+    "organization": "Default", 
+    "asset_relation": {
+      "roles": [
+        {
+          "team": [], 
+          "name": "Admin", 
+          "user": []
+        }, 
+        {
+          "team": [], 
+          "name": "Read", 
+          "user": []
+        }, 
+        {
+          "team": [], 
+          "name": "Use", 
+          "user": []
+        }
+      ]
+    }
+  }
+]
+
