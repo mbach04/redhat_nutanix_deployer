@@ -23,6 +23,26 @@ cluster_name: "SOFATL"
 subnet_name: "VMtest"
 image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
 
+# Quay vars
+quay_registry_auth: Y29yZW9zK3RlYzJfaWZidWdsa2VoZTNka25ieWd1NHMycnJ4aTpBMTBFVjZGUkZOVEgzVU9WMksyNUhRREw0TjZVMTIwNVJQMjYzMjhFNk5QWEVMRDFZTU1VUzcwMU5HM0RVRTQ4
+database_type: postgresql
+docker_install: true
+quay_hostname: quay.ocp.dell.local
+quay_database_type: postgresql
+database_name: quay
+database_username: quay
+database_password: quay
+database_admin_username: root
+database_admin_password: quayadmin
+postgresql_port: 5432
+redis_port: 6379
+quay_http_port: 8081
+quay_https_port: 8444
+quay_superuser_username: quayadmin
+quay_superuser_password: quayquay
+quay_superuser_email: cthiel@redhat.com
+quay_ssl_local_tmp_dir: /tmp/local
+
 # VM Specs
 # Disk specs here are close, but not exact yet
 # Ram size is in MiB
