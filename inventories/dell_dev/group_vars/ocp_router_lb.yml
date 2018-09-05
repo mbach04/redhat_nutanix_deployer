@@ -23,7 +23,7 @@ lb_haproxy_frontend_instances:
     bind_port: 443
     mode: "tcp"
     option: "tcplog"
-    default_backend: "router_ocp_backend_80"
+    default_backend: "router_ocp_backend_443"
 
 lb_haproxy_backend_instances:
   router_ocp_backend_80:
