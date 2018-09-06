@@ -26,6 +26,7 @@ image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
 
 # Quay vars
 quay_registry_auth: Y29yZW9zK3RlYzJfaWZidWdsa2VoZTNka25ieWd1NHMycnJ4aTpBMTBFVjZGUkZOVEgzVU9WMksyNUhRREw0TjZVMTIwNVJQMjYzMjhFNk5QWEVMRDFZTU1VUzcwMU5HM0RVRTQ4
+quay_registry_email: cthiel@redhat.com
 database_type: postgresql
 docker_install: true
 quay_hostname: quay.ocplabs.dell.local
