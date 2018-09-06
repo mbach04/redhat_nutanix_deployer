@@ -1,6 +1,6 @@
 ---
 - block:
-    - name: create the docker-storage config file
+    - name: create the docker-storage config file for post-7.4 RHEL hosts
       template:
         src: docker-storage-setup-overlayfs.j2
         dest: /etc/sysconfig/docker-storage-setup
@@ -12,7 +12,7 @@
     - ansible_distribution == "RedHat"
 
 - block:
-    - name: create the docker-storage-setup config file
+    - name: create the docker-storage-setup config file for pre-7.4 RHEL hosts
       template:
         src: docker-storage-setup-dm.j2
         dest: /etc/sysconfig/docker-storage-setup

@@ -11,11 +11,11 @@ api_url_v3: "https://{{ cluster_url }}:9440/api/nutanix/v3"
 prism_user: "admin"
 prism_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
-          61633163353738633566663562333065653033626533626362653836653933656434343963366634
-          3365613566393566636162653162363561376666303235330a303232316365386639346136356539
-          31393030656432363631666436356439613464303937383039616161666230306632313962326537
-          6662623531316237360a623163303538633037306163323661346332663730643633313662646539
-          3331
+          61353531326365626238393865396438383833643936336161383336326235303965316531666366
+          6361363262393961363063613464633364363335653138310a333162383838346537383661636430
+          38393837303539336433393466396366353661633134323535363133646362663066366131333435
+          3566623534653836300a313339353463336463316136303434346266313431636336363065626231
+          3036
 
 
 # Global VM Settings
@@ -86,12 +86,16 @@ vm_defs_lbs:
   -  {vm_name: labs-ocp-lb-03, vm_ip: '172.29.171.203', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76800]}
   -  {vm_name: labs-ocp-lb-04, vm_ip: '172.29.171.204', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76800]}
 
+# vm_defs_quay:
+#   -  {vm_name: quay-lb-01, vm_ip: '172.29.171.140', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76294]}
+#   -  {vm_name: quay-01, vm_ip: '172.29.171.141', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
+#   -  {vm_name: quay-02, vm_ip: '172.29.171.142', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
+#   -  {vm_name: quay-03, vm_ip: '172.29.171.143', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
 vm_defs_quay:
-  -  {vm_name: quay-lb-01, vm_ip: '172.29.171.140', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 76294]}
-  -  {vm_name: quay-01, vm_ip: '172.29.171.141', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: quay-02, vm_ip: '172.29.171.142', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
-  -  {vm_name: quay-03, vm_ip: '172.29.171.143', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 76294]}
-
+  -  {vm_name: labs-quay-lb-01, vm_ip: '172.29.171.144', vm_ram: 4096, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 56294]}
+  -  {vm_name: labs-quay-01, vm_ip: '172.29.171.145', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 56294]}
+  -  {vm_name: labs-quay-02, vm_ip: '172.29.171.146', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 56294]}
+  -  {vm_name: labs-quay-03, vm_ip: '172.29.171.147', vm_ram: 8192, vm_num_cpu_per_socket: 1, vm_num_sockets: 4, vm_disk_list: [disk_size_mib: 381471, disk_size_mib: 56294]}
 
 
 # Virtual IP assignments
