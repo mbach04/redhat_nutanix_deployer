@@ -1,0 +1,16 @@
+[quay_enterprise]
+quay-[01:03].ocp.dell.local
+
+[database]
+quay-[01:03].ocp.dell.local
+
+[redis]
+quay-[01:03].ocp.dell.local
+
+[quay_lb]
+quay-lb-01.ocp.dell.local
+
+[docker_hosts:children]
+quay_enterprise
+redis
+database
