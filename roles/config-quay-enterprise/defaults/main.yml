@@ -25,8 +25,8 @@ mysql_db_uri: "mysql+pymysql://{{ database_username }}:{{ database_password }}@{
 container_credentials_file: /root/.docker/config.json
 container_credentials_file_content: {}
 quay_registry_server: quay.io
-quay_registry_auth:
-quay_registry_email:
+# quay_registry_auth:
+# quay_registry_email:
 
 
 # SSL
