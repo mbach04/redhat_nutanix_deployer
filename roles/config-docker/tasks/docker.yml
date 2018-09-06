@@ -30,3 +30,9 @@
     name: "{{ docker_username }}"
     groups: docker
     append: yes
+
+- name: "Add insecure docker registry for coreos/quay image"
+  template:
+    src: registries.conf.j2
+    dest: /etc/containers/registries.conf
+  notify: restart docker

@@ -123,6 +123,7 @@ quay_superuser_email: !vault |
           6537313561643230330a303162346432636338383261346462333031313738666431643635316330
           6338
 quay_ssl_local_tmp_dir: /tmp/local
+docker_local_registry: repo-labs.ocplabs.dell.local:5000
 
 # Cloud-init values
 vm_net_dns:
