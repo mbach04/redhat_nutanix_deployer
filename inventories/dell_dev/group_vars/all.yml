@@ -24,7 +24,18 @@ subnet_name: "VMtest"
 image_name: "RHEL Server 7.5 KVM Guest May 2018 Update"
 
 # Quay vars
-quay_registry_auth: Y29yZW9zK3RlYzJfaWZidWdsa2VoZTNka25ieWd1NHMycnJ4aTpBMTBFVjZGUkZOVEgzVU9WMksyNUhRREw0TjZVMTIwNVJQMjYzMjhFNk5QWEVMRDFZTU1VUzcwMU5HM0RVRTQ4
+quay_image: 'repo-labs.ocplabs.dell.local:5000/quay.io/coreos/quay:v2.9.2'
+quay_registry_auth: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          62363538633038613533643261313735316537386663623166373037646262373734656364633933
+          3239633365646338663562643438336331306263303334660a353361356463363937376564633334
+          39323166363864363431353434343063613164626661333534306238383239383138623834636161
+          3833313038313562620a623436363838316339316662373838373538323962643037633863343932
+          62343861396665353536333735323035336531303032363866636138336237333235646530376632
+          35323033313234393037313631393365653630303963306632386232653532346462336562613161
+          64376433323835623063393462303835313062363166613835666563633230393534623063336534
+          38353934323463333661
+quay_registry_email: no-reply@ocplabs.dell.local
 database_type: postgresql
 docker_install: true
 quay_hostname: quay.ocp.dell.local
@@ -40,8 +51,10 @@ quay_http_port: 8081
 quay_https_port: 8444
 quay_superuser_username: quayadmin
 quay_superuser_password: quayquay
-quay_superuser_email: cthiel@redhat.com
+quay_superuser_email: no-reply@ocp.dell.local
 quay_ssl_local_tmp_dir: /tmp/local
+docker_local_registry: repo-labs.ocplabs.dell.local:5000
+
 
 # VM Specs
 # Disk specs here are close, but not exact yet
