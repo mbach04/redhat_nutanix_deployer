@@ -10,7 +10,18 @@ labs-quay-[01:03].ocplabs.dell.local
 [quay_lb]
 labs-quay-lb-01.ocplabs.dell.local
 
+[clair]
+labs-clair-01.ocplabs.dell.local
+
+[quay_builder]
+labs-quay-builder-01.ocplabs.dell.local
+
 [docker_hosts:children]
 quay_enterprise
 redis
 database
+clair
+quay_builder
+
+
+

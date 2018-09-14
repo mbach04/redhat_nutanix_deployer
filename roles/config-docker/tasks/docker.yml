@@ -36,3 +36,8 @@
     src: registries.conf.j2
     dest: /etc/containers/registries.conf
   notify: restart docker
+
+- name: Explicitly restart docker daemon
+  service:
+    name: docker
+    state: restarted

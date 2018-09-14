@@ -1,15 +1,13 @@
 ---
-
 - name: Generate Random DB Username
   set_fact:
     postgresql_username: "{{ lookup('password', '/dev/null length=5 chars=ascii_letters') | lower }}"
-  when: postgresql_username is undefined and postgresql_username|trim == ""
+  when: (postgresql_username is undefined) and (postgresql_username|trim == "")
 
 - name: Generate Random DB Admin Username
   set_fact:
     postgresql_admin_user: "{{ lookup('password', '/dev/null length=5 chars=ascii_letters') | lower }}"
   when: postgresql_admin_user is undefined and postgresql_admin_user|trim == ""
-
 
 - name: Generate Random DB Password
   set_fact:
@@ -20,6 +18,15 @@
   set_fact:
     postgresql_admin_password: "{{ lookup('password', '/dev/null length=10 chars=ascii_letters,digits,hexdigits') }}"
   when: postgresql_admin_password is undefined and postgresql_admin_password|trim == ""
+
+- debug:
+    var: postgresql_username
+- debug:
+    var: postgresql_admin_user
+- debug:
+    var: postgresql_password
+- debug:
+    var: postgresql_admin_password
 
 - name: Configure Storage Directory
   file:

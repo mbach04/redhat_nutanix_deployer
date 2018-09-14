@@ -1,0 +1,23 @@
+---
+- name: Install Firewalld
+  yum:
+    name: firewalld
+    state: latest
+
+- name: Check if firewalld is installed
+  command: systemctl status firewalld
+  register: firewalld_status
+  failed_when: false
+  changed_when: false
+
+- name: Open port in firewalld
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: true
+    state: enabled
+  # when: firewalld_status.rc == 0
+  with_items:
+    - "{{ clair_host_proxy_port }}"
+    - "{{ clair_host_api_port }}"
+  notify:
+  - restart firewalld

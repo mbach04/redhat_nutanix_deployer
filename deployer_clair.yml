@@ -1,0 +1,22 @@
+# ---
+# - name: Clair VM Provisioner
+#   hosts: localhost
+#   gather_facts: false
+#   tasks:
+#     - name: Provision Clair VM on Nutanix
+#       include_role:
+#         name: nutanix_provisioner
+#       vars:
+#         vm_defs: "{{ vm_defs_clair }}"
+#       tags:
+#         - provision
+
+# - name: Configure / Install Clair and dependencies
+#   hosts: clair
+#   gather_facts: true
+#   become: yes
+#   tasks:
+#     - name: Configure Quay
+#       include_role:
+#         name: config-clair
+

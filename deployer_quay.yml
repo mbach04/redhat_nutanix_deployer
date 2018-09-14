@@ -29,3 +29,68 @@
       include_role:
         name: quay_deployer
 
+
+# New additions for Clair
+- name: Install Clair Database
+  hosts: database
+  become: True
+  tasks:
+    - name: Install and Configure PostgreSQL for Clair
+      include_role:
+        name: config-postgresql
+      vars:
+        mode: containerized
+        # postgresql_name: "{{ clair_database_service_name | default('postgresql-clair') }}"
+        # postgresql_username: "{{ clair_database_username }}"
+        # postgresql_password: "{{ clair_database_password }}"
+        # postgresql_admin_user: "{{ clair_database_admin_username }}"
+        # postgresql_admin_password: "{{ clair_database_admin_password }}"
+        # postgresql_host_port: "{{ clair_database_port | default('5433') }}"
+        # postgresql_database: "{{ clair_database_name }}"
+      when: groups['clair']| length > 0
+
+- name: Install Clair
+  hosts: clair
+  become: True
+  tasks:
+    - name: Gather facts from machine
+      setup:
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    
+    # statically defining quay_hostname already
+    # - name: Set Quay Hostname When Quay LB Defined
+    #   set_fact:
+    #     quay_hostname: "{{ hostvars[groups['quqy_lb'][0]]['inventory_hostname'] }}"
+    #   when: quay_hostname is undefined and groups['quay_lb'] | length > 0
+    
+    # - name: Set Quay Hostname When Quay LB Defined
+    #   set_fact:
+    #     quay_hostname: "{{ hostvars[groups['quay_enterprise'][0]]['inventory_hostname'] }}"
+    #   when: quay_hostname is undefined and groups['quay_lb'] | length == 0
+
+    - name: Install Clair
+      include_role:
+        name: config-clair
+      vars:
+        database_host: "{{ hostvars[groups['database'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        quay_enterprise_address: "{{ hostvars[groups['quay_enterprise'][0]]['quay_http_protocol'] }}://{{ quay_hostname }}"
+        clair_ssl_trust_configure: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool }}"
+        clair_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"
+        postgresql_port: "{{ clair_database_port | default('5433') }}"
+        clair_host_proxy_port: "{{ clair_endpoint_port | default('6060') }}"
+
+- name: Install Quay Builder
+  hosts: quay_builder
+  tasks:
+    - name: Gather facts from machine
+      setup:
+      with_items:
+        - "{{ groups['quay_enterprise'] }}"
+    - name: Install Quay Enterprise
+      include_role:
+        name: config-quay-builder
+      vars:
+        quay_enterprise_hostname: "{{ quay_hostname }}"
+        quay_builder_ssl_trust_configure: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool }}"
+        quay_builder_ssl_trust_src_file: "{{ hostvars[groups['quay_enterprise'][0]]['quay_ssl_cert_file'] if hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable'] is defined and hostvars[groups['quay_enterprise'][0]]['quay_ssl_enable']|bool else '' }}"
