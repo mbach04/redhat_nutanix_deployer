@@ -1,0 +1,57 @@
+---
+- name: Nutanix VM Deployer
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Provision VM on Nutanix
+      include_role:
+        name: nutanix_provisioner
+      vars:
+        vm_defs: "{{ vm_defs_demo }}"
+      tags:
+        - provision
+
+    - name: Refresh inventory after provisioning
+      meta: refresh_inventory
+
+    - name: login to rocket chat
+      uri:
+        url: "http://{{ rocket_url }}/api/v1/login
+        method: POST
+        body:
+          username: redhat
+          password: redhat
+        validate_certs: no
+        body_format: json
+        status_code: 200
+        return_content: yes
+      register: raw_out
+      ignore_errors: yes
+ 
+    - debug:
+        var: raw_out
+
+    - name: Get Rocket user id
+      set_fact: 
+        user_id: "{{ raw_out.json.data.userId }}"
+
+    - name: get Rocket auth Token
+      set_fact:
+        auth_token: "{{ raw_out.json.data.authToken }}"
+
+    - name: Send the notice to Rocket
+      uri:
+        url: http://rocket.app.soc.sif.mil/api/v1/chat.postMessage
+        method: POST
+        body:
+          channel: "#general"
+          text: "@here `Ansible Tower created a VM`\n```Name: {{ vm_defs_demo[0].vm_name }}\nIP: {{ vm_defs_demo[0].vm_ip }}\nSockets: {{ vm_defs_demo[0].vm_num_cpu_per_socket }}\n Image: {{ image_name }}\nPower State: ON\n Cluster: {{ cluster_name }}\n Subnet: {{ subnet_name }}\n FQDN: {{ vm_defs_demo[0].vm_name }}.{{ vm_net_domain }}```"
+          emoji: ":robot:"
+        HEADER_X-Auth-Token: "{{ auth_token }}"
+        HEADER_X-User-Id: "{{ user_id }}"
+        body_format: json
+        status_code: 200
+        return_content: yes
+        ignore_errors: yes
+          
